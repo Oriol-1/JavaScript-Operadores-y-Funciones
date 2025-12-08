@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Métodos JS - Master Suite</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #e0e0e0;
+            --success: #4caf50;
+            --card-bg: #1f2b4d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header & Search */
+        header {
+            background-color: var(--bg-secondary);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        h1 {
+            color: var(--highlight);
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto 0;
+            position: relative;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            border: 2px solid var(--accent);
+            background-color: var(--bg-primary);
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        #search-input:focus {
+            border-color: var(--highlight);
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+        }
+
+        /* Results Grid */
+        .results-container {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .method-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.2s;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--highlight);
+        }
+
+        .method-name {
+            color: var(--highlight);
+            font-family: 'Consolas', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .method-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .method-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background-color: var(--accent);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .code-block {
+            background-color: #0f111a;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #a6accd;
+            overflow-x: auto;
+            border-left: 3px solid var(--success);
+        }
+
+        .no-results {
+            text-align: center;
+            color: #777;
+            font-size: 1.2rem;
+            margin-top: 50px;
+            grid-column: 1 / -1;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .results-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Volver al Menú</a>
+
+    <header>
+        <h1>🔍 Buscador de Métodos JS</h1>
+        <p>Describe qué quieres hacer (ej: "filtrar array", "convertir a mayúsculas")</p>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Escribe aquí tu búsqueda..." autofocus>
+        </div>
+    </header>
+
+    <main class="results-container">
+        <div id="results-grid" class="results-grid">
+            <!-- Los resultados se inyectarán aquí -->
+        </div>
+    </main>
+
+    <script>
+        // Base de datos de métodos
+        const methodsDB = [
+            // --- ARRAYS ---
+            {
+                name: "Array.prototype.filter()",
+                desc: "Crea un nuevo array con todos los elementos que cumplan una condición.",
+                keywords: ["filtrar", "buscar", "condicion", "eliminar elementos", "seleccionar", "array"],
+                example: "const nums = [1, 2, 3, 4];\nconst pares = nums.filter(n => n % 2 === 0);\n// [2, 4]"
+            },
+            {
+                name: "Array.prototype.map()",
+                desc: "Crea un nuevo array con los resultados de aplicar una función a cada elemento.",
+                keywords: ["transformar", "modificar", "cambiar", "lista", "array", "convertir"],
+                example: "const nums = [1, 2, 3];\nconst dobles = nums.map(n => n * 2);\n// [2, 4, 6]"
+            },
+            {
+                name: "Array.prototype.find()",
+                desc: "Devuelve el primer elemento que cumple con la condición proporcionada.",
+                keywords: ["encontrar", "buscar uno", "primer elemento", "obtener", "array"],
+                example: "const users = [{id:1}, {id:2}];\nconst user = users.find(u => u.id === 2);\n// {id:2}"
+            },
+            {
+                name: "Array.prototype.forEach()",
+                desc: "Ejecuta la función indicada una vez por cada elemento del array.",
+                keywords: ["recorrer", "iterar", "bucle", "loop", "hacer algo", "array"],
+                example: "['a', 'b'].forEach(letra => console.log(letra));"
+            },
+            {
+                name: "Array.prototype.push()",
+                desc: "Añade uno o más elementos al final de un array.",
+                keywords: ["añadir", "agregar", "insertar", "final", "meter", "array"],
+                example: "const frutas = ['manzana'];\nfrutas.push('pera');\n// ['manzana', 'pera']"
+            },
+            {
+                name: "Array.prototype.pop()",
+                desc: "Elimina el último elemento de un array y lo devuelve.",
+                keywords: ["eliminar", "borrar", "sacar", "ultimo", "final", "array"],
+                example: "const frutas = ['manzana', 'pera'];\nfrutas.pop();\n// 'pera' (queda ['manzana'])"
+            },
+            {
+                name: "Array.prototype.shift()",
+                desc: "Elimina el primer elemento del array y lo devuelve.",
+                keywords: ["eliminar", "borrar", "sacar", "primero", "inicio", "array"],
+                example: "const arr = [1, 2, 3];\narr.shift(); // 1 (queda [2, 3])"
+            },
+            {
+                name: "Array.prototype.unshift()",
+                desc: "Agrega uno o más elementos al inicio del array.",
+                keywords: ["añadir", "agregar", "insertar", "inicio", "principio", "array"],
+                example: "const arr = [2, 3];\narr.unshift(1); // [1, 2, 3]"
+            },
+            {
+                name: "Array.prototype.includes()",
+                desc: "Determina si un array incluye un determinado elemento.",
+                keywords: ["contiene", "existe", "tiene", "verificar", "buscar", "array"],
+                example: "const nums = [1, 2, 3];\nnums.includes(2); // true"
+            },
+            {
+                name: "Array.prototype.reduce()",
+                desc: "Ejecuta una función reductora sobre cada elemento para devolver un único valor.",
+                keywords: ["sumar", "total", "acumular", "reducir", "calcular", "array"],
+                example: "const nums = [1, 2, 3];\nconst suma = nums.reduce((acc, curr) => acc + curr, 0);\n// 6"
+            },
+            {
+                name: "Array.prototype.sort()",
+                desc: "Ordena los elementos de un array localmente y devuelve el array ordenado.",
+                keywords: ["ordenar", "alfabetico", "mayor a menor", "ascendente", "descendente", "array"],
+                example: "const nums = [3, 1, 2];\nnums.sort((a, b) => a - b);\n// [1, 2, 3]"
+            },
+            {
+                name: "Array.prototype.slice()",
+                desc: "Devuelve una copia de una parte del array dentro de un nuevo array.",
+                keywords: ["copiar", "cortar", "parte", "fragmento", "sub-array", "array"],
+                example: "const arr = ['a', 'b', 'c', 'd'];\nconst sub = arr.slice(1, 3); // ['b', 'c']"
+            },
+            {
+                name: "Array.prototype.splice()",
+                desc: "Cambia el contenido de un array eliminando elementos existentes y/o agregando nuevos elementos.",
+                keywords: ["eliminar", "insertar", "reemplazar", "modificar", "en medio", "array"],
+                example: "const arr = ['a', 'c'];\narr.splice(1, 0, 'b'); // ['a', 'b', 'c']"
+            },
+            {
+                name: "Array.prototype.join()",
+                desc: "Une todos los elementos de un array en una cadena.",
+                keywords: ["unir", "concatenar", "texto", "string", "separador", "array"],
+                example: "['Hola', 'Mundo'].join(' '); // 'Hola Mundo'"
+            },
+            {
+                name: "Array.prototype.some()",
+                desc: "Comprueba si al menos un elemento del array cumple con la condición.",
+                keywords: ["alguno", "existe", "verificar", "condicion", "booleano", "array"],
+                example: "[1, 2, 3].some(n => n > 2); // true"
+            },
+            {
+                name: "Array.prototype.every()",
+                desc: "Comprueba si todos los elementos del array cumplen con la condición.",
+                keywords: ["todos", "verificar", "condicion", "booleano", "validar", "array"],
+                example: "[2, 4, 6].every(n => n % 2 === 0); // true"
+            },
+            
+            // --- STRINGS ---
+            {
+                name: "String.prototype.toUpperCase()",
+                desc: "Devuelve el valor de la cadena convertido a mayúsculas.",
+                keywords: ["mayusculas", "gritar", "texto", "convertir", "string"],
+                example: "'hola'.toUpperCase(); // 'HOLA'"
+            },
+            {
+                name: "String.prototype.toLowerCase()",
+                desc: "Devuelve el valor de la cadena convertido a minúsculas.",
+                keywords: ["minusculas", "texto", "convertir", "string"],
+                example: "'HOLA'.toLowerCase(); // 'hola'"
+            },
+            {
+                name: "String.prototype.includes()",
+                desc: "Determina si una cadena de texto puede ser encontrada dentro de otra.",
+                keywords: ["contiene", "buscar texto", "palabra", "existe", "string"],
+                example: "'Hola mundo'.includes('mundo'); // true"
+            },
+            {
+                name: "String.prototype.split()",
+                desc: "Divide un objeto de tipo String en un array de cadenas mediante la separación de la cadena en subcadenas.",
+                keywords: ["dividir", "separar", "cortar", "array", "texto a array", "string"],
+                example: "'a,b,c'.split(','); // ['a', 'b', 'c']"
+            },
+            {
+                name: "String.prototype.replace()",
+                desc: "Devuelve una nueva cadena con algunas o todas las coincidencias de un patrón reemplazadas.",
+                keywords: ["reemplazar", "cambiar texto", "sustituir", "string"],
+                example: "'Hola mundo'.replace('mundo', 'amigo');\n// 'Hola amigo'"
+            },
+            {
+                name: "String.prototype.trim()",
+                desc: "Elimina los espacios en blanco en ambos extremos del string.",
+                keywords: ["limpiar", "espacios", "borrar espacios", "formato", "string"],
+                example: "'  hola  '.trim(); // 'hola'"
+            },
+            {
+                name: "String.prototype.substring()",
+                desc: "Devuelve un subconjunto de un objeto String.",
+                keywords: ["cortar", "parte", "fragmento", "texto", "string"],
+                example: "'Mozilla'.substring(1, 3); // 'oz'"
+            },
+            {
+                name: "String.prototype.startsWith()",
+                desc: "Indica si una cadena de texto comienza con los caracteres de una cadena de texto concreta.",
+                keywords: ["empieza", "comienza", "inicio", "verificar", "string"],
+                example: "'Hola'.startsWith('Ho'); // true"
+            },
+
+            // --- OBJECTS & JSON ---
+            {
+                name: "Object.keys()",
+                desc: "Devuelve un array de las propiedades names de un objeto.",
+                keywords: ["claves", "propiedades", "nombres", "listar", "objeto"],
+                example: "const obj = {a: 1, b: 2};\nObject.keys(obj); // ['a', 'b']"
+            },
+            {
+                name: "Object.values()",
+                desc: "Devuelve un array con los valores correspondientes a las propiedades enumerables de un objeto.",
+                keywords: ["valores", "contenido", "datos", "listar", "objeto"],
+                example: "const obj = {a: 1, b: 2};\nObject.values(obj); // [1, 2]"
+            },
+            {
+                name: "Object.entries()",
+                desc: "Devuelve un array de pares [clave, valor] de las propiedades enumerables de un objeto.",
+                keywords: ["pares", "clave valor", "listar", "iterar", "objeto"],
+                example: "Object.entries({a:1}); // [['a', 1]]"
+            },
+            {
+                name: "JSON.parse()",
+                desc: "Analiza una cadena de texto como JSON, transformando opcionalmente el valor producido.",
+                keywords: ["convertir", "texto a objeto", "leer json", "interpretar", "json"],
+                example: "JSON.parse('{\"p\": 5}'); // {p: 5}"
+            },
+            {
+                name: "JSON.stringify()",
+                desc: "Convierte un objeto o valor de JavaScript en una cadena de texto JSON.",
+                keywords: ["convertir", "objeto a texto", "guardar", "serializar", "json"],
+                example: "JSON.stringify({x: 5}); // '{\"x\":5}'"
+            },
+
+            // --- MATH ---
+            {
+                name: "Math.random()",
+                desc: "Devuelve un número pseudo-aleatorio entre 0 (inclusive) y 1 (exclusive).",
+                keywords: ["aleatorio", "random", "azar", "numero", "suerte", "math"],
+                example: "Math.random(); // 0.123..."
+            },
+            {
+                name: "Math.floor()",
+                desc: "Devuelve el máximo entero menor o igual a un número (redondea hacia abajo).",
+                keywords: ["redondear", "abajo", "entero", "decimales", "math"],
+                example: "Math.floor(5.95); // 5"
+            },
+            {
+                name: "Math.ceil()",
+                desc: "Devuelve el entero mayor o igual más próximo a un número dado (redondea hacia arriba).",
+                keywords: ["redondear", "arriba", "entero", "techo", "math"],
+                example: "Math.ceil(5.05); // 6"
+            },
+            {
+                name: "Math.round()",
+                desc: "Retorna el valor de un número redondeado al entero más cercano.",
+                keywords: ["redondear", "cercano", "entero", "math"],
+                example: "Math.round(5.5); // 6"
+            },
+            {
+                name: "Math.max()",
+                desc: "Devuelve el mayor de cero o más números.",
+                keywords: ["mayor", "maximo", "grande", "comparar", "math"],
+                example: "Math.max(1, 3, 2); // 3"
+            },
+            {
+                name: "Math.min()",
+                desc: "Devuelve el menor de cero o más números.",
+                keywords: ["menor", "minimo", "pequeño", "comparar", "math"],
+                example: "Math.min(1, 3, 2); // 1"
+            },
+            
+            // --- DOM ---
+            {
+                name: "document.getElementById()",
+                desc: "Devuelve una referencia al elemento por su ID.",
+                keywords: ["seleccionar", "dom", "html", "id", "elemento", "buscar"],
+                example: "const el = document.getElementById('miId');"
+            },
+            {
+                name: "document.querySelector()",
+                desc: "Devuelve el primer elemento del documento que coincida con el grupo especificado de selectores.",
+                keywords: ["seleccionar", "css", "clase", "dom", "buscar", "elemento"],
+                example: "const el = document.querySelector('.mi-clase');"
+            },
+            {
+                name: "document.querySelectorAll()",
+                desc: "Devuelve una lista de elementos (NodeList) que coinciden con el grupo de selectores.",
+                keywords: ["seleccionar", "varios", "lista", "todos", "dom", "buscar"],
+                example: "const items = document.querySelectorAll('li');"
+            },
+            {
+                name: "element.addEventListener()",
+                desc: "Registra un evento a un objeto en específico.",
+                keywords: ["evento", "click", "escuchar", "responder", "interaccion", "dom"],
+                example: "btn.addEventListener('click', () => alert('Hola'));"
+            },
+            {
+                name: "document.createElement()",
+                desc: "Crea un elemento HTML especificado por su nombre de etiqueta.",
+                keywords: ["crear", "nuevo", "generar", "html", "dom"],
+                example: "const div = document.createElement('div');"
+            },
+            {
+                name: "element.appendChild()",
+                desc: "Agrega un nuevo nodo al final de la lista de un elemento hijo de un elemento padre especificado.",
+                keywords: ["agregar", "meter", "hijo", "padre", "insertar", "dom"],
+                example: "document.body.appendChild(nuevoDiv);"
+            },
+            {
+                name: "element.innerHTML",
+                desc: "Propiedad que obtiene o establece la sintaxis HTML describiendo los descendientes del elemento.",
+                keywords: ["contenido", "html", "cambiar", "escribir", "leer", "dom"],
+                example: "div.innerHTML = '<b>Hola</b>';"
+            },
+            {
+                name: "element.innerText",
+                desc: "Propiedad que representa el contenido de texto renderizado de un nodo y sus descendientes.",
+                keywords: ["texto", "contenido", "escribir", "leer", "sin html", "dom"],
+                example: "p.innerText = 'Solo texto';"
+            },
+            {
+                name: "element.classList",
+                desc: "Propiedad de solo lectura que devuelve una colección activa de los atributos de clase del elemento.",
+                keywords: ["clases", "css", "estilos", "añadir clase", "quitar clase", "toggle", "dom"],
+                example: "div.classList.add('active');\ndiv.classList.toggle('hidden');"
+            },
+            {
+                name: "element.getAttribute()",
+                desc: "Devuelve el valor de un atributo especificado en el elemento.",
+                keywords: ["atributo", "leer", "valor", "html", "data", "dom"],
+                example: "const src = img.getAttribute('src');"
+            },
+            {
+                name: "element.setAttribute()",
+                desc: "Establece el valor de un atributo en el elemento indicado.",
+                keywords: ["atributo", "cambiar", "poner", "valor", "html", "dom"],
+                example: "img.setAttribute('src', 'foto.jpg');"
+            },
+            {
+                name: "element.style",
+                desc: "Propiedad para obtener y establecer los estilos en línea de un elemento.",
+                keywords: ["css", "estilo", "color", "diseño", "apariencia", "dom"],
+                example: "div.style.backgroundColor = 'red';"
+            },
+
+            // --- ASYNC & TIMERS ---
+            {
+                name: "setTimeout()",
+                desc: "Establece un temporizador que ejecuta una función o una porción de código después de que transcurre un tiempo establecido.",
+                keywords: ["tiempo", "retraso", "esperar", "temporizador", "async"],
+                example: "setTimeout(() => console.log('Hola'), 1000);"
+            },
+            {
+                name: "setInterval()",
+                desc: "Ejecuta una función o un fragmento de código de forma repetitiva cada vez que termina el periodo de tiempo determinado.",
+                keywords: ["repetir", "bucle", "tiempo", "intervalo", "reloj", "async"],
+                example: "setInterval(() => console.log('Tic'), 1000);"
+            },
+            {
+                name: "Promise",
+                desc: "El objeto Promise representa la eventual finalización (o falla) de una operación asíncrona y su valor resultante.",
+                keywords: ["promesa", "async", "futuro", "espera", "then", "catch"],
+                example: "new Promise((resolve, reject) => resolve('Éxito'));"
+            },
+            {
+                name: "fetch()",
+                desc: "Proporciona una interfaz para recuperar recursos (incluso a través de la red).",
+                keywords: ["api", "peticion", "http", "ajax", "datos", "servidor", "async"],
+                example: "fetch('https://api.com/data')\n  .then(res => res.json());"
+            },
+            {
+                name: "async / await",
+                desc: "Sintaxis para trabajar con promesas de una manera más cómoda y legible.",
+                keywords: ["asincrono", "esperar", "promesa", "sintaxis", "moderno"],
+                example: "async function pedir() {\n  const data = await fetch(url);\n}"
+            },
+
+            // --- STORAGE ---
+            {
+                name: "localStorage.setItem()",
+                desc: "Añade una clave y un valor al almacenamiento local del navegador.",
+                keywords: ["guardar", "almacenamiento", "memoria", "navegador", "persistir"],
+                example: "localStorage.setItem('usuario', 'Juan');"
+            },
+            {
+                name: "localStorage.getItem()",
+                desc: "Devuelve el valor de la clave especificada del almacenamiento local.",
+                keywords: ["leer", "recuperar", "obtener", "almacenamiento", "memoria"],
+                example: "const user = localStorage.getItem('usuario');"
+            },
+            {
+                name: "localStorage.removeItem()",
+                desc: "Elimina la clave especificada del almacenamiento local.",
+                keywords: ["borrar", "eliminar", "limpiar", "almacenamiento"],
+                example: "localStorage.removeItem('usuario');"
+            },
+
+            // --- CONSOLE ---
+            {
+                name: "console.log()",
+                desc: "Muestra un mensaje en la consola web.",
+                keywords: ["imprimir", "mostrar", "debug", "depurar", "consola"],
+                example: "console.log('Hola mundo');"
+            },
+            {
+                name: "console.error()",
+                desc: "Muestra un mensaje de error en la consola web.",
+                keywords: ["error", "fallo", "rojo", "debug", "consola"],
+                example: "console.error('Algo salió mal');"
+            },
+            {
+                name: "console.table()",
+                desc: "Muestra datos tabulares como una tabla.",
+                keywords: ["tabla", "array", "objetos", "visualizar", "debug", "consola"],
+                example: "console.table([{id:1}, {id:2}]);"
+            }
+        ];
+
+        const searchInput = document.getElementById('search-input');
+        const resultsGrid = document.getElementById('results-grid');
+
+        // Función de búsqueda
+        function search(query) {
+            const terms = query.toLowerCase().split(' ').filter(t => t.length > 0);
+            
+            if (terms.length === 0) {
+                renderResults(methodsDB); // Mostrar todo si está vacío
+                return;
+            }
+
+            const filtered = methodsDB.filter(method => {
+                // Puntuación de relevancia
+                let score = 0;
+                const textToSearch = (method.name + ' ' + method.desc + ' ' + method.keywords.join(' ')).toLowerCase();
+                
+                return terms.every(term => textToSearch.includes(term));
+            });
+
+            renderResults(filtered);
+        }
+
+        // Renderizar resultados
+        function renderResults(results) {
+            resultsGrid.innerHTML = '';
+
+            if (results.length === 0) {
+                resultsGrid.innerHTML = '<div class="no-results">No se encontraron métodos que coincidan con tu búsqueda. 😕</div>';
+                return;
+            }
+
+            results.forEach(method => {
+                const card = document.createElement('div');
+                card.className = 'method-card';
+                
+                const tagsHtml = method.keywords.slice(0, 4).map(k => `<span class="tag">${k}</span>`).join('');
+
+                card.innerHTML = `
+                    <span class="method-name">${method.name}</span>
+                    <div class="method-tags">${tagsHtml}</div>
+                    <p class="method-desc">${method.desc}</p>
+                    <div class="code-block">${method.example}</div>
+                `;
+                
+                resultsGrid.appendChild(card);
+            });
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', (e) => search(e.target.value));
+
+        // Inicializar con todos los resultados
+        renderResults(methodsDB);
+
+    </script>
+</body>
+</html>
