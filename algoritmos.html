@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Algoritmos JS/TS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #e0e0e0;
+            --code-bg: #0f111a;
+            --success: #4caf50;
+            --warning: #ff9800;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--highlight);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .sidebar li {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .sidebar li:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+        }
+
+        .sidebar li.active {
+            background-color: var(--accent);
+            border-color: var(--highlight);
+            font-weight: bold;
+        }
+
+        .back-btn {
+            margin-top: auto;
+            background-color: var(--highlight);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            padding: 20px;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        button.control-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button.control-btn:hover {
+            background-color: var(--highlight);
+        }
+
+        .lang-toggle {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            color: var(--text);
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Visualization Area */
+        .viz-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .code-panel {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow: auto;
+            border: 1px solid var(--accent);
+        }
+
+        .code-line {
+            padding: 2px 5px;
+            border-radius: 3px;
+            white-space: pre-wrap;
+        }
+        .code-line.active {
+            background-color: rgba(233, 69, 96, 0.3);
+            border-left: 3px solid var(--highlight);
+        }
+
+        .visual-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .array-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            min-height: 100px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .array-item {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .array-item.active {
+            background-color: var(--highlight);
+            transform: scale(1.1);
+            box-shadow: 0 0 10px var(--highlight);
+        }
+
+        .variables-panel {
+            background-color: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .var-box {
+            margin-bottom: 5px;
+            font-family: monospace;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 2px;
+        }
+
+        .algo-type-badge {
+            background-color: var(--accent);
+            color: var(--warning);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            border: 1px solid var(--warning);
+        }
+
+        .explanation-box {
+            background: #252540;
+            border-left: 4px solid var(--highlight);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            display: none;
+        }
+        .explanation-box.visible {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-theory {
+            background: transparent;
+            border: 1px solid var(--text);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        .btn-theory:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--highlight);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; overflow: auto; }
+            header { flex-direction: column; gap: 15px; align-items: stretch; }
+            .header-info { width: 100%; }
+            .controls { flex-wrap: wrap; justify-content: space-between; }
+            .control-btn { flex: 1; text-align: center; padding: 12px; }
+            
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                max-height: 60px; 
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                border-right: none;
+                border-bottom: 1px solid var(--accent);
+                flex-shrink: 0;
+            }
+            .sidebar.open {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            .sidebar h2 {
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0;
+                padding-bottom: 10px;
+            }
+            .sidebar h2::after {
+                content: '☰';
+                font-size: 1.5rem;
+            }
+            .viz-layout { grid-template-columns: 1fr; gap: 10px; }
+            .code-panel { max-height: 300px; }
+            .array-container { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; padding-bottom: 10px; }
+            .array-item { flex-shrink: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2>Algoritmos</h2>
+        <ul id="algo-list">
+            <!-- Botones generados dinámicamente -->
+        </ul>
+        <a href="index.html" class="back-btn">🏠 Volver al Menú</a>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <div class="header-info">
+                <div style="display: flex; align-items: center; flex-wrap: wrap;">
+                    <h1 id="algo-title" style="margin: 0; font-size: 1.5rem;">Selecciona un algoritmo</h1>
+                    <span id="algo-type" class="algo-type-badge">TIPO</span>
+                    <button id="btn-theory" class="btn-theory">📖 Ver Explicación</button>
+                </div>
+                <p id="algo-goal" style="margin: 0; font-size: 0.9rem; color: #aaa; font-style: italic;">Objetivo del algoritmo...</p>
+                <div id="algo-explanation" class="explanation-box"></div>
+            </div>
+            <div class="controls">
+                <div style="display: flex; flex-direction: column; font-size: 0.8rem;">
+                    <span>Velocidad:</span>
+                    <select id="speed-select" style="background: var(--bg-secondary); color: white; border: 1px solid var(--accent);">
+                        <option value="2000">Lenta</option>
+                        <option value="1000" selected>Normal</option>
+                        <option value="500">Rápida</option>
+                    </select>
+                </div>
+                <select id="lang-select" class="lang-toggle">
+                    <option value="js">JavaScript</option>
+                    <option value="ts">TypeScript</option>
+                </select>
+                <button class="control-btn" id="btn-prev" title="Paso anterior">⏮</button>
+                <button class="control-btn" id="btn-play" title="Reproducir/Pausar">▶</button>
+                <button class="control-btn" id="btn-reset" title="Reiniciar">↺</button>
+            </div>
+        </header>
+
+        <div class="viz-layout">
+            <div class="code-panel" id="code-display">
+                <!-- El código aparecerá aquí -->
+            </div>
+
+            <div class="visual-panel">
+                <div class="variables-panel">
+                    <h3>Variables</h3>
+                    <div id="vars-container"></div>
+                </div>
+                
+                <h3>Visualización</h3>
+                <div class="array-container" id="viz-container">
+                    <!-- Elementos del array -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="description-panel" style="padding: 10px; background: var(--bg-secondary); border-radius: 5px;">
+            <p id="step-desc">Descripción del paso actual...</p>
+        </div>
+    </main>
+    
+
+
+    <script>
+        const algoritmos = {
+            map: {
+                title: "Array.map(x => x * 2)",
+                type: "Transformación",
+                goal: "Crear un nuevo array transformando cada elemento del original.",
+                explanation: "<code>.map()</code> es fundamental en programación funcional. <br><br>Recorre cada elemento del array original, le aplica una función transformadora y coloca el resultado en un <strong>nuevo array</strong>. <br>⚠️ Importante: No modifica el array original (inmutabilidad), y el nuevo array siempre tendrá la misma longitud que el original.",
+                codeJS: `function duplicar(nums) {
+    // .map() es un método inmutable: NO modifica el array original.
+    // Crea un NUEVO array con los resultados de la función callback.
+    return nums.map(n => {
+        // La función se ejecuta para cada elemento 'n'
+        return n * 2; // Multiplica cada número por 2
+    });
+}
+const input = [1, 2, 3, 4]; // Array original
+const res = duplicar(input); // [2, 4, 6, 8]`,
+                codeTS: `function duplicar(nums: number[]): number[] {
+    // .map() es un método inmutable: NO modifica el array original.
+    // Crea un NUEVO array con los resultados de la función callback.
+    return nums.map((n: number): number => {
+        // La función se ejecuta para cada elemento 'n'
+        return n * 2; // Multiplica cada número por 2
+    });
+}
+const input: number[] = [1, 2, 3, 4]; // Array original
+const res: number[] = duplicar(input); // [2, 4, 6, 8]`,
+                data: [1, 2, 3, 4],
+                steps: (data) => {
+                    const steps = [];
+                    steps.push({ line: 9, vars: { input: JSON.stringify(data) }, activeIdx: -1, desc: "Definimos el array de entrada." });
+                    steps.push({ line: 10, vars: { call: "duplicar(input)" }, activeIdx: -1, desc: "Llamamos a la función." });
+                    steps.push({ line: 4, vars: { nums: JSON.stringify(data), res: "[]" }, activeIdx: -1, desc: "Entramos al map." });
+                    
+                    const result = [];
+                    for (let i = 0; i < data.length; i++) {
+                        steps.push({ line: 6, vars: { n: data[i], calc: `${data[i]} * 2` }, activeIdx: i, desc: `Iteración ${i}: ${data[i]} * 2` });
+                        result.push(data[i] * 2);
+                    }
+                    steps.push({ line: 10, vars: { res: JSON.stringify(result) }, activeIdx: -1, desc: "Función retorna el nuevo array." });
+                    return { steps, result };
+                }
+            },
+            filter: {
+                title: "Array.filter(x => x % 2 === 0)",
+                type: "Filtrado",
+                goal: "Crear un nuevo array solo con los elementos que cumplan una condición.",
+                explanation: "<code>.filter()</code> actúa como un colador. <br><br>Evalúa cada elemento con una función que debe devolver <code>true</code> (pasa el filtro) o <code>false</code> (se descarta). <br>El resultado es un <strong>nuevo array</strong> que puede ser más corto que el original (o vacío si ninguno cumple la condición).",
+                codeJS: `function filtrarPares(nums) {
+    // .filter() crea un nuevo array con elementos que cumplan la condición.
+    // Si la función devuelve true, el elemento se queda. Si false, se descarta.
+    return nums.filter(n => {
+        // Condición: ¿Es el residuo de dividir por 2 igual a 0?
+        return n % 2 === 0; 
+    });
+}
+const input = [1, 2, 3, 4, 5]; // Array original
+const res = filtrarPares(input); // [2, 4]`,
+                codeTS: `function filtrarPares(nums: number[]): number[] {
+    // .filter() crea un nuevo array con elementos que cumplan la condición.
+    // Si la función devuelve true, el elemento se queda. Si false, se descarta.
+    return nums.filter((n: number): boolean => {
+        // Condición: ¿Es el residuo de dividir por 2 igual a 0?
+        return n % 2 === 0; 
+    });
+}
+const input: number[] = [1, 2, 3, 4, 5]; // Array original
+const res: number[] = filtrarPares(input); // [2, 4]`,
+                data: [1, 2, 3, 4, 5],
+                steps: (data) => {
+                    const steps = [];
+                    steps.push({ line: 9, vars: { input: JSON.stringify(data) }, activeIdx: -1, desc: "Definimos input." });
+                    steps.push({ line: 10, vars: { call: "filtrarPares(input)" }, activeIdx: -1, desc: "Llamada a función." });
+                    steps.push({ line: 4, vars: { nums: JSON.stringify(data) }, activeIdx: -1, desc: "Inicia filter." });
+                    
+                    const result = [];
+                    for(let i=0; i<data.length; i++) {
+                        const isEven = data[i] % 2 === 0;
+                        steps.push({ line: 6, vars: { n: data[i], check: `${data[i]} % 2 === 0 -> ${isEven}` }, activeIdx: i, desc: `¿Es par? ${isEven ? "SÍ" : "NO"}` });
+                        if(isEven) result.push(data[i]);
+                    }
+                    return { steps, result };
+                }
+            },
+            reduce: {
+                title: "Array.reduce((acc, curr) => acc + curr, 0)",
+                type: "Acumulación",
+                goal: "Reducir todos los elementos del array a un único valor acumulado.",
+                explanation: "<code>.reduce()</code> es el método más poderoso y flexible. <br><br>Itera sobre el array manteniendo un <strong>acumulador</strong> (<code>acc</code>). En cada paso, combina el acumulador con el elemento actual (<code>curr</code>) para generar un nuevo valor de acumulador. <br>Se usa para sumas, promedios, aplanar arrays, o transformar datos a estructuras complejas.",
+                codeJS: `function sumarTodo(nums) {
+    // .reduce() transforma un array en un único valor.
+    // Recibe: 1. Función reductora (acumulador, actual)
+    //         2. Valor inicial del acumulador (0 en este caso)
+    return nums.reduce((acc, curr) => {
+        return acc + curr; // Suma el acumulador con el valor actual
+    }, 0); 
+}
+const input = [10, 20, 30];
+const total = sumarTodo(input); // 60`,
+                codeTS: `function sumarTodo(nums: number[]): number {
+    // .reduce() transforma un array en un único valor.
+    // Recibe: 1. Función reductora (acumulador, actual)
+    //         2. Valor inicial del acumulador (0 en este caso)
+    return nums.reduce((acc: number, curr: number): number => {
+        return acc + curr; // Suma el acumulador con el valor actual
+    }, 0); 
+}
+const input: number[] = [10, 20, 30];
+const total: number = sumarTodo(input); // 60`,
+                data: [10, 20, 30],
+                steps: (data) => {
+                    const steps = [];
+                    steps.push({ line: 9, vars: { input: JSON.stringify(data) }, activeIdx: -1, desc: "Definimos input." });
+                    steps.push({ line: 10, vars: { call: "sumarTodo(input)" }, activeIdx: -1, desc: "Llamada a función." });
+                    
+                    let acc = 0;
+                    steps.push({ line: 6, vars: { acc: 0 }, activeIdx: -1, desc: "Valor inicial acc = 0" });
+                    
+                    for(let i=0; i<data.length; i++) {
+                        const curr = data[i];
+                        const newAcc = acc + curr;
+                        steps.push({ line: 5, vars: { acc, curr, newAcc }, activeIdx: i, desc: `acc(${acc}) + curr(${curr}) = ${newAcc}` });
+                        acc = newAcc;
+                    }
+                    steps.push({ line: 10, vars: { total: acc }, activeIdx: -1, desc: "Retorna total." });
+                    return { steps, result: [acc] };
+                }
+            },
+            bubble: {
+                title: "Bubble Sort",
+                type: "Ordenamiento",
+                goal: "Ordenar un array de menor a mayor comparando adyacentes.",
+                explanation: "El <strong>Bubble Sort</strong> (Ordenamiento de Burbuja) es un algoritmo clásico pero ineficiente ($O(n^2)$). <br><br>Funciona comparando pares adyacentes y 'burbujeando' los elementos más grandes hacia el final del array en cada pasada. <br>En JavaScript moderno, solemos usar <code>.sort((a, b) => a - b)</code> que usa algoritmos más rápidos (como MergeSort o QuickSort).",
+                codeJS: `function bubbleSort(arr) {
+    const n = arr.length;
+    // Bucle externo: controla las pasadas
+    for (let i = 0; i < n - 1; i++) {
+        // Bucle interno: compara adyacentes
+        for (let j = 0; j < n - i - 1; j++) {
+            // Si el actual es mayor que el siguiente, intercambiar
+            if (arr[j] > arr[j + 1]) {
+                let temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    return arr;
+}
+const data = [5, 3, 8, 4, 2];
+bubbleSort(data); // [2, 3, 4, 5, 8]`,
+                codeTS: `function bubbleSort(arr: number[]): number[] {
+    const n = arr.length;
+    // Bucle externo: controla las pasadas
+    for (let i = 0; i < n - 1; i++) {
+        // Bucle interno: compara adyacentes
+        for (let j = 0; j < n - i - 1; j++) {
+            // Si el actual es mayor que el siguiente, intercambiar
+            if (arr[j] > arr[j + 1]) {
+                let temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    return arr;
+}
+const data: number[] = [5, 3, 8, 4, 2];
+bubbleSort(data); // [2, 3, 4, 5, 8]`,
+                data: [5, 3, 8, 4, 2],
+                steps: (data) => {
+                    const steps = [];
+                    const arr = [...data];
+                    const n = arr.length;
+                    
+                    steps.push({ line: 1, vars: { arr: JSON.stringify(arr) }, activeIdx: -1, desc: "Inicio Bubble Sort" });
+                    
+                    for (let i = 0; i < n - 1; i++) {
+                        for (let j = 0; j < n - i - 1; j++) {
+                            steps.push({ line: 6, vars: { i, j, "arr[j]": arr[j], "arr[j+1]": arr[j+1] }, activeIdx: j, desc: `Comparar ${arr[j]} > ${arr[j+1]}?` });
+                            
+                            if (arr[j] > arr[j + 1]) {
+                                let temp = arr[j];
+                                arr[j] = arr[j + 1];
+                                arr[j + 1] = temp;
+                                steps.push({ line: 8, vars: { temp, arr: JSON.stringify(arr) }, activeIdx: j, desc: "Intercambio (Swap)" });
+                            }
+                        }
+                    }
+                    steps.push({ line: 13, vars: { result: JSON.stringify(arr) }, activeIdx: -1, desc: "Array ordenado." });
+                    return { steps, result: arr };
+                }
+            },
+            binary: {
+                title: "Binary Search",
+                type: "Búsqueda",
+                goal: "Encontrar un elemento en un array ORDENADO dividiendo el espacio de búsqueda.",
+                explanation: "La <strong>Búsqueda Binaria</strong> es extremadamente rápida ($O(\log n)$) pero requiere que los datos estén <strong>ordenados</strong>. <br><br>En lugar de buscar uno por uno, miramos el elemento central. Si es lo que buscamos, ¡genial! Si es menor, descartamos la mitad derecha. Si es mayor, descartamos la mitad izquierda. Repetimos hasta encontrarlo.",
+                codeJS: `function binarySearch(arr, target) {
+    let left = 0;
+    let right = arr.length - 1;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        
+        if (arr[mid] === target) {
+            return mid; // Encontrado
+        }
+        
+        if (arr[mid] < target) {
+            left = mid + 1; // Buscar en la mitad derecha
+        } else {
+            right = mid - 1; // Buscar en la mitad izquierda
+        }
+    }
+    return -1; // No encontrado
+}
+const data = [10, 20, 30, 40, 50, 60, 70];
+const idx = binarySearch(data, 30); // 2`,
+                codeTS: `function binarySearch(arr: number[], target: number): number {
+    let left = 0;
+    let right = arr.length - 1;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        
+        if (arr[mid] === target) {
+            return mid; // Encontrado
+        }
+        
+        if (arr[mid] < target) {
+            left = mid + 1; // Buscar en la mitad derecha
+        } else {
+            right = mid - 1; // Buscar en la mitad izquierda
+        }
+    }
+    return -1; // No encontrado
+}
+const data: number[] = [10, 20, 30, 40, 50, 60, 70];
+const idx: number = binarySearch(data, 30); // 2`,
+                data: [10, 20, 30, 40, 50, 60, 70],
+                steps: (data) => {
+                    const steps = [];
+                    const target = 30;
+                    let left = 0;
+                    let right = data.length - 1;
+                    
+                    steps.push({ line: 1, vars: { left, right, target }, activeIdx: -1, desc: `Buscar ${target} en [${left}, ${right}]` });
+                    
+                    while (left <= right) {
+                        let mid = Math.floor((left + right) / 2);
+                        steps.push({ line: 5, vars: { left, right, mid, val: data[mid] }, activeIdx: mid, desc: `Mitad: ${data[mid]}. ¿Es ${target}?` });
+                        
+                        if (data[mid] === target) {
+                            steps.push({ line: 8, vars: { found: mid }, activeIdx: mid, desc: "¡Encontrado!" });
+                            return { steps, result: [mid] };
+                        }
+                        
+                        if (data[mid] < target) {
+                            left = mid + 1;
+                            steps.push({ line: 12, vars: { left, right }, activeIdx: -1, desc: "Menor que target. Mover left." });
+                        } else {
+                            right = mid - 1;
+                            steps.push({ line: 14, vars: { left, right }, activeIdx: -1, desc: "Mayor que target. Mover right." });
+                        }
+                    }
+                    return { steps, result: [-1] };
+                }
+            },
+            recursion: {
+                title: "Recursión (Factorial)",
+                type: "Recursión",
+                goal: "Calcular el factorial de un número llamándose a sí misma.",
+                explanation: "La <strong>recursión</strong> ocurre cuando una función se llama a sí misma. <br><br>Es vital tener un <strong>caso base</strong> (condición de parada) para evitar un bucle infinito (Stack Overflow). En el factorial, el caso base es cuando llegamos a 0 o 1.",
+                codeJS: `function factorial(n) {
+    // Caso base: condición para detener la recursión
+    if (n === 0 || n === 1) {
+        return 1;
+    }
+    // Llamada recursiva: la función se llama a sí misma con un problema más pequeño
+    return n * factorial(n - 1);
+}
+const num = 4;
+const res = factorial(num); // 4 * 3 * 2 * 1 = 24`,
+                codeTS: `function factorial(n: number): number {
+    // Caso base: condición para detener la recursión
+    if (n === 0 || n === 1) {
+        return 1;
+    }
+    // Llamada recursiva: la función se llama a sí misma con un problema más pequeño
+    return n * factorial(n - 1);
+}
+const num: number = 4;
+const res: number = factorial(num); // 4 * 3 * 2 * 1 = 24`,
+                data: [4], 
+                steps: (data) => {
+                    const steps = [];
+                    const n = data[0];
+                    
+                    let stack = [];
+                    for(let i = n; i >= 1; i--) {
+                        stack.push(i);
+                        steps.push({ line: 6, vars: { n: i }, activeIdx: -1, desc: `factorial(${i}) llama a factorial(${i-1})` });
+                    }
+                    
+                    steps.push({ line: 3, vars: { n: 1, res: 1 }, activeIdx: -1, desc: "Caso base: factorial(1) retorna 1" });
+                    
+                    let res = 1;
+                    while(stack.length > 0) {
+                        const curr = stack.pop();
+                        if(curr > 1) {
+                            res = res * curr;
+                            steps.push({ line: 8, vars: { n: curr, res }, activeIdx: -1, desc: `Retorno: ${curr} * ${(res/curr)} = ${res}` });
+                        }
+                    }
+                    
+                    return { steps, result: [res] };
+                }
+            },
+            stack: {
+                title: "Stack (Pila) - LIFO",
+                type: "Estructura de Datos",
+                goal: "Last In, First Out. El último en entrar es el primero en salir.",
+                explanation: "Una <strong>Pila (Stack)</strong> sigue el principio LIFO (Last-In, First-Out). <br><br>Imagina una pila de platos: solo puedes poner uno encima (<code>push</code>) o quitar el de arriba (<code>pop</code>). En JavaScript, los arrays funcionan naturalmente como pilas.",
+                codeJS: `const stack = []; // Usamos un array como pila
+// .push() agrega elementos al final (cima de la pila)
+stack.push(1); 
+stack.push(2);
+stack.push(3); // Pila: [1, 2, 3]
+
+// .pop() elimina y devuelve el último elemento (cima)
+const last = stack.pop(); // Devuelve 3. Pila: [1, 2]`,
+                codeTS: `const stack: number[] = []; // Usamos un array como pila
+// .push() agrega elementos al final (cima de la pila)
+stack.push(1); 
+stack.push(2);
+stack.push(3); // Pila: [1, 2, 3]
+
+// .pop() elimina y devuelve el último elemento (cima)
+const last: number | undefined = stack.pop(); // Devuelve 3. Pila: [1, 2]`,
+                data: [],
+                steps: (data) => {
+                    const steps = [];
+                    let stack = [];
+                    
+                    steps.push({ line: 1, vars: { arr: "[]" }, activeIdx: -1, desc: "Pila vacía." });
+                    
+                    stack.push(1);
+                    steps.push({ line: 3, vars: { push: 1, arr: JSON.stringify(stack) }, activeIdx: 0, desc: "Push(1)" });
+                    
+                    stack.push(2);
+                    steps.push({ line: 4, vars: { push: 2, arr: JSON.stringify(stack) }, activeIdx: 1, desc: "Push(2)" });
+                    
+                    stack.push(3);
+                    steps.push({ line: 5, vars: { push: 3, arr: JSON.stringify(stack) }, activeIdx: 2, desc: "Push(3)" });
+                    
+                    const popped = stack.pop();
+                    steps.push({ line: 8, vars: { pop: popped, arr: JSON.stringify(stack) }, activeIdx: 1, desc: "Pop() -> 3 sale" });
+                    
+                    return { steps, result: stack };
+                }
+            }
+        };
+
+        const dom = {
+            algoList: document.getElementById('algo-list'),
+            algoTitle: document.getElementById('algo-title'),
+            algoType: document.getElementById('algo-type'),
+            algoGoal: document.getElementById('algo-goal'),
+            algoExplanation: document.getElementById('algo-explanation'),
+            codeDisplay: document.getElementById('code-display'),
+            vizContainer: document.getElementById('viz-container'),
+            varsContainer: document.getElementById('vars-container'),
+            stepDesc: document.getElementById('step-desc'),
+            btnPlay: document.getElementById('btn-play'),
+            btnPrev: document.getElementById('btn-prev'),
+            btnReset: document.getElementById('btn-reset'),
+            btnTheory: document.getElementById('btn-theory'),
+            speedSelect: document.getElementById('speed-select'),
+            langSelect: document.getElementById('lang-select')
+        };
+
+        let currentAlgo = 'map';
+        let currentLang = 'js';
+        let stepsData = [];
+        let currentStep = 0;
+        let isPlaying = false;
+        let playInterval = null;
+
+        function init() {
+            renderSidebar();
+            loadAlgo(currentAlgo);
+            
+            dom.langSelect.onchange = (e) => {
+                currentLang = e.target.value;
+                renderCode();
+            };
+        }
+
+        function renderSidebar() {
+            dom.algoList.innerHTML = '';
+            Object.keys(algoritmos).forEach(key => {
+                const li = document.createElement('li');
+                li.textContent = algoritmos[key].title;
+                li.onclick = () => loadAlgo(key);
+                if(key === currentAlgo) li.classList.add('active');
+                dom.algoList.appendChild(li);
+            });
+        }
+
+        function loadAlgo(key) {
+            currentAlgo = key;
+            const algo = algoritmos[key];
+            
+            // Actualizar UI
+            dom.algoTitle.textContent = algo.title;
+            dom.algoType.textContent = algo.type;
+            dom.algoGoal.textContent = algo.goal;
+            dom.algoExplanation.innerHTML = algo.explanation;
+            
+            // Resetear estado
+            stop();
+            currentStep = 0;
+            
+            // Generar pasos
+            const execution = algo.steps(algo.data);
+            stepsData = execution.steps;
+            
+            renderCode();
+            updateViz();
+            renderSidebar(); // Para actualizar clase active
+        }
+
+        function renderCode() {
+            const algo = algoritmos[currentAlgo];
+            const code = currentLang === 'js' ? algo.codeJS : algo.codeTS;
+            const lines = code.split('\n');
+            dom.codeDisplay.innerHTML = lines.map((line, i) => 
+                `<div class="code-line" id="line-${i+1}">${line}</div>`
+            ).join('');
+        }
+
+        function updateViz() {
+            if(stepsData.length === 0) return;
+            
+            const step = stepsData[currentStep];
+            
+            // Resaltar línea de código
+            document.querySelectorAll('.code-line').forEach(l => l.classList.remove('active'));
+            const activeLine = document.getElementById(`line-${step.line}`);
+            if(activeLine) activeLine.classList.add('active');
+            
+            // Variables
+            dom.varsContainer.innerHTML = '';
+            Object.entries(step.vars).forEach(([key, val]) => {
+                const div = document.createElement('div');
+                div.className = 'var-box';
+                div.innerHTML = `<strong>${key}:</strong> ${val}`;
+                dom.varsContainer.appendChild(div);
+            });
+            
+            // Descripción
+            dom.stepDesc.textContent = `Paso ${currentStep + 1}/${stepsData.length}: ${step.desc}`;
+            
+            // Visualización (Barras o Cajas)
+            renderVisuals(step);
+        }
+
+        function renderVisuals(step) {
+            dom.vizContainer.innerHTML = '';
+            
+            // Si hay una variable 'arr' o 'input' que sea un array, lo dibujamos
+            let dataToRender = null;
+            if(step.vars.arr) dataToRender = JSON.parse(step.vars.arr);
+            else if(step.vars.nums) dataToRender = JSON.parse(step.vars.nums);
+            else if(step.vars.input) dataToRender = JSON.parse(step.vars.input);
+            
+            // Fallback: usar datos iniciales si no hay datos en el paso
+            if (!dataToRender) {
+                 dataToRender = algoritmos[currentAlgo].data;
+            }
+            
+            if(dataToRender && Array.isArray(dataToRender)) {
+                dataToRender.forEach((val, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'array-item';
+                    div.textContent = val;
+                    if(idx === step.activeIdx) div.classList.add('active');
+                    dom.vizContainer.appendChild(div);
+                });
+            }
+        }
+
+        // Controles
+        // Mobile Menu Toggle
+        const sidebar = document.querySelector('.sidebar');
+        if(sidebar) {
+            const sidebarTitle = sidebar.querySelector('h2');
+            if(sidebarTitle) {
+                sidebarTitle.onclick = () => {
+                    sidebar.classList.toggle('open');
+                };
+            }
+        }
+
+        dom.btnTheory.onclick = () => {
+            dom.algoExplanation.classList.toggle('visible');
+            if(dom.algoExplanation.classList.contains('visible')) {
+                dom.btnTheory.textContent = "📖 Ocultar Explicación";
+            } else {
+                dom.btnTheory.textContent = "📖 Ver Explicación";
+            }
+        };
+
+        dom.btnPrev.onclick = () => {
+            if(currentStep > 0) {
+                currentStep--;
+                updateViz();
+            }
+        };
+
+        dom.btnReset.onclick = () => {
+            stop();
+            currentStep = 0;
+            updateViz();
+        };
+
+        dom.btnPlay.onclick = togglePlay;
+
+        function togglePlay() {
+            if(isPlaying) {
+                stop();
+            } else {
+                play();
+            }
+        }
+
+        function play() {
+            isPlaying = true;
+            dom.btnPlay.textContent = '⏸';
+            if(currentStep === stepsData.length - 1) currentStep = 0;
+            
+            const speed = parseInt(dom.speedSelect.value) || 1000;
+
+            playInterval = setInterval(() => {
+                if(currentStep < stepsData.length - 1) {
+                    currentStep++;
+                    updateViz();
+                } else {
+                    stop();
+                }
+            }, speed);
+        }
+
+        function stop() {
+            isPlaying = false;
+            dom.btnPlay.textContent = '▶';
+            clearInterval(playInterval);
+        }
+
+        // Arrancar
+        init();
+    </script>
+</body>
+</html>

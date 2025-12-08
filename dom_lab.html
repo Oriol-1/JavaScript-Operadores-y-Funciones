@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio DOM - Módulo 3</title>
+    <!-- Monaco Editor Loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #e0e0e0;
+            --code-bg: #0f111a;
+            --success: #4caf50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-right: 1px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar h2 {
+            color: var(--highlight);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--text);
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: var(--accent);
+            border-color: var(--highlight);
+        }
+
+        .back-btn {
+            margin-top: auto;
+            background-color: var(--highlight);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+
+        header {
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        p.desc { color: #aaa; margin-top: 5px; }
+
+        /* Workspace */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .panel {
+            background-color: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--accent);
+        }
+
+        .panel h3 { margin-top: 0; color: var(--highlight); }
+
+        /* Playground Area */
+        #playground {
+            background-color: white;
+            color: black;
+            flex: 1;
+            border-radius: 5px;
+            padding: 20px;
+            overflow: auto;
+            position: relative;
+        }
+
+        /* Code Editor Style */
+        #code-editor {
+            flex: 1;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+
+        .action-bar {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-run {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-reset {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* Estilos para elementos creados dinámicamente en el playground */
+        #playground .caja {
+            width: 100px;
+            height: 100px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            border: 2px solid #333;
+        }
+        
+        #playground .item-lista {
+            padding: 5px;
+            background: #eee;
+            margin-bottom: 5px;
+            border-left: 3px solid #667eea;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: #252540;
+            border-left: 4px solid var(--highlight);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            display: none;
+        }
+        .explanation-box.visible {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        .btn-theory {
+            background: transparent;
+            border: 1px solid var(--text);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-theory:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--highlight);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; overflow: auto; }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                max-height: 60px; 
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                border-right: none;
+                border-bottom: 1px solid var(--accent);
+                flex-shrink: 0;
+            }
+            .sidebar.open {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            .sidebar h2 {
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0;
+                padding-bottom: 10px; /* Adjust for alignment */
+            }
+            .sidebar h2::after {
+                content: '☰';
+                font-size: 1.5rem;
+            }
+            .main-content { padding: 10px; overflow: visible; }
+            .workspace { 
+                grid-template-columns: 1fr; 
+                grid-template-rows: auto auto; 
+                gap: 20px;
+                height: auto;
+            }
+            .panel { height: auto; min-height: 400px; }
+            #code-editor { height: 300px; }
+            #playground { height: 300px; overflow: auto; }
+            .action-bar { flex-wrap: wrap; }
+            .btn-run, .btn-reset { flex: 1; padding: 12px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2>Laboratorio DOM</h2>
+        <div id="lesson-list">
+            <!-- Botones generados dinámicamente -->
+        </div>
+        <a href="index.html" class="back-btn">🏠 Volver al Menú</a>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1 id="lesson-title">Cargando...</h1>
+            <p class="desc" id="lesson-desc">...</p>
+            <button id="btn-toggle-theory" class="btn-theory">📖 Ver Explicación Teórica</button>
+            <div id="lesson-explanation" class="explanation-box"></div>
+        </header>
+
+        <div class="workspace">
+            <!-- Panel de Código -->
+            <div class="panel">
+                <h3>💻 Código JavaScript</h3>
+                <div id="code-editor"></div>
+                <div class="action-bar">
+                    <button class="btn-run">▶ Ejecutar</button>
+                    <button class="btn-reset">↺ Reiniciar Lección</button>
+                </div>
+            </div>
+
+            <!-- Panel Visual (DOM Real) -->
+            <div class="panel">
+                <h3>👁️ Resultado Visual</h3>
+                <div id="playground"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- DATOS DE LAS LECCIONES ---
+        const lessons = [
+            {
+                title: "1. Selectores Básicos",
+                desc: "Usa document.getElementById para seleccionar elementos y cambiar sus propiedades básicas.",
+                explanation: "<strong>El DOM (Document Object Model)</strong> es una representación en árbol de tu página HTML. <br><br><code>getElementById</code> es el método más rápido y común para encontrar un elemento específico por su ID único. Una vez seleccionado, obtienes un objeto JavaScript que representa ese elemento, y puedes modificar sus propiedades (como <code>style</code>, <code>innerText</code>, etc.) para cambiar su apariencia o contenido dinámicamente.",
+                html: `
+<h1 id="titulo">Hola Mundo DOM</h1>
+<p id="parrafo">Este es un párrafo de prueba.</p>
+<div id="caja" class="caja">Soy una caja</div>
+`,
+                code: `// 1. Seleccionamos el elemento por su ID
+// document.getElementById('id') busca en el HTML un elemento con ese id único.
+const titulo = document.getElementById('titulo');
+
+// 2. Modificamos sus propiedades
+// .style accede a los estilos CSS en línea del elemento.
+titulo.style.color = 'red'; // Cambia el color del texto a rojo.
+titulo.style.textAlign = 'center'; // Alinea el texto al centro.
+
+// ¡Intenta cambiar el color de la caja también!
+// const caja = document.getElementById('caja');
+// caja.style.backgroundColor = 'blue';`
+            },
+            {
+                title: "2. Modificar Texto",
+                desc: "Diferencia entre innerText (solo texto) e innerHTML (interpreta etiquetas HTML).",
+                explanation: "<code>innerText</code> trata todo el contenido como texto plano, lo que es seguro para evitar inyección de código. <br><br><code>innerHTML</code> analiza el contenido como HTML, permitiendo insertar etiquetas como <code>&lt;b&gt;</code> o <code>&lt;span&gt;</code>. <br>⚠️ <strong>¡Cuidado!</strong> Usar <code>innerHTML</code> con datos de usuarios puede ser inseguro (XSS).",
+                html: `
+<p id="mensaje">Texto original</p>
+<div id="contenedor"></div>
+`,
+                code: `const mensaje = document.getElementById('mensaje');
+const contenedor = document.getElementById('contenedor');
+
+// .innerText: Propiedad para leer o escribir SOLO texto.
+// Si pones etiquetas HTML aquí, se verán como texto plano.
+mensaje.innerText = "¡He cambiado el texto!";
+
+// .innerHTML: Propiedad que interpreta el contenido como HTML.
+// Útil para insertar estructuras complejas (negritas, listas, etc.).
+contenedor.innerHTML = "<b>Texto en negrita</b> y <i>cursiva</i> creado con JS";`
+            },
+            {
+                title: "3. Estilos CSS",
+                desc: "Accede a la propiedad .style para modificar la apariencia dinámicamente.",
+                explanation: "La propiedad <code>.style</code> permite aplicar estilos en línea (inline styles). <br><br>Ten en cuenta que en JavaScript las propiedades CSS con guiones (kebab-case) se convierten a <strong>camelCase</strong> (ej. <code>background-color</code> pasa a <code>backgroundColor</code>).",
+                html: `
+<div id="tarjeta" style="padding: 20px; border: 1px solid #ccc; width: 200px;">
+    Soy una tarjeta
+</div>
+`,
+                code: `const tarjeta = document.getElementById('tarjeta');
+
+// Las propiedades CSS con guiones se escriben en camelCase en JavaScript.
+// background-color -> backgroundColor
+// border-radius -> borderRadius
+
+tarjeta.style.backgroundColor = '#f0f0f0'; // Cambia el fondo.
+tarjeta.style.borderRadius = '10px';       // Redondea las esquinas.
+tarjeta.style.boxShadow = '5px 5px 15px rgba(0,0,0,0.2)'; // Añade sombra.
+                tarjeta.style.color = '#333';              // Cambia color de letra.`
+            },
+            {
+                title: "4. Crear Elementos",
+                desc: "Aprende a crear nuevos nodos HTML y agregarlos al documento con appendChild.",
+                explanation: "Crear elementos dinámicamente requiere 3 pasos: <ol><li>Crear el nodo en memoria con <code>document.createElement('tag')</code>.</li><li>Configurarlo (texto, clases, estilos).</li><li>Insertarlo en el DOM con <code>padre.appendChild(hijo)</code>.</li></ol>Sin el paso 3, el elemento existe en memoria pero no se ve en la página.",
+                html: `
+<h3>Lista de Tareas:</h3>
+<ul id="lista">
+    <li>Tarea 1</li>
+</ul>
+`,
+                code: `const lista = document.getElementById('lista');
+
+// 1. document.createElement('etiqueta'): Crea un nuevo elemento en memoria (aún no visible).
+const nuevaTarea = document.createElement('li');
+
+// 2. Configurar el elemento (texto, estilos, clases).
+nuevaTarea.innerText = "Nueva Tarea creada con JS";
+nuevaTarea.style.color = 'green';
+
+// 3. padre.appendChild(hijo): Agrega el nuevo elemento al final del elemento padre.
+lista.appendChild(nuevaTarea);`
+            },
+            {
+                title: "5. Eventos Click",
+                desc: "Haz que tu página reaccione a las acciones del usuario con addEventListener.",
+                explanation: "Los eventos hacen la página interactiva. <code>addEventListener</code> es la forma moderna y recomendada de escuchar eventos. <br><br>Recibe dos argumentos: el tipo de evento ('click', 'mouseover', 'keydown') y una función 'callback' que se ejecuta cuando el evento ocurre.",
+                html: `
+<button id="miBoton" style="padding: 10px 20px; cursor: pointer;">¡Hazme Click!</button>
+<p id="contador">Clicks: 0</p>
+`,
+                code: `const boton = document.getElementById('miBoton');
+const contador = document.getElementById('contador');
+let numero = 0;
+
+// .addEventListener('evento', funcion): Escucha cuando ocurre algo (ej. click).
+boton.addEventListener('click', () => {
+    numero++; // Incrementamos variable
+    
+    // Actualizamos el texto en pantalla
+    contador.innerText = "Clicks: " + numero;
+    
+    // Cambiamos estilo dinámicamente según si es par o impar
+    boton.style.backgroundColor = numero % 2 === 0 ? '#ff9800' : '#4caf50';
+});`
+            },
+            {
+                title: "6. Formularios (Inputs)",
+                desc: "Lee valores de inputs en tiempo real y maneja el evento submit.",
+                explanation: "Para leer lo que escribe el usuario, usamos la propiedad <code>.value</code> de los inputs. <br><br>El evento <code>input</code> se dispara en tiempo real cada vez que el valor cambia (mientras se escribe), mientras que <code>change</code> se dispara solo al perder el foco o confirmar el cambio.",
+                html: `
+<div style="padding: 10px; border: 1px solid #444;">
+    <input type="text" id="nombreInput" placeholder="Escribe tu nombre..." style="padding: 5px;">
+    <p id="saludoOutput">Hola, ...</p>
+</div>
+`,
+                code: `const input = document.getElementById('nombreInput');
+const salida = document.getElementById('saludoOutput');
+
+// Evento 'input': Se dispara cada vez que el valor del campo cambia (al escribir).
+input.addEventListener('input', (e) => {
+    // e.target: Es el elemento que disparó el evento (el input).
+    // .value: Propiedad que contiene el texto actual del input.
+    const valor = e.target.value;
+    
+    salida.innerText = "Hola, " + valor;
+    
+    // Validación simple visual
+    if(valor.length > 5) {
+        salida.style.color = '#4caf50'; // Verde si es largo
+    } else {
+        salida.style.color = '#e94560'; // Rojo si es corto
+    }
+});`
+            },
+            {
+                title: "7. Delegación de Eventos",
+                desc: "Eficiencia: Un solo listener para múltiples elementos hijos.",
+                explanation: "La <strong>delegación de eventos</strong> aprovecha el 'burbujeo' (bubbling). <br><br>En lugar de poner un listener en cada uno de los 100 hijos, pones uno solo en el padre. Cuando haces click en un hijo, el evento sube hasta el padre, donde puedes capturarlo usando <code>e.target</code> para saber exactamente qué elemento fue clickeado.",
+                html: `
+<ul id="listaPadre" style="cursor: pointer;">
+    <li>Elemento 1</li>
+    <li>Elemento 2</li>
+    <li>Elemento 3</li>
+    <li>Elemento 4</li>
+</ul>
+<p id="infoClick">Haz click en un elemento...</p>
+`,
+                code: `const lista = document.getElementById('listaPadre');
+const info = document.getElementById('infoClick');
+
+// Agregamos el evento AL PADRE (ul), no a cada hijo (li).
+// Esto es más eficiente que poner 100 listeners si hubiera 100 elementos.
+lista.addEventListener('click', (e) => {
+    // e.target: El elemento exacto donde se hizo click.
+    // .tagName: El nombre de la etiqueta en mayúsculas (LI, DIV, SPAN).
+    
+    if(e.target.tagName === 'LI') {
+        info.innerText = "Click en: " + e.target.innerText;
+        
+        // Resaltar selección temporalmente
+        e.target.style.backgroundColor = '#333';
+        setTimeout(() => {
+            e.target.style.backgroundColor = 'transparent';
+        }, 500);
+    }
+});`
+            },
+            {
+                title: "8. LocalStorage",
+                desc: "Guarda datos en el navegador que no se borran al recargar.",
+                explanation: "<code>localStorage</code> permite guardar pares clave-valor en el navegador del usuario. <br><br>Los datos persisten incluso si cierras la pestaña o reinicias el navegador. <br>⚠️ Solo puede guardar texto (strings), por lo que para guardar objetos o arrays debes usar <code>JSON.stringify()</code> al guardar y <code>JSON.parse()</code> al leer.",
+                html: `
+<input id="notaInput" placeholder="Nota rápida...">
+<button id="btnGuardar">Guardar</button>
+<button id="btnBorrar">Borrar</button>
+<p>Guardado: <span id="valorGuardado" style="color: yellow;">(vacío)</span></p>
+`,
+                code: `const input = document.getElementById('notaInput');
+const display = document.getElementById('valorGuardado');
+
+// localStorage: Objeto global para guardar datos persistentes (clave-valor).
+
+// 1. Cargar dato al iniciar
+// .getItem('clave'): Recupera el valor guardado. Devuelve null si no existe.
+const datoGuardado = localStorage.getItem('miNota');
+if(datoGuardado) {
+    display.innerText = datoGuardado;
+}
+
+// 2. Guardar
+document.getElementById('btnGuardar').addEventListener('click', () => {
+    const valor = input.value;
+    // .setItem('clave', 'valor'): Guarda o actualiza un dato.
+    localStorage.setItem('miNota', valor);
+    display.innerText = valor;
+    alert('¡Guardado en el navegador!');
+});
+
+// 3. Borrar
+document.getElementById('btnBorrar').addEventListener('click', () => {
+    // .removeItem('clave'): Elimina el dato específico.
+    localStorage.removeItem('miNota');
+    display.innerText = '(vacío)';
+});`
+            },
+            {
+                title: "9. Navegación por el DOM",
+                desc: "Muévete entre elementos: padres, hijos y hermanos.",
+                explanation: "El DOM es un árbol genealógico. <br><ul><li><code>parentElement</code>: te lleva al contenedor directo.</li><li><code>children</code>: te da una colección de los hijos directos.</li><li><code>nextElementSibling</code> / <code>previousElementSibling</code>: te permiten moverte horizontalmente entre elementos del mismo nivel (hermanos).</li></ul>",
+                html: `
+<div id="padre" style="border: 1px solid #666; padding: 10px;">
+    <p>Soy el primer hijo</p>
+    <ul id="listaHermanos">
+        <li id="item1">Item 1 (Start)</li>
+        <li id="item2">Item 2 (Middle)</li>
+        <li id="item3">Item 3 (End)</li>
+    </ul>
+    <p>Soy el último hijo</p>
+</div>
+<div id="infoNav" style="margin-top: 10px; color: #4caf50;"></div>
+`,
+                code: `const lista = document.getElementById('listaHermanos');
+const item1 = document.getElementById('item1');
+const info = document.getElementById('infoNav');
+
+// 1. Navegar hacia el padre
+// .parentElement: Accede al elemento contenedor directo.
+const padreDeLista = lista.parentElement;
+padreDeLista.style.borderColor = 'gold'; // Resaltamos el padre
+
+// 2. Navegar hacia los hijos
+// .children: Colección de elementos hijos (HTMLCollection).
+// .firstElementChild / .lastElementChild: Primer y último hijo directo.
+const primerHijo = lista.firstElementChild;
+primerHijo.style.fontWeight = 'bold';
+
+// 3. Navegar entre hermanos
+// .nextElementSibling: El siguiente hermano (mismo nivel).
+// .previousElementSibling: El hermano anterior.
+const item2 = item1.nextElementSibling;
+item2.innerText += " (Encontrado por navegación)";
+item2.style.color = 'cyan';
+
+info.innerText = "Padre es: " + padreDeLista.tagName + 
+                 " | Hijos en lista: " + lista.children.length;`
+            },
+            {
+                title: "10. Atributos y Propiedades",
+                desc: "Diferencia entre atributos HTML (iniciales) y propiedades DOM (actuales).",
+                explanation: "<ul><li><strong>Atributos:</strong> Están en el HTML (escritos en el código fuente). <code>getAttribute()</code> lee este valor inicial.</li><li><strong>Propiedades:</strong> Están en el objeto DOM (en memoria). <code>.value</code> lee el estado actual vivo (lo que el usuario ha escrito).</li></ul>A veces coinciden, pero en inputs suelen ser diferentes.",
+                html: `
+<input id="miInput" type="text" value="Valor Inicial" data-info="12345">
+<button id="btnCheck">Ver Diferencias</button>
+<p id="resultadoAttrs"></p>
+`,
+                code: `const input = document.getElementById('miInput');
+const btn = document.getElementById('btnCheck');
+const res = document.getElementById('resultadoAttrs');
+
+// Escribe algo nuevo en el input antes de pulsar el botón...
+
+btn.addEventListener('click', () => {
+    // 1. Atributo (HTML): Lo que está escrito en el HTML original.
+    // .getAttribute('nombre'): Lee el valor inicial/estático.
+    const attrValue = input.getAttribute('value');
+    
+    // 2. Propiedad (DOM): El valor actual en memoria (lo que ves).
+    // .value: Lee el estado actual vivo.
+    const propValue = input.value;
+    
+    // 3. Dataset: Para atributos personalizados data-*
+    const dataInfo = input.dataset.info; // lee data-info
+    
+    res.innerHTML = 
+        "<b>Atributo (HTML):</b> " + attrValue + "<br>" +
+        "<b>Propiedad (Vivo):</b> " + propValue + "<br>" +
+        "<b>Data-Info:</b> " + dataInfo;
+});`
+            },
+            {
+                title: "11. Geometría y Scroll",
+                desc: "Mide elementos y controla el desplazamiento (scroll).",
+                explanation: "<ul><li><code>offsetWidth/Height</code>: Tamaño total visible (contenido + padding + bordes).</li><li><code>clientWidth/Height</code>: Tamaño del contenido visible (contenido + padding, SIN bordes ni scrollbars).</li><li><code>scrollTop</code>: Mide cuántos píxeles se ha desplazado el contenido hacia arriba (scroll vertical).</li></ul>",
+                html: `
+<div id="cajaScroll" style="width: 150px; height: 100px; overflow-y: scroll; border: 2px solid #fff;">
+    <div style="height: 300px; background: linear-gradient(#444, #888);">
+        Contenido alto...<br>Sigue bajando...<br>...<br>...<br>Final.
+    </div>
+</div>
+<button id="btnMedir">Medir y Scroll</button>
+<p id="infoGeo"></p>
+`,
+                code: `const caja = document.getElementById('cajaScroll');
+const btn = document.getElementById('btnMedir');
+const info = document.getElementById('infoGeo');
+
+btn.addEventListener('click', () => {
+    // 1. Geometría
+    // .offsetWidth/Height: Tamaño total visible (incluye bordes/padding).
+    // .clientWidth/Height: Tamaño del contenido visible (sin bordes/scrollbars).
+    const anchoTotal = caja.offsetWidth;
+    const altoCliente = caja.clientHeight;
+    
+    // 2. Scroll
+    // .scrollTop: Cuántos píxeles se ha desplazado hacia abajo.
+    // .scrollHeight: Altura TOTAL del contenido (incluyendo lo no visible).
+    const scrollActual = Math.floor(caja.scrollTop);
+    
+    info.innerHTML = 
+        "Ancho Total: " + anchoTotal + "px<br>" +
+        "Alto Visible: " + altoCliente + "px<br>" +
+        "Scroll Top: " + scrollActual + "px";
+        
+    // Hacer scroll automático al final
+    // caja.scrollTop = caja.scrollHeight;
+});`
+            },
+            {
+                title: "12. Selectores Modernos",
+                desc: "Usa querySelector y querySelectorAll para buscar elementos con selectores CSS.",
+                explanation: "<ul><li><code>querySelector</code>: Devuelve el <strong>primer</strong> elemento que coincide con un selector CSS (como <code>.clase</code>, <code>#id</code>, o <code>div > p</code>).</li><li><code>querySelectorAll</code>: Devuelve una <strong>NodeList</strong> con <strong>todos</strong> los elementos coincidentes.</li></ul>Son más flexibles que <code>getElementById</code> pero ligeramente más lentos.",
+                html: `
+<div class="caja-moderna" style="padding: 5px; margin: 5px; border: 1px solid #444;">Caja 1</div>
+<div class="caja-moderna" style="padding: 5px; margin: 5px; border: 1px solid #444;">Caja 2</div>
+<div class="caja-moderna" style="padding: 5px; margin: 5px; border: 1px solid #444;">Caja 3</div>
+<p id="unico">Soy un párrafo único</p>
+`,
+                code: `// 1. querySelector: Devuelve el PRIMER elemento que coincida con el selector CSS.
+const primeraCaja = document.querySelector('.caja-moderna');
+primeraCaja.style.border = '2px solid gold';
+primeraCaja.innerText += " (Primero)";
+
+// 2. querySelectorAll: Devuelve TODOS los elementos (NodeList).
+const todasLasCajas = document.querySelectorAll('.caja-moderna');
+
+// Podemos recorrerlas con forEach (a diferencia de getElementsByClassName que requiere conversión)
+todasLasCajas.forEach((caja, index) => {
+    caja.style.backgroundColor = '#222';
+    // Solo a los que no son el primero
+    if(index > 0) caja.innerText += " (Otros)";
+});
+
+// Selectores complejos (ID + etiqueta)
+const unico = document.querySelector('p#unico');
+unico.style.color = 'cyan';`
+            },
+            {
+                title: "13. Clases CSS (classList)",
+                desc: "Usa classList para añadir, quitar o alternar clases CSS. Es más limpio que usar .style.",
+                explanation: "Manipular <code>className</code> sobrescribe todas las clases (es destructivo). <br><br>Es mejor usar la propiedad <code>classList</code> que ofrece métodos seguros: <ul><li><code>.add('clase')</code></li><li><code>.remove('clase')</code></li><li><code>.toggle('clase')</code></li><li><code>.contains('clase')</code></li></ul>",
+                html: `
+<style>
+    .resaltado { background-color: #ffeb3b; color: black; font-weight: bold; }
+    .borde-rojo { border: 3px solid #f44336; }
+</style>
+<div id="elementoClase" style="padding: 20px; background: #333; transition: all 0.3s;">
+    Elemento de prueba
+</div>
+<button id="btnToggle" style="margin-top: 10px;">Alternar Resaltado</button>
+`,
+                code: `const elem = document.getElementById('elementoClase');
+const btn = document.getElementById('btnToggle');
+
+// 1. add: Añadir clase
+elem.classList.add('borde-rojo');
+
+// 2. remove: Quitar clase
+// elem.classList.remove('borde-rojo');
+
+// 3. toggle: Si la clase existe la quita, si no, la añade.
+btn.addEventListener('click', () => {
+    elem.classList.toggle('resaltado');
+    
+    // 4. contains: Verificar si tiene la clase (devuelve true/false)
+    if(elem.classList.contains('resaltado')) {
+        btn.innerText = "Quitar Resaltado";
+    } else {
+        btn.innerText = "Poner Resaltado";
+    }
+});`
+            },
+            {
+                title: "14. Coordenadas (Viewport)",
+                desc: "Obtén la posición exacta de un elemento respecto a la ventana con getBoundingClientRect.",
+                explanation: "<code>getBoundingClientRect()</code> devuelve un objeto con el tamaño y la posición de un elemento relativo a la ventana visible (viewport). <br><br>Propiedades: <code>top</code>, <code>left</code>, <code>right</code>, <code>bottom</code>, <code>width</code>, <code>height</code>. <br>Es fundamental para animaciones complejas, drag & drop, o saber si un elemento es visible en pantalla.",
+                html: `
+<div style="height: 50px;">Espacio superior...</div>
+<div id="objetivo" style="width: 100px; height: 100px; background: #e91e63; margin-left: 50px;">
+    Objetivo
+</div>
+<button id="btnCoords" style="margin-top: 20px;">Ver Coordenadas</button>
+<p id="infoCoords"></p>
+`,
+                code: `const objetivo = document.getElementById('objetivo');
+const btn = document.getElementById('btnCoords');
+const info = document.getElementById('infoCoords');
+
+btn.addEventListener('click', () => {
+    // getBoundingClientRect() devuelve un objeto DOMRect con {top, right, bottom, left, width, height}
+    // Las coordenadas son relativas a la ventana visible (viewport).
+    const rect = objetivo.getBoundingClientRect();
+    
+    info.innerHTML = 
+        "Top (desde arriba): " + Math.floor(rect.top) + "px<br>" +
+        "Left (desde izquierda): " + Math.floor(rect.left) + "px<br>" +
+        "Width: " + rect.width + "px";
+        
+    // Es muy útil para animaciones, tooltips o saber si un elemento es visible.
+});`
+            }
+        ];
+
+        // --- ESTADO ---
+        let currentLessonIndex = 0;
+        let editorInstance;
+
+        // --- DOM ELEMENTS ---
+        const dom = {
+            lessonList: document.getElementById('lesson-list'),
+            title: document.getElementById('lesson-title'),
+            desc: document.getElementById('lesson-desc'),
+            explanation: document.getElementById('lesson-explanation'),
+            btnTheory: document.getElementById('btn-toggle-theory'),
+            editorContainer: document.getElementById('code-editor'),
+            playground: document.getElementById('playground'),
+            btnRun: document.querySelector('.btn-run'),
+            btnReset: document.querySelector('.btn-reset')
+        };
+
+        // --- MONACO INIT ---
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+
+        require(['vs/editor/editor.main'], function() {
+            editorInstance = monaco.editor.create(dom.editorContainer, {
+                value: lessons[0].code,
+                language: 'javascript',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                minimap: { enabled: false }
+            });
+
+            // Add Ctrl+Enter shortcut
+            editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, function() {
+                runCode();
+            });
+
+            init();
+        });
+
+        // --- FUNCIONES ---
+        function init() {
+            renderSidebar();
+            loadLesson(0);
+            setupListeners();
+        }
+
+        function renderSidebar() {
+            dom.lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.textContent = lesson.title;
+                btn.onclick = () => loadLesson(index);
+                dom.lessonList.appendChild(btn);
+            });
+        }
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            const lesson = lessons[index];
+
+            // Actualizar UI Sidebar
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                if (i === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            // Cargar contenido
+            dom.title.textContent = lesson.title;
+            dom.desc.textContent = lesson.desc;
+            dom.explanation.innerHTML = lesson.explanation || "Sin explicación detallada.";
+            dom.explanation.classList.remove('visible');
+            dom.btnTheory.textContent = "📖 Ver Explicación Teórica";
+            
+            if(editorInstance) {
+                editorInstance.setValue(lesson.code);
+            }
+            
+            dom.playground.innerHTML = lesson.html;
+        }
+
+        function runCode() {
+            if(!editorInstance) return;
+            
+            // Restaurar HTML original de la lección antes de ejecutar para evitar duplicados/errores
+            dom.playground.innerHTML = lessons[currentLessonIndex].html;
+
+            const userCode = editorInstance.getValue();
+            
+            try {
+                // Ejecución segura (dentro de lo posible en cliente)
+                // Envolvemos en una función para limitar scope de variables let/const
+                // y evitar conflictos si se ejecuta varias veces
+                const runFunction = new Function(userCode);
+                runFunction();
+            } catch (error) {
+                alert("⚠️ Error en tu código:\n" + error.message);
+            }
+        }
+
+        function setupListeners() {
+            dom.btnRun.onclick = runCode;
+            
+            dom.btnReset.onclick = () => {
+                loadLesson(currentLessonIndex);
+            };
+
+            dom.btnTheory.onclick = () => {
+                dom.explanation.classList.toggle('visible');
+                if(dom.explanation.classList.contains('visible')) {
+                    dom.btnTheory.textContent = "📖 Ocultar Explicación";
+                } else {
+                    dom.btnTheory.textContent = "📖 Ver Explicación Teórica";
+                }
+            };
+
+            // Mobile Menu Toggle
+            const sidebar = document.querySelector('.sidebar');
+            if(sidebar) {
+                const sidebarTitle = sidebar.querySelector('h2');
+                if(sidebarTitle) {
+                    sidebarTitle.onclick = () => {
+                        sidebar.classList.toggle('open');
+                    };
+                }
+            }
+        }
+
+        // Iniciar
+        // init() is called by Monaco loader
+
+    </script>
+</body>
+</html>

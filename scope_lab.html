@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 5: Scope & Closures - Master Suite JS</title>
+    <!-- Monaco Editor Loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --accent: #0f3460;
+            --text-primary: #e94560;
+            --text-secondary: #b2b2b2;
+            --success: #4caf50;
+            --scope-global: #2a2a40;
+            --scope-function: #3a3a55;
+            --scope-block: #4a4a6a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 1fr;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--accent);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .lesson-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--text-secondary);
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .lesson-btn:hover, .lesson-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--text-primary);
+        }
+
+        /* Editor Section */
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--accent);
+            padding: 1rem;
+        }
+
+        .code-editor {
+            flex: 1;
+            background-color: #000;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        .btn-run {
+            background-color: var(--text-primary);
+            color: white;
+        }
+
+        .btn-run:active {
+            transform: scale(0.98);
+        }
+
+        /* Visualization Section */
+        .viz-section {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            background-color: #121212;
+            overflow-y: auto;
+        }
+
+        .console-output {
+            background-color: #000;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            height: 150px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        .log-entry {
+            border-bottom: 1px solid #333;
+            padding: 2px 0;
+        }
+        .log-entry.error { color: #ff4444; }
+        .log-entry.info { color: #4caf50; }
+
+        .scope-visualizer {
+            flex: 1;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            padding: 1rem;
+            position: relative;
+            background-image: radial-gradient(#333 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Scope Boxes */
+        .scope-box {
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .scope-box::before {
+            content: attr(data-label);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background-color: var(--bg-primary);
+            padding: 0 5px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        .scope-global {
+            background-color: rgba(42, 42, 64, 0.8);
+            border-color: #666;
+        }
+
+        .scope-function {
+            background-color: rgba(58, 58, 85, 0.8);
+            border-color: var(--text-primary);
+            margin-left: 2rem;
+        }
+
+        .scope-block {
+            background-color: rgba(74, 74, 106, 0.8);
+            border-color: var(--success);
+            margin-left: 2rem;
+        }
+
+        .variable-item {
+            background-color: rgba(0,0,0,0.5);
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            font-family: monospace;
+        }
+
+        .var-name { color: #4db6ac; }
+        .var-value { color: #ffb74d; }
+        .var-type { color: #999; font-size: 0.8em; margin-left: 0.5rem; }
+
+        .closure-badge {
+            position: absolute;
+            right: 10px;
+            top: -10px;
+            background-color: var(--text-primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { height: auto; overflow: auto; }
+            .main-container { 
+                display: flex; 
+                flex-direction: column; 
+                height: auto;
+                overflow: visible;
+            }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                max-height: 50px; 
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                border-right: none;
+                border-bottom: 1px solid var(--accent);
+                flex-shrink: 0;
+            }
+            .sidebar.open {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            .mobile-menu-title {
+                display: block !important;
+                cursor: pointer;
+                padding: 10px;
+                margin: 0;
+                background: var(--bg-secondary);
+                font-size: 1.1rem;
+                color: var(--text-primary);
+            }
+            
+            .editor-section { height: auto; border-right: none; border-bottom: 1px solid var(--accent); }
+            .viz-section { height: auto; min-height: 500px; overflow-x: hidden; }
+            .code-editor { min-height: 300px; }
+            .scope-visualizer { overflow-x: auto; padding: 0.5rem; }
+            .scope-box { margin: 0.5rem; padding: 1rem; min-width: 200px; }
+            .controls { flex-wrap: wrap; }
+            .btn { flex: 1; padding: 12px; }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="index.html" class="back-btn">← Volver al Hub</a>
+            <h1>Módulo 5: Scope & Closures</h1>
+        </div>
+        <div>
+            <span style="color: var(--text-secondary)">Visualizador de Contexto</span>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="lessonList">
+            <h3 class="mobile-menu-title" style="display: none;">☰ Menú de Lecciones</h3>
+            <!-- Lessons injected by JS -->
+        </aside>
+
+        <section class="editor-section">
+            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                <h3>Editor de Código</h3>
+                <small style="color: var(--text-secondary)">Modifica y Ejecuta</small>
+            </div>
+            <div id="codeEditor" class="code-editor"></div>
+            <div class="controls">
+                <button class="btn btn-run" onclick="runCode()">▶ Ejecutar Código</button>
+                <button class="btn" style="background: #333; color: white;" onclick="resetLesson()">↺ Reiniciar Lección</button>
+            </div>
+        </section>
+
+        <section class="viz-section">
+            <h3>Consola</h3>
+            <div id="consoleOutput" class="console-output"></div>
+            
+            <h3>Visualización de Scope</h3>
+            <div id="scopeViz" class="scope-visualizer">
+                <!-- Scope boxes injected here -->
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #666;">
+                    Ejecuta el código para ver el análisis de Scope
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- Lesson Data ---
+        const lessons = [
+            {
+                id: 1,
+                title: "1. Scope Global vs Local",
+                code: `// Scope Global: Variables declaradas fuera de funciones
+// Son accesibles desde cualquier parte del código
+let mensajeGlobal = "Soy visible en todas partes";
+
+function mostrarMensaje() {
+    // Scope Local (Función): Variables declaradas dentro de una función
+    // Solo existen mientras se ejecuta esta función
+    let mensajeLocal = "Solo soy visible aquí dentro";
+    
+    console.log("Dentro de la función:");
+    console.log(mensajeGlobal); // ✅ Accede al global (scope chain busca hacia arriba)
+    console.log(mensajeLocal);  // ✅ Accede al local
+}
+
+mostrarMensaje();
+
+console.log("Fuera de la función:");
+console.log(mensajeGlobal); // ✅ Funciona
+try {
+    // ❌ Error: mensajeLocal no existe fuera de la función
+    console.log(mensajeLocal); 
+} catch(e) {
+    console.log("Error esperado: " + e.message);
+}`,
+                vizData: {
+                    type: "nested",
+                    scopes: [
+                        {
+                            name: "Global Scope",
+                            type: "global",
+                            vars: [{name: "mensajeGlobal", value: '"Soy visible..."'}],
+                            children: [
+                                {
+                                    name: "Function Scope (mostrarMensaje)",
+                                    type: "function",
+                                    vars: [{name: "mensajeLocal", value: '"Solo soy visible..."'}],
+                                    children: []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                id: 2,
+                title: "2. Block Scope (let/const)",
+                code: `function verificarEdad(edad) {
+    let mensaje = ""; // Scope de función
+    
+    if (edad >= 18) {
+        // Block Scope: Creado por llaves {} (if, for, while)
+        // let y const respetan este bloque. var NO.
+        
+        let adulto = true;             // Solo visible dentro del if
+        const tipo = "Mayor de edad";  // Solo visible dentro del if
+        var antiguo = "Yo ignoro el bloque (var)"; // var se "fuga" al scope de función
+        
+        mensaje = "Acceso permitido";
+        console.log(tipo); // ✅ Dentro del bloque funciona
+    }
+    
+    console.log(mensaje);
+    console.log(antiguo); // ✅ Funciona porque es var (Function Scope)
+    
+    try {
+        console.log(adulto); // ❌ Error! 'adulto' murió al cerrar el if }
+    } catch(e) {
+        console.log("Error esperado: " + e.message);
+    }
+}
+
+verificarEdad(20);`,
+                vizData: {
+                    type: "nested",
+                    scopes: [
+                        {
+                            name: "Global Scope",
+                            type: "global",
+                            vars: [],
+                            children: [
+                                {
+                                    name: "Function Scope (verificarEdad)",
+                                    type: "function",
+                                    vars: [
+                                        {name: "edad", value: "20"},
+                                        {name: "mensaje", value: '"Acceso permitido"'},
+                                        {name: "antiguo", value: '"Yo ignoro el bloque..."'}
+                                    ],
+                                    children: [
+                                        {
+                                            name: "Block Scope (if)",
+                                            type: "block",
+                                            vars: [
+                                                {name: "adulto", value: "true"},
+                                                {name: "tipo", value: '"Mayor de edad"'}
+                                            ],
+                                            children: []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                id: 3,
+                title: "3. Closures (Clausuras)",
+                code: `function crearContador() {
+    // Esta variable vive en el scope de crearContador
+    let cuenta = 0; 
+    
+    // Retornamos una función. Esta función "recuerda" el scope donde nació.
+    // Esto es un CLOSURE: una función + su entorno léxico.
+    return function() {
+        cuenta++; // Accede a 'cuenta' aunque crearContador ya terminó
+        console.log("Cuenta actual: " + cuenta);
+        return cuenta;
+    };
+}
+
+const miContador = crearContador();
+// En este punto, crearContador() ya finalizó.
+// Normalmente sus variables se borrarían de memoria.
+// PERO, como 'miContador' mantiene una referencia, 'cuenta' sigue viva en la "Mochila" (Closure).
+
+miContador(); // 1
+miContador(); // 2
+miContador(); // 3`,
+                vizData: {
+                    type: "closure",
+                    scopes: [
+                        {
+                            name: "Global Scope",
+                            type: "global",
+                            vars: [{name: "miContador", value: "Function"}],
+                            children: [
+                                {
+                                    name: "Closure Scope (Mochila)",
+                                    type: "function",
+                                    isClosure: true,
+                                    vars: [{name: "cuenta", value: "3"}],
+                                    children: []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                id: 4,
+                title: "4. Hoisting (Elevación)",
+                code: `// Hoisting: JS mueve las declaraciones al inicio del scope antes de ejecutar.
+
+// 1. var se eleva como undefined
+console.log(saludo); // undefined (no da error, pero no tiene valor aún)
+var saludo = "Hola mundo";
+
+// 2. Las funciones declaradas se elevan COMPLETAS
+saludar(); // ✅ Funciona perfectamente antes de declararla
+
+function saludar() {
+    console.log("¡Función elevada!");
+}
+
+// 3. let y const TAMBIÉN se elevan, pero a una "Zona Muerta Temporal" (TDZ)
+// No se pueden usar hasta que la línea de código se ejecuta.
+try {
+    console.log(despedida); // ❌ Error: Cannot access before initialization
+} catch(e) {
+    console.log("Error TDZ: " + e.message);
+}
+
+let despedida = "Adiós";`,
+                vizData: {
+                    type: "nested",
+                    scopes: [
+                        {
+                            name: "Global Scope (Fase de Creación)",
+                            type: "global",
+                            vars: [
+                                {name: "saludar", value: "Function (Elevada completa)"},
+                                {name: "saludo", value: "undefined (Elevada parcial)"},
+                                {name: "despedida", value: "<TDZ> (Zona Muerta Temporal)"}
+                            ],
+                            children: []
+                        }
+                    ]
+                }
+            },
+            {
+                id: 5,
+                title: "5. Contexto 'this'",
+                code: `const usuario = {
+    nombre: "Ana",
+    // Método normal: 'this' es el objeto que llama al método (usuario)
+    saludar: function() {
+        console.log("Hola, soy " + this.nombre);
+    },
+    // Arrow Function: NO tiene su propio 'this'. Lo hereda del contexto padre.
+    // Aquí el padre es el scope global (window), no el objeto usuario.
+    saludarFlecha: () => {
+        console.log("Arrow: Hola, soy " + this.nombre); 
+    }
+};
+
+usuario.saludar();       // ✅ 'this' es usuario -> "Ana"
+usuario.saludarFlecha(); // ⚠️ 'this' es global -> undefined
+
+// Pérdida de contexto
+const saludarSuelta = usuario.saludar;
+// Al sacarla del objeto, 'this' deja de ser 'usuario' y pasa a ser global/undefined
+try {
+    saludarSuelta(); 
+} catch(e) {
+    console.log("Error al llamar suelta: " + e.message);
+}`,
+                vizData: {
+                    type: "nested",
+                    scopes: [
+                        {
+                            name: "Objeto 'usuario'",
+                            type: "block",
+                            vars: [{name: "nombre", value: '"Ana"'}],
+                            children: []
+                        },
+                        {
+                            name: "Ejecución usuario.saludar()",
+                            type: "function",
+                            vars: [{name: "this", value: "Objeto usuario"}],
+                            children: []
+                        },
+                        {
+                            name: "Ejecución saludarSuelta()",
+                            type: "function",
+                            vars: [{name: "this", value: "undefined / Global"}],
+                            children: []
+                        }
+                    ]
+                }
+            }
+        ];
+
+        let currentLessonIndex = 0;
+        let editorInstance;
+
+        // --- Monaco Init ---
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+
+        require(['vs/editor/editor.main'], function() {
+            editorInstance = monaco.editor.create(document.getElementById('codeEditor'), {
+                value: lessons[0].code,
+                language: 'javascript',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                minimap: { enabled: false }
+            });
+
+            // Add Ctrl+Enter shortcut
+            editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, function() {
+                runCode();
+            });
+
+            init();
+        });
+
+        // --- Initialization ---
+        function init() {
+            const lessonList = document.getElementById('lessonList');
+            lessonList.innerHTML = '';
+            
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `lesson-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = lesson.title;
+                btn.onclick = () => loadLesson(index);
+                lessonList.appendChild(btn);
+            });
+
+            loadLesson(0);
+
+            // Mobile Menu Toggle
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarTitle = sidebar.querySelector('.mobile-menu-title');
+            if(sidebarTitle) {
+                sidebarTitle.onclick = () => {
+                    sidebar.classList.toggle('open');
+                };
+            }
+        }
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            // Update UI buttons
+            document.querySelectorAll('.lesson-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+
+            // Set Code
+            if(editorInstance) {
+                editorInstance.setValue(lessons[index].code);
+            }
+            
+            // Clear Output
+            document.getElementById('consoleOutput').innerHTML = '';
+            document.getElementById('scopeViz').innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #666;">
+                    Ejecuta el código para ver el análisis de Scope
+                </div>
+            `;
+        }
+
+        function resetLesson() {
+            loadLesson(currentLessonIndex);
+        }
+
+        // --- Execution Engine ---
+        function runCode() {
+            if(!editorInstance) return;
+            const code = editorInstance.getValue();
+            const consoleDiv = document.getElementById('consoleOutput');
+            consoleDiv.innerHTML = '';
+
+            // Mock Console
+            const mockConsole = {
+                log: (...args) => {
+                    const line = document.createElement('div');
+                    line.className = 'log-entry info';
+                    line.innerText = args.map(arg => 
+                        typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+                    ).join(' ');
+                    consoleDiv.appendChild(line);
+                    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+                },
+                error: (...args) => {
+                    const line = document.createElement('div');
+                    line.className = 'log-entry error';
+                    line.innerText = args.join(' ');
+                    consoleDiv.appendChild(line);
+                }
+            };
+
+            try {
+                // Execute Code
+                const run = new Function('console', code);
+                run(mockConsole);
+                
+                // Render Visualization (Static for now, based on lesson data)
+                // In a real advanced tool, we would parse the AST or use a Proxy to track variables.
+                renderVisualization(lessons[currentLessonIndex].vizData);
+
+            } catch (e) {
+                mockConsole.error("Error de ejecución: " + e.message);
+            }
+        }
+
+        // --- Visualization Engine ---
+        function renderVisualization(data) {
+            const container = document.getElementById('scopeViz');
+            container.innerHTML = '';
+
+            if (!data || !data.scopes) return;
+
+            function createScopeBox(scopeData) {
+                const box = document.createElement('div');
+                box.className = `scope-box scope-${scopeData.type}`;
+                box.setAttribute('data-label', scopeData.name);
+
+                if (scopeData.isClosure) {
+                    const badge = document.createElement('span');
+                    badge.className = 'closure-badge';
+                    badge.innerText = 'Closure';
+                    box.appendChild(badge);
+                }
+
+                // Variables
+                if (scopeData.vars && scopeData.vars.length > 0) {
+                    scopeData.vars.forEach(v => {
+                        const vItem = document.createElement('div');
+                        vItem.className = 'variable-item';
+                        vItem.innerHTML = `
+                            <span class="var-name">${v.name}</span>
+                            <span>
+                                <span class="var-value">${v.value}</span>
+                            </span>
+                        `;
+                        box.appendChild(vItem);
+                    });
+                } else {
+                    const empty = document.createElement('div');
+                    empty.style.color = '#666';
+                    empty.style.fontStyle = 'italic';
+                    empty.innerText = '(Vacío)';
+                    box.appendChild(empty);
+                }
+
+                // Children
+                if (scopeData.children) {
+                    scopeData.children.forEach(child => {
+                        box.appendChild(createScopeBox(child));
+                    });
+                }
+
+                return box;
+            }
+
+            data.scopes.forEach(scope => {
+                container.appendChild(createScopeBox(scope));
+            });
+        }
+
+        // Start
+        // init() is called by Monaco loader
+
+    </script>
+</body>
+</html>

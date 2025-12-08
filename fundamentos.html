@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funciones en JavaScript y Operadores</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+
+        .nav-cta {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .btn-cta {
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background: #f57c00;
+        }
+        
+        .seccion {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .seccion h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 10px 18px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        thead {
+            background: #667eea;
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #ddd;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        
+        tbody tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .simbolo {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 16px;
+        }
+        
+        .categoria {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .categoria.aritmetico {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .categoria.asignacion {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .categoria.comparacion {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .categoria.logico {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .categoria.otro {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .ejemplo {
+            background: #f9f9f9;
+            border-left: 3px solid #667eea;
+            padding: 8px;
+            margin-top: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .resultado {
+            color: #388e3c;
+            font-weight: 600;
+        }
+        
+        tr.hidden {
+            display: none;
+        }
+
+        .codigo {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .codigo-linea {
+            line-height: 1.6;
+            display: block;
+        }
+        
+        .palabra-clave {
+            color: #ff79c6;
+        }
+        
+        .string {
+            color: #f1fa8c;
+        }
+        
+        .numero {
+            color: #bd93f9;
+        }
+        
+        .comentario {
+            color: #6272a4;
+        }
+
+        .boton-interactivo {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        
+        .boton-interactivo:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .resultado-ejecutar {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            color: #2e7d32;
+            font-weight: 500;
+            min-height: 60px;
+            display: none;
+            line-height: 1.8;
+        }
+
+        .resultado-ejecutar.mostrar {
+            display: block;
+        }
+
+        .punto {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .paso {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        
+        .paso-numero {
+            font-weight: bold;
+            color: #1976d2;
+            margin-right: 8px;
+        }
+
+        ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        ul li {
+            margin-bottom: 4px;
+        }
+
+        details {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: #444;
+        }
+
+        details summary:hover {
+            color: #000;
+        }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.8em; margin-bottom: 20px; }
+            .seccion { padding: 15px; }
+            .btn-cta { width: 100%; text-align: center; }
+            .filter-buttons { flex-direction: column; }
+            .filter-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 JavaScript: Operadores y Funciones</h1>
+        
+        <div class="nav-cta">
+            <a href="index.html" class="btn-cta">🏠 Volver al Menú</a>
+        </div>
+
+        <!-- TABLA DE OPERADORES -->
+        <div class="seccion">
+            <h2>📋 Tabla de Operadores en JavaScript</h2>
+
+            <p>
+                <span class="punto">¿Qué es un operador?</span>
+                Es un símbolo que le dice a JavaScript qué operación debe realizar entre uno o más valores.
+            </p>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filtrarTabla('todos', this)">Todos</button>
+                <button class="filter-btn" onclick="filtrarTabla('aritmetico', this)">Aritméticos</button>
+                <button class="filter-btn" onclick="filtrarTabla('asignacion', this)">Asignación</button>
+                <button class="filter-btn" onclick="filtrarTabla('comparacion', this)">Comparación</button>
+                <button class="filter-btn" onclick="filtrarTabla('logico', this)">Lógicos</button>
+                <button class="filter-btn" onclick="filtrarTabla('otro', this)">Otros</button>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Símbolo</th>
+                        <th style="width: 15%;">Tipo</th>
+                        <th style="width: 20%;">Nombre</th>
+                        <th style="width: 20%;">Descripción</th>
+                        <th style="width: 35%;">Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Aritméticos -->
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">+</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>Suma</td>
+                        <td>Suma dos números o concatena strings</td>
+                        <td class="ejemplo">5 + 3 <span class="resultado">→ 8</span><br>"Hola" + " Mundo" <span class="resultado">→ "Hola Mundo"</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">-</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>Resta</td>
+                        <td>Resta el segundo número del primero</td>
+                        <td class="ejemplo">10 - 3 <span class="resultado">→ 7</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">*</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>Multiplicación</td>
+                        <td>Multiplica dos números</td>
+                        <td class="ejemplo">4 * 5 <span class="resultado">→ 20</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">/</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>División</td>
+                        <td>Divide el primer número entre el segundo</td>
+                        <td class="ejemplo">20 / 4 <span class="resultado">→ 5</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">%</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>Módulo</td>
+                        <td>Devuelve el residuo de una división</td>
+                        <td class="ejemplo">10 % 3 <span class="resultado">→ 1</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">**</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>Exponenciación</td>
+                        <td>Eleva el primer número a la potencia del segundo</td>
+                        <td class="ejemplo">2 ** 3 <span class="resultado">→ 8</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">++</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>Incremento</td>
+                        <td>Aumenta el valor en 1</td>
+                        <td class="ejemplo">let x = 5; x++ <span class="resultado">→ x = 6</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="aritmetico">
+                        <td class="simbolo">--</td>
+                        <td><span class="categoria aritmetico">Aritmético</span></td>
+                        <td>Decremento</td>
+                        <td>Disminuye el valor en 1</td>
+                        <td class="ejemplo">let y = 5; y-- <span class="resultado">→ y = 4</span></td>
+                    </tr>
+                    
+                    <!-- Asignación -->
+                    <tr data-categoria="asignacion">
+                        <td class="simbolo">=</td>
+                        <td><span class="categoria asignacion">Asignación</span></td>
+                        <td>Asignación</td>
+                        <td>Asigna un valor a una variable</td>
+                        <td class="ejemplo">let x = 10;</td>
+                    </tr>
+                    
+                    <tr data-categoria="asignacion">
+                        <td class="simbolo">+=</td>
+                        <td><span class="categoria asignacion">Asignación</span></td>
+                        <td>Suma y asigna</td>
+                        <td>Suma y luego asigna el resultado</td>
+                        <td class="ejemplo">let x = 5; x += 3 <span class="resultado">→ x = 8</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="asignacion">
+                        <td class="simbolo">-=</td>
+                        <td><span class="categoria asignacion">Asignación</span></td>
+                        <td>Resta y asigna</td>
+                        <td>Resta y luego asigna el resultado</td>
+                        <td class="ejemplo">let x = 10; x -= 3 <span class="resultado">→ x = 7</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="asignacion">
+                        <td class="simbolo">*=</td>
+                        <td><span class="categoria asignacion">Asignación</span></td>
+                        <td>Multiplica y asigna</td>
+                        <td>Multiplica y luego asigna el resultado</td>
+                        <td class="ejemplo">let x = 5; x *= 2 <span class="resultado">→ x = 10</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="asignacion">
+                        <td class="simbolo">/=</td>
+                        <td><span class="categoria asignacion">Asignación</span></td>
+                        <td>Divide y asigna</td>
+                        <td>Divide y luego asigna el resultado</td>
+                        <td class="ejemplo">let x = 10; x /= 2 <span class="resultado">→ x = 5</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="asignacion">
+                        <td class="simbolo">%=</td>
+                        <td><span class="categoria asignacion">Asignación</span></td>
+                        <td>Módulo y asigna</td>
+                        <td>Calcula módulo y luego asigna</td>
+                        <td class="ejemplo">let x = 10; x %= 3 <span class="resultado">→ x = 1</span></td>
+                    </tr>
+                    
+                    <!-- Comparación -->
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">==</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Igualdad débil</td>
+                        <td>Compara valores (convierte tipos si es necesario)</td>
+                        <td class="ejemplo">5 == "5" <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">===</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Igualdad estricta</td>
+                        <td>Compara valor y tipo (sin conversión)</td>
+                        <td class="ejemplo">5 === "5" <span class="resultado">→ false</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">!=</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Desigualdad débil</td>
+                        <td>Verifica si no son iguales (débil)</td>
+                        <td class="ejemplo">5 != "5" <span class="resultado">→ false</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">!==</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Desigualdad estricta</td>
+                        <td>Verifica si no son iguales (estricto)</td>
+                        <td class="ejemplo">5 !== "5" <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">&lt;</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Menor que</td>
+                        <td>Verifica si el primero es menor</td>
+                        <td class="ejemplo">3 &lt; 5 <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">&gt;</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Mayor que</td>
+                        <td>Verifica si el primero es mayor</td>
+                        <td class="ejemplo">5 &gt; 3 <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">&lt;=</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Menor o igual</td>
+                        <td>Verifica si es menor o igual</td>
+                        <td class="ejemplo">5 &lt;= 5 <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="comparacion">
+                        <td class="simbolo">&gt;=</td>
+                        <td><span class="categoria comparacion">Comparación</span></td>
+                        <td>Mayor o igual</td>
+                        <td>Verifica si es mayor o igual</td>
+                        <td class="ejemplo">5 &gt;= 5 <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <!-- Lógicos -->
+                    <tr data-categoria="logico">
+                        <td class="simbolo">&&</td>
+                        <td><span class="categoria logico">Lógico</span></td>
+                        <td>AND (Y)</td>
+                        <td>Devuelve true si ambas condiciones son verdaderas</td>
+                        <td class="ejemplo">true && true <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="logico">
+                        <td class="simbolo">||</td>
+                        <td><span class="categoria logico">Lógico</span></td>
+                        <td>OR (O)</td>
+                        <td>Devuelve true si al menos una condición es verdadera</td>
+                        <td class="ejemplo">true || false <span class="resultado">→ true</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="logico">
+                        <td class="simbolo">!</td>
+                        <td><span class="categoria logico">Lógico</span></td>
+                        <td>NOT (NO)</td>
+                        <td>Invierte el valor booleano</td>
+                        <td class="ejemplo">!true <span class="resultado">→ false</span></td>
+                    </tr>
+                    
+                    <!-- Otros -->
+                    <tr data-categoria="otro">
+                        <td class="simbolo">?:</td>
+                        <td><span class="categoria otro">Condicional</span></td>
+                        <td>Operador ternario</td>
+                        <td>Devuelve uno de dos valores según una condición</td>
+                        <td class="ejemplo">5 &gt; 3 ? "Sí" : "No" <span class="resultado">→ "Sí"</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="otro">
+                        <td class="simbolo">.</td>
+                        <td><span class="categoria otro">Acceso</span></td>
+                        <td>Punto (acceso a propiedad)</td>
+                        <td>Accede a propiedades de un objeto</td>
+                        <td class="ejemplo">obj.nombre <span class="resultado">→ valor de la propiedad</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="otro">
+                        <td class="simbolo">[]</td>
+                        <td><span class="categoria otro">Acceso</span></td>
+                        <td>Corchetes (índice/clave)</td>
+                        <td>Accede a elementos por índice o clave</td>
+                        <td class="ejemplo">arr[0] <span class="resultado">→ primer elemento</span></td>
+                    </tr>
+                    
+                    <tr data-categoria="otro">
+                        <td class="simbolo">typeof</td>
+                        <td><span class="categoria otro">Operador</span></td>
+                        <td>Tipo de dato</td>
+                        <td>Devuelve el tipo de una variable</td>
+                        <td class="ejemplo">typeof 5 <span class="resultado">→ "number"</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="paso">
+                <span class="paso-numero">💡 Notas clave sobre operadores:</span><br>
+                <ul>
+                    <li><strong>=</strong> asigna un valor. <strong>NO</strong> compara.</li>
+                    <li><strong>==</strong> compara valores permitiendo conversión de tipo.</li>
+                    <li><strong>===</strong> compara valor y tipo (es el recomendado en la práctica).</li>
+                    <li><strong>&amp;&amp;</strong> solo es <code>false</code> cuando alguna condición es falsa.</li>
+                    <li><strong>||</strong> solo es <code>false</code> cuando todas las condiciones son falsas.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FUNCIONES -->
+        <div class="seccion">
+            <h2>1️⃣ Función Básica - Conceptos Fundamentales</h2>
+            
+            <p><span class="punto">¿Qué es una función?</span> Es un bloque de código reutilizable que realiza una tarea específica cuando la llamamos.</p>
+            
+            <div class="ejemplo">
+                <strong>Sintaxis básica:</strong>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">function</span> nombreFuncion() {</span>
+<span class="codigo-linea">  <span class="comentario">// Código que se ejecuta</span></span>
+<span class="codigo-linea">}</span>
+<span class="codigo-linea">nombreFuncion(); <span class="comentario">// Llamar la función</span></span>
+                </div>
+            </div>
+
+            <div class="paso">
+                <span class="paso-numero">✅ Puntos clave de una función:</span>
+                <ul>
+                    <li><strong>Nombre</strong>: cómo la vas a llamar (por ejemplo, <code>sumar</code>).</li>
+                    <li><strong>Parámetros</strong>: variables entre paréntesis al definirla (ej: <code>a</code>, <code>b</code>).</li>
+                    <li><strong>Argumentos</strong>: valores reales que pasas al llamar (<code>5</code>, <code>3</code>).</li>
+                    <li><strong>return</strong>: indica qué valor devuelve la función al terminar.</li>
+                </ul>
+            </div>
+            
+            <div class="ejemplo">
+                <strong>Ejemplo: Función con parámetros y retorno</strong>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">function</span> sumar(a, b) {</span>
+<span class="codigo-linea">  <span class="palabra-clave">return</span> a + b;</span>
+<span class="codigo-linea">}</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="palabra-clave">let</span> resultado = sumar(<span class="numero">5</span>, <span class="numero">3</span>);</span>
+<span class="codigo-linea">console.log(resultado); <span class="comentario">// Salida: 8</span></span>
+                </div>
+            </div>
+
+            <div class="paso">
+                <span class="paso-numero">🧠 Paso a paso:</span>
+                <ul>
+                    <li>Definimos la función <code>sumar(a, b)</code>.</li>
+                    <li>Dentro, usamos <code>return a + b</code> para devolver la suma.</li>
+                    <li>La llamamos con <code>sumar(5, 3)</code>, y eso devuelve <code>8</code>.</li>
+                    <li>Guardamos el resultado en <code>resultado</code> y lo mostramos con <code>console.log</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RECORRIDOS -->
+        <div class="seccion">
+            <h2>2️⃣ Recorriendo Arrays con Funciones</h2>
+            
+            <p><span class="punto">Métodos comunes:</span> <code>forEach</code>, <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>find</code></p>
+            
+            <div class="paso">
+                <span class="paso-numero">📌 Idea general:</span>
+                Estos métodos reciben una <strong>función de callback</strong> (normalmente una función flecha)
+                que se ejecuta para cada elemento del array.
+            </div>
+
+            <!-- forEach -->
+            <div class="ejemplo">
+                <strong>forEach - Recorrer cada elemento:</strong>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> numeros = [<span class="numero">1</span>, <span class="numero">2</span>, <span class="numero">3</span>, <span class="numero">4</span>];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .forEach() ejecuta la función una vez por cada elemento.</span></span>
+<span class="codigo-linea">numeros.forEach(num =&gt; {</span>
+<span class="codigo-linea">  console.log(num * <span class="numero">2</span>); <span class="comentario">// Imprime el doble de cada número</span></span>
+<span class="codigo-linea">});</span>
+<span class="codigo-linea"><span class="comentario">// Salida en consola: 2, 4, 6, 8</span></span>
+                </div>
+            </div>
+            <div class="paso">
+                <span class="paso-numero">forEach:</span>
+                <ul>
+                    <li><strong>Qué hace:</strong> recorre el array y ejecuta una función por cada elemento.</li>
+                    <li><strong>Qué recibe:</strong> una función con hasta 3 parámetros: <code>(valor, índice, array)</code>.</li>
+                    <li><strong>Qué devuelve:</strong> <em>nada</em> (undefined). Se usa para efectos secundarios (logs, DOM...).</li>
+                </ul>
+            </div>
+            
+            <!-- map -->
+            <div class="ejemplo">
+                <strong>map - Transformar elementos:</strong>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> numeros = [<span class="numero">1</span>, <span class="numero">2</span>, <span class="numero">3</span>];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .map() crea un NUEVO array con los resultados de la función.</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> duplicados = numeros.map(num =&gt; num * <span class="numero">2</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea">console.log(duplicados); <span class="comentario">// [2, 4, 6] (Array original intacto)</span></span>
+                </div>
+            </div>
+            <div class="paso">
+                <span class="paso-numero">map:</span>
+                <ul>
+                    <li><strong>Qué hace:</strong> crea un <strong>nuevo array</strong> transformando cada elemento.</li>
+                    <li><strong>Qué recibe:</strong> una función con <code>(valor, índice, array)</code>.</li>
+                    <li><strong>Qué devuelve:</strong> un array nuevo con los valores transformados.</li>
+                </ul>
+            </div>
+            
+            <!-- filter -->
+            <div class="ejemplo">
+                <strong>filter - Filtrar elementos:</strong>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> numeros = [<span class="numero">1</span>, <span class="numero">2</span>, <span class="numero">3</span>, <span class="numero">4</span>, <span class="numero">5</span>];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .filter() crea un NUEVO array solo con los elementos que cumplen la condición.</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> pares = numeros.filter(num =&gt; num % <span class="numero">2</span> === <span class="numero">0</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea">console.log(pares); <span class="comentario">// [2, 4] (Solo los pares)</span></span>
+                </div>
+            </div>
+            <div class="paso">
+                <span class="paso-numero">filter:</span>
+                <ul>
+                    <li><strong>Qué hace:</strong> se queda solo con los elementos que cumplan la condición.</li>
+                    <li><strong>Qué recibe:</strong> una función que devuelve <code>true</code> (lo deja) o <code>false</code> (lo descarta).</li>
+                    <li><strong>Qué devuelve:</strong> un nuevo array con los elementos que pasaron el filtro.</li>
+                </ul>
+            </div>
+            
+            <!-- reduce -->
+            <div class="ejemplo">
+                <strong>reduce - Acumular valores:</strong>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> numeros = [<span class="numero">1</span>, <span class="numero">2</span>, <span class="numero">3</span>, <span class="numero">4</span>];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .reduce() reduce el array a un único valor acumulado.</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> suma = numeros.reduce((acum, num) =&gt; acum + num, <span class="numero">0</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea">console.log(suma); <span class="comentario">// 10 (1+2+3+4)</span></span>
+                </div>
+            </div>
+            <div class="paso">
+                <span class="paso-numero">reduce:</span>
+                <ul>
+                    <li><strong>Qué hace:</strong> combina todos los elementos en un único valor (suma, producto, objeto, etc.).</li>
+                    <li><strong>Qué recibe:</strong> una función <code>(acumulador, valorActual)</code> y un valor inicial (ej: <code>0</code>).</li>
+                    <li><strong>Qué devuelve:</strong> el valor final acumulado.</li>
+                </ul>
+            </div>
+            
+            <!-- find -->
+            <div class="ejemplo">
+                <strong>find - Encontrar un elemento:</strong>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> usuarios = [</span>
+<span class="codigo-linea">  { id: <span class="numero">1</span>, nombre: <span class="string">"Ana"</span> },</span>
+<span class="codigo-linea">  { id: <span class="numero">2</span>, nombre: <span class="string">"Juan"</span> }</span>
+<span class="codigo-linea">];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .find() devuelve el PRIMER elemento que cumple la condición.</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> usuario = usuarios.find(u =&gt; u.id === <span class="numero">2</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea">console.log(usuario.nombre); <span class="comentario">// "Juan" (Accedemos a la propiedad nombre)</span></span>
+                </div>
+            </div>
+            <div class="paso">
+                <span class="paso-numero">find:</span>
+                <ul>
+                    <li><strong>Qué hace:</strong> busca el <strong>primer</strong> elemento que cumpla la condición.</li>
+                    <li><strong>Qué recibe:</strong> una función que devuelve <code>true</code> cuando encuentra lo que quieres.</li>
+                    <li><strong>Qué devuelve:</strong> el elemento encontrado o <code>undefined</code> si no hay coincidencias.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- EJEMPLOS INTERACTIVOS -->
+        <div class="seccion">
+            <h2>🎮 Prueba los Ejemplos Interactivos</h2>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="boton-interactivo" onclick="ejecutarEjemplo1()">forEach - Elementos</button>
+                <button class="boton-interactivo" onclick="ejecutarEjemplo2()">map - Cuadrados</button>
+                <button class="boton-interactivo" onclick="ejecutarEjemplo3()">filter - Pares</button>
+                <button class="boton-interactivo" onclick="ejecutarEjemplo4()">reduce - Suma</button>
+                <button class="boton-interactivo" onclick="ejecutarEjemplo5()">find - Buscar</button>
+            </div>
+            
+            <div id="resultado-ejecutar" class="resultado-ejecutar"></div>
+        </div>
+
+        <!-- EJERCICIOS PRÁCTICOS -->
+        <div class="seccion">
+            <h2>3️⃣ Ejercicios prácticos para afianzar el temario</h2>
+
+            <p>
+                Estos ejercicios están pensados para practicar los conceptos de este temario.  
+                La recomendación es intentar resolverlos primero sin mirar la solución y luego desplegar el bloque de
+                <strong>“Ver solución explicada”</strong>.
+            </p>
+
+            <!-- EJERCICIOS OPERADORES -->
+            <h3>🧮 Ejercicios de operadores</h3>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 1 – Operadores aritméticos y de asignación</span>
+                <p>
+                    Escribe código que:
+                </p>
+                <ul>
+                    <li>Declare una variable <code>total</code> con valor inicial <code>10</code>.</li>
+                    <li>Le sume <code>5</code> usando <code>+=</code>.</li>
+                    <li>La multiplique por <code>2</code> usando <code>*=</code>.</li>
+                    <li>Finalmente muestre el resultado por consola.</li>
+                </ul>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">let</span> total = <span class="numero">10</span>;             <span class="comentario">// Paso 1: total vale 10</span></span>
+<span class="codigo-linea">total += <span class="numero">5</span>;                  <span class="comentario">// Paso 2: total = total + 5 → 15</span></span>
+<span class="codigo-linea">total *= <span class="numero">2</span>;                  <span class="comentario">// Paso 3: total = total * 2 → 30</span></span>
+<span class="codigo-linea">console.log(total);         <span class="comentario">// Paso 4: muestra 30</span></span>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación:</span>
+                        <ul>
+                            <li><code>total += 5</code> es azúcar sintáctico de <code>total = total + 5</code>.</li>
+                            <li><code>total *= 2</code> equivale a <code>total = total * 2</code>.</li>
+                            <li>Estamos usando operadores de asignación compuesta para escribir menos código y más legible.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 2 – Comparación estricta vs débil</span>
+                <p>
+                    Sin ejecutar el código, intenta adivinar el resultado de cada comparación:
+                </p>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(<span class="numero">5</span> == <span class="string">"5"</span>);   <span class="comentario">// ¿Iguales en valor?</span></span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(<span class="numero">5</span> === <span class="string">"5"</span>);  <span class="comentario">// ¿Iguales en valor Y tipo?</span></span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(<span class="string">"0"</span> == <span class="palabra-clave">false</span>); <span class="comentario">// Conversión implícita</span></span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(<span class="string">"0"</span> === <span class="palabra-clave">false</span>); <span class="comentario">// Sin conversión</span></span>
+                </div>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="paso">
+                        <span class="paso-numero">Resultado:</span>
+                        <ul>
+                            <li><code>5 == "5"</code> → <strong>true</strong></li>
+                            <li><code>5 === "5"</code> → <strong>false</strong></li>
+                            <li><code>"0" == false</code> → <strong>true</strong> (por conversión de tipo)</li>
+                            <li><code>"0" === false</code> → <strong>false</strong></li>
+                        </ul>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación:</span>
+                        <ul>
+                            <li>
+                                <code>==</code> intenta convertir los valores al mismo tipo antes de comparar:  
+                                <code>"5"</code> se convierte a número <code>5</code>, por eso <code>5 == "5"</code> es <code>true</code>.
+                            </li>
+                            <li>
+                                <code>===</code> no convierte tipos. Compara tipo y valor:  
+                                número <code>5</code> vs string <code>"5"</code> → tipos distintos → <code>false</code>.
+                            </li>
+                            <li>
+                                En <code>"0" == false</code>, ambos se convierten a número:  
+                                <code>"0"</code> → <code>0</code>, <code>false</code> → <code>0</code> → son iguales → <code>true</code>.
+                            </li>
+                            <li>
+                                En <code>"0" === false</code> no hay conversión de tipo: string vs boolean → siempre <code>false</code>.
+                            </li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <!-- EJERCICIOS FUNCIONES -->
+            <h3>🧠 Ejercicios de funciones</h3>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 3 – Función con parámetros y return</span>
+                <p>
+                    Crea una función llamada <code>calcularDescuento</code> que:
+                </p>
+                <ul>
+                    <li>Reciba dos parámetros: <code>precio</code> y <code>porcentaje</code>.</li>
+                    <li>Calcule el precio final aplicando el descuento.</li>
+                    <li>Devuelva el precio final.</li>
+                    <li>Prueba la función con un precio de <code>100</code> y un descuento del <code>20%</code>.</li>
+                </ul>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">function</span> calcularDescuento(precio, porcentaje) {</span>
+<span class="codigo-linea">  <span class="comentario">// precio y porcentaje son parámetros (variables locales)</span></span>
+<span class="codigo-linea">  <span class="palabra-clave">const</span> descuento = precio * (porcentaje / <span class="numero">100</span>);</span>
+<span class="codigo-linea">  <span class="palabra-clave">const</span> precioFinal = precio - descuento;</span>
+<span class="codigo-linea">  <span class="palabra-clave">return</span> precioFinal; <span class="comentario">// Devuelve el resultado al exterior</span></span>
+<span class="codigo-linea">}</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> resultado = calcularDescuento(<span class="numero">100</span>, <span class="numero">20</span>);</span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(resultado); <span class="comentario">// 80</span></span>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación:</span>
+                        <ul>
+                            <li>Calculamos el valor del descuento con <code>precio * (porcentaje / 100)</code>.</li>
+                            <li>Restamos el descuento al precio original: <code>precio - descuento</code>.</li>
+                            <li><code>return precioFinal</code> devuelve el valor a quien llame a la función.</li>
+                            <li>Al llamar <code>calcularDescuento(100, 20)</code>, devuelve <code>80</code>.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 4 – Función que prepara un mensaje</span>
+                <p>
+                    Crea una función llamada <code>saludarUsuario</code> que:
+                </p>
+                <ul>
+                    <li>Reciba un nombre (<code>nombre</code>) y una edad (<code>edad</code>).</li>
+                    <li>Devuelva un string del tipo: <code>"Hola Ana, tienes 25 años"</code>.</li>
+                    <li>Muestra el resultado en consola para comprobarlo.</li>
+                </ul>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">function</span> saludarUsuario(nombre, edad) {</span>
+<span class="codigo-linea">  <span class="comentario">// Concatenamos strings con variables usando +</span></span>
+<span class="codigo-linea">  <span class="palabra-clave">return</span> <span class="string">"Hola "</span> + nombre + <span class="string">", tienes "</span> + edad + <span class="string">" años"</span>;</span>
+<span class="codigo-linea">}</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> mensaje = saludarUsuario(<span class="string">"Ana"</span>, <span class="numero">25</span>);</span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(mensaje); <span class="comentario">// "Hola Ana, tienes 25 años"</span></span>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación:</span>
+                        <ul>
+                            <li>La función no sabe qué nombre ni edad tendrá: lo recibe como parámetros.</li>
+                            <li>Concatenamos partes del mensaje usando <code>+</code> y devolvemos el string completo.</li>
+                            <li>Quien llama a la función obtiene el texto y lo puede usar, por ejemplo, en un <code>console.log</code>.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <!-- EJERCICIOS ARRAYS -->
+            <h3>📚 Ejercicios con arrays y sus métodos</h3>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 5 – Usar map para transformar</span>
+                <p>
+                    Tienes un array de precios sin IVA:
+                </p>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> precios = [<span class="numero">10</span>, <span class="numero">20</span>, <span class="numero">30</span>];</span>
+                </div>
+                <p>
+                    Usando <code>map</code>, crea un nuevo array llamado <code>preciosConIVA</code> donde cada elemento tenga un 21% de IVA añadido.
+                </p>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> precios = [<span class="numero">10</span>, <span class="numero">20</span>, <span class="numero">30</span>];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .map() transforma cada precio multiplicándolo por 1.21</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> preciosConIVA = precios.map(precio =&gt; precio * <span class="numero">1.21</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(preciosConIVA); <span class="comentario">// [12.1, 24.2, 36.3]</span></span>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación:</span>
+                        <ul>
+                            <li>Multiplicamos cada precio por <code>1.21</code> (100% + 21% de IVA).</li>
+                            <li><code>map</code> crea un nuevo array con el resultado de la función para cada elemento.</li>
+                            <li>El array original <code>precios</code> no se modifica.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 6 – Filtrar valores</span>
+                <p>
+                    Dado el siguiente array:
+                </p>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> edades = [<span class="numero">12</span>, <span class="numero">18</span>, <span class="numero">25</span>, <span class="numero">16</span>, <span class="numero">40</span>];</span>
+                </div>
+                <p>
+                    Usando <code>filter</code>, crea un nuevo array <code>mayoresDeEdad</code> con las edades mayores o iguales a 18.
+                </p>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> edades = [<span class="numero">12</span>, <span class="numero">18</span>, <span class="numero">25</span>, <span class="numero">16</span>, <span class="numero">40</span>];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .filter() mantiene solo los que cumplen edad &gt;= 18</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> mayoresDeEdad = edades.filter(edad =&gt; edad &gt;= <span class="numero">18</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(mayoresDeEdad); <span class="comentario">// [18, 25, 40]</span></span>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación:</span>
+                        <ul>
+                            <li>La condición <code>edad &gt;= 18</code> devuelve <code>true</code> para 18, 25 y 40.</li>
+                            <li><code>filter</code> construye un nuevo array solo con los elementos que cumplen la condición.</li>
+                            <li>Los valores 12 y 16 quedan fuera porque no cumplen <code>&gt;= 18</code>.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 7 – Sumar todos los elementos con reduce</span>
+                <p>
+                    Dado:
+                </p>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> numeros = [<span class="numero">3</span>, <span class="numero">7</span>, <span class="numero">2</span>];</span>
+                </div>
+                <p>
+                    Usa <code>reduce</code> para obtener la suma total de los números.
+                </p>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> numeros = [<span class="numero">3</span>, <span class="numero">7</span>, <span class="numero">2</span>];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .reduce() suma acumulativamente. 0 es el valor inicial.</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> sumaTotal = numeros.reduce((acum, num) =&gt; acum + num, <span class="numero">0</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(sumaTotal); <span class="comentario">// 12</span></span>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación paso a paso:</span>
+                        <ul>
+                            <li>Valor inicial del acumulador: <code>0</code>.</li>
+                            <li>Iteración 1: <code>acum = 0</code>, <code>num = 3</code> → <code>acum + num = 3</code>.</li>
+                            <li>Iteración 2: <code>acum = 3</code>, <code>num = 7</code> → <code>3 + 7 = 10</code>.</li>
+                            <li>Iteración 3: <code>acum = 10</code>, <code>num = 2</code> → <code>10 + 2 = 12</code>.</li>
+                            <li>Resultado final devuelto por <code>reduce</code>: <code>12</code>.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <div class="paso">
+                <span class="paso-numero">Ejercicio 8 – Buscar con find</span>
+                <p>
+                    Dado el siguiente array de objetos:
+                </p>
+                <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> productos = [</span>
+<span class="codigo-linea">  { id: <span class="numero">1</span>, nombre: <span class="string">"Teclado"</span>, precio: <span class="numero">25</span> },</span>
+<span class="codigo-linea">  { id: <span class="numero">2</span>, nombre: <span class="string">"Ratón"</span>, precio: <span class="numero">15</span> },</span>
+<span class="codigo-linea">  { id: <span class="numero">3</span>, nombre: <span class="string">"Monitor"</span>, precio: <span class="numero">120</span> }</span>
+<span class="codigo-linea">];</span>
+                </div>
+                <p>
+                    Usa <code>find</code> para buscar el producto cuyo <code>id</code> sea <code>2</code> y muestra su nombre por consola.
+                </p>
+
+                <details>
+                    <summary>Ver solución explicada</summary>
+                    <div class="codigo">
+<span class="codigo-linea"><span class="palabra-clave">const</span> productos = [</span>
+<span class="codigo-linea">  { id: <span class="numero">1</span>, nombre: <span class="string">"Teclado"</span>, precio: <span class="numero">25</span> },</span>
+<span class="codigo-linea">  { id: <span class="numero">2</span>, nombre: <span class="string">"Ratón"</span>, precio: <span class="numero">15</span> },</span>
+<span class="codigo-linea">  { id: <span class="numero">3</span>, nombre: <span class="string">"Monitor"</span>, precio: <span class="numero">120</span> }</span>
+<span class="codigo-linea">];</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// .find() busca el objeto donde la propiedad id sea 2</span></span>
+<span class="codigo-linea"><span class="palabra-clave">const</span> productoEncontrado = productos.find(p =&gt; p.id === <span class="numero">2</span>);</span>
+<span class="codigo-linea"></span>
+<span class="codigo-linea"><span class="comentario">// Accedemos a la propiedad .nombre del objeto encontrado</span></span>
+<span class="codigo-linea"><span class="palabra-clave">console</span>.log(productoEncontrado.nombre); <span class="comentario">// "Ratón"</span></span>
+                    </div>
+                    <div class="paso">
+                        <span class="paso-numero">Explicación:</span>
+                        <ul>
+                            <li><code>find</code> recorre el array hasta que la condición <code>p.id === 2</code> devuelve <code>true</code>.</li>
+                            <li>Devuelve directamente el objeto que cumple la condición.</li>
+                            <li>Luego accedemos a su propiedad <code>nombre</code> con <code>productoEncontrado.nombre</code>.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Función para filtrar la tabla de operadores
+        function filtrarTabla(categoria, boton) {
+            const filas = document.querySelectorAll('#tbody tr');
+            const botones = document.querySelectorAll('.filter-btn');
+            
+            // Remover clase active de todos los botones
+            botones.forEach(btn => btn.classList.remove('active'));
+            
+            // Añadir clase active al botón clicado
+            if (boton) {
+                boton.classList.add('active');
+            }
+            
+            // Filtrar filas
+            filas.forEach(fila => {
+                if (categoria === 'todos' || fila.dataset.categoria === categoria) {
+                    fila.classList.remove('hidden');
+                } else {
+                    fila.classList.add('hidden');
+                }
+            });
+        }
+
+        // Función para ejecutar ejemplo 1
+        function ejecutarEjemplo1() {
+            const resultado = document.getElementById('resultado-ejecutar');
+            resultado.classList.add('mostrar');
+            resultado.innerHTML = '<strong>forEach - Recorriendo cada elemento:</strong><br><br>';
+            
+            const frutas = ['manzana', 'banana', 'naranja'];
+            resultado.innerHTML += 'Array: [' + frutas.join(', ') + ']<br><br>';
+            resultado.innerHTML += 'Recorrido:<br>';
+            
+            frutas.forEach((fruta, index) => {
+                resultado.innerHTML += '&nbsp;&nbsp;Índice ' + index + ': ' + fruta + '<br>';
+            });
+        }
+        
+        // Función para ejecutar ejemplo 2
+        function ejecutarEjemplo2() {
+            const resultado = document.getElementById('resultado-ejecutar');
+            resultado.classList.add('mostrar');
+            
+            const numeros = [1, 2, 3, 4];
+            const cuadrados = numeros.map(n => n * n);
+            resultado.innerHTML = '<strong>map - Elevando al cuadrado:</strong><br><br>';
+            resultado.innerHTML += 'Original: [' + numeros.join(', ') + ']<br>';
+            resultado.innerHTML += 'Al cuadrado: [' + cuadrados.join(', ') + ']';
+        }
+        
+        // Función para ejecutar ejemplo 3
+        function ejecutarEjemplo3() {
+            const resultado = document.getElementById('resultado-ejecutar');
+            resultado.classList.add('mostrar');
+            
+            const numeros = [1, 2, 3, 4, 5, 6, 7, 8];
+            const pares = numeros.filter(n => n % 2 === 0);
+            resultado.innerHTML = '<strong>filter - Números pares:</strong><br><br>';
+            resultado.innerHTML += 'Original: [' + numeros.join(', ') + ']<br>';
+            resultado.innerHTML += 'Solo pares: [' + pares.join(', ') + ']';
+        }
+        
+        // Función para ejecutar ejemplo 4
+        function ejecutarEjemplo4() {
+            const resultado = document.getElementById('resultado-ejecutar');
+            resultado.classList.add('mostrar');
+            
+            const numeros = [1, 2, 3, 4, 5];
+            const suma = numeros.reduce((acum, num) => acum + num, 0);
+            resultado.innerHTML = '<strong>reduce - Suma de todos los números:</strong><br><br>';
+            resultado.innerHTML += 'Números: [' + numeros.join(', ') + ']<br>';
+            resultado.innerHTML += 'Suma total: ' + suma;
+        }
+        
+        // Función para ejecutar ejemplo 5
+        function ejecutarEjemplo5() {
+            const resultado = document.getElementById('resultado-ejecutar');
+            resultado.classList.add('mostrar');
+            
+            const personas = [
+                { nombre: 'Ana', edad: 20 },
+                { nombre: 'Juan', edad: 25 },
+                { nombre: 'Pedro', edad: 30 }
+            ];
+            
+            const mayor = personas.find(p => p.edad > 25);
+            resultado.innerHTML = '<strong>find - Encontrando persona con edad &gt; 25:</strong><br><br>';
+            resultado.innerHTML += 'Buscando...<br>';
+            resultado.innerHTML += 'Encontrado: ' + mayor.nombre + ', ' + mayor.edad + ' años';
+        }
+    </script>
+</body>
+</html>

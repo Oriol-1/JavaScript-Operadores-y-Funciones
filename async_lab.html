@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Asincronía - Módulo 4</title>
+    <!-- Monaco Editor Loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #e0e0e0;
+            --code-bg: #0f111a;
+            --success: #4caf50;
+            --console-bg: #000;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-right: 1px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar h2 {
+            color: var(--highlight);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--text);
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: var(--accent);
+            border-color: var(--highlight);
+        }
+
+        .back-btn {
+            margin-top: auto;
+            background-color: var(--highlight);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+
+        header {
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        p.desc { color: #aaa; margin-top: 5px; }
+
+        /* Workspace */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .panel {
+            background-color: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--accent);
+        }
+
+        .panel h3 { margin-top: 0; color: var(--highlight); }
+
+        /* Code Editor Style */
+        #code-editor {
+            flex: 1;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+
+        /* Virtual Console */
+        #console-output {
+            background-color: var(--console-bg);
+            color: #0f0;
+            font-family: 'Consolas', monospace;
+            flex: 1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            border: 1px solid #333;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #111;
+            padding-bottom: 2px;
+        }
+
+        .log-time {
+            color: #888;
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        .log-error { color: #ff5555; }
+        .log-info { color: #55ffff; }
+
+        .action-bar {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-run {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-clear {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; overflow: auto; }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                max-height: 60px; 
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                border-right: none;
+                border-bottom: 1px solid var(--accent);
+                flex-shrink: 0;
+            }
+            .sidebar.open {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            .sidebar h2 {
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0;
+                padding-bottom: 10px;
+            }
+            .sidebar h2::after {
+                content: '☰';
+                font-size: 1.5rem;
+            }
+            .main-content { padding: 10px; overflow: visible; }
+            .workspace { 
+                grid-template-columns: 1fr; 
+                grid-template-rows: auto auto; 
+                gap: 20px;
+                height: auto;
+            }
+            .panel { height: auto; min-height: 400px; }
+            #code-editor { height: 300px; }
+            #console-output { height: 300px; overflow-x: auto; }
+            .action-bar { flex-wrap: wrap; }
+            .btn-run, .btn-clear { flex: 1; padding: 12px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2>Asincronía</h2>
+        <div id="lesson-list"></div>
+        <a href="index.html" class="back-btn">🏠 Volver al Menú</a>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1 id="lesson-title">Cargando...</h1>
+            <p class="desc" id="lesson-desc">...</p>
+        </header>
+
+        <div class="workspace">
+            <!-- Panel de Código -->
+            <div class="panel">
+                <h3>💻 Código JavaScript</h3>
+                <div id="code-editor"></div>
+                <div class="action-bar">
+                    <button class="btn-run">▶ Ejecutar</button>
+                    <button class="btn-clear">🗑️ Limpiar Consola</button>
+                </div>
+            </div>
+
+            <!-- Panel Consola -->
+            <div class="panel">
+                <h3>📟 Consola Virtual (Output)</h3>
+                <div id="console-output">
+                    <div class="log-entry" style="color: #aaa;">// Los resultados aparecerán aquí...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- DATOS DE LAS LECCIONES ---
+        const lessons = [
+            {
+                title: "1. Callbacks & setTimeout",
+                desc: "Entiende cómo JavaScript maneja el tiempo. setTimeout programa código para el futuro.",
+                code: `console.log("1. Inicio del script");
+
+// setTimeout es una función asíncrona.
+// Recibe dos argumentos:
+// 1. Un callback (función a ejecutar después)
+// 2. El tiempo de espera en milisegundos (2000ms = 2s)
+
+setTimeout(() => {
+    console.log("2. Esto aparece después de 2 segundos");
+}, 2000);
+
+// JS no espera a que termine el setTimeout, sigue ejecutando lo siguiente:
+console.log("3. Fin del script (esto sale antes que el timeout)");`
+            },
+            {
+                title: "2. El Infierno de los Callbacks",
+                desc: "Qué pasa cuando dependemos de múltiples operaciones asíncronas anidadas.",
+                code: `console.log("Iniciando proceso...");
+
+// Callback Hell: Anidar callbacks dentro de callbacks hace el código difícil de leer.
+// Esto sucede cuando una tarea depende de la anterior.
+
+setTimeout(() => {
+    console.log("Paso 1 completado");
+    
+    // Segundo nivel de anidación
+    setTimeout(() => {
+        console.log("Paso 2 completado");
+        
+        // Tercer nivel de anidación... y podría seguir
+        setTimeout(() => {
+            console.log("Paso 3 completado (Callback Hell 😈)");
+        }, 1000);
+        
+    }, 1000);
+    
+}, 1000);`
+            },
+            {
+                title: "3. Promesas Básicas",
+                desc: "Las Promesas son objetos que representan la terminación (o falla) de una operación asíncrona.",
+                code: `console.log("Pidiendo pizza...");
+
+// Creamos una Promesa. Recibe una función ejecutora con dos parámetros:
+// resolve: función para indicar éxito
+// reject: función para indicar error
+const pedirPizza = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        const exito = true; // Cambia a false para probar el error
+        
+        if(exito) {
+            // Si todo va bien, llamamos a resolve con el resultado
+            resolve("🍕 ¡Pizza entregada!");
+        } else {
+            // Si falla, llamamos a reject con la razón
+            reject("❌ No hay repartidores");
+        }
+    }, 2000);
+});
+
+// Consumimos la promesa:
+pedirPizza
+    .then((mensaje) => {
+        // .then se ejecuta si la promesa se resuelve (resolve)
+        console.log(mensaje);
+    })
+    .catch((error) => {
+        // .catch se ejecuta si la promesa es rechazada (reject)
+        console.error(error);
+    })
+    .finally(() => {
+        // .finally se ejecuta SIEMPRE, haya éxito o error
+        console.log("Operación finalizada");
+    });`
+            },
+            {
+                title: "4. Async / Await",
+                desc: "La forma moderna y limpia de trabajar con promesas. Parece código síncrono.",
+                code: `// Función auxiliar que retorna una promesa que se resuelve tras 'ms' tiempo
+function esperar(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// 'async' convierte la función en asíncrona (siempre devuelve una promesa)
+async function proceso() {
+    console.log("Inicio del proceso async");
+    
+    // 'await' PAUSA la ejecución de esta función hasta que la promesa se resuelva.
+    // Esto hace que el código se lea de arriba a abajo, como si fuera síncrono.
+    
+    await esperar(1000); // Espera 1 segundo
+    console.log("Paso 1 (1s después)");
+    
+    await esperar(1000); // Espera otro segundo
+    console.log("Paso 2 (2s después)");
+    
+    return "¡Todo terminado!";
+}
+
+// Al llamar a una función async, podemos usar .then()
+proceso().then(res => console.log(res));`
+            },
+            {
+                title: "5. Fetch API (Simulado)",
+                desc: "Cómo obtener datos de un servidor. Aquí simulamos una respuesta JSON.",
+                code: `async function obtenerUsuario() {
+    console.log("Cargando datos...");
+    
+    // Simulamos una petición de red (fetch) que tarda 1.5s
+    // En la vida real sería: const respuesta = await fetch('url');
+    await new Promise(r => setTimeout(r, 1500));
+    
+    // Simulamos los datos que devolvería el servidor
+    const usuario = {
+        id: 1,
+        nombre: "Seto",
+        rol: "Admin"
+    };
+    
+    // JSON.stringify convierte el objeto JS a texto JSON para mostrarlo
+    console.log("Datos recibidos:", JSON.stringify(usuario));
+    
+    // Accedemos a las propiedades del objeto
+    console.log("Hola, " + usuario.nombre);
+}
+
+obtenerUsuario();`
+            },
+            {
+                title: "6. Manejo de Errores (Try/Catch)",
+                desc: "Patrón robusto para capturar fallos en funciones asíncronas.",
+                code: `function apiInestable() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // Simulamos un fallo aleatorio (50% de probabilidad)
+            if(Math.random() > 0.5) {
+                reject("Error 500: Servidor caído");
+            } else {
+                resolve("Datos cargados correctamente");
+            }
+        }, 1000);
+    });
+}
+
+async function conectar() {
+    console.log("Intentando conectar...");
+    
+    // Usamos try/catch para manejar errores en async/await
+    try {
+        // Si apiInestable() falla (reject), salta al bloque catch
+        const respuesta = await apiInestable();
+        console.log("✅ Éxito: " + respuesta);
+    } catch (error) {
+        // Aquí capturamos el error sin que se rompa todo el programa
+        console.error("🚨 Capturamos el error: " + error);
+        console.log("Reintentando en el futuro...");
+    }
+}
+
+conectar();`
+            },
+            {
+                title: "7. Promesas en Paralelo (Promise.all)",
+                desc: "Ejecuta múltiples tareas al mismo tiempo para ganar velocidad.",
+                code: `// Definimos 3 tareas que tardan distinto tiempo
+const tareaRapida = new Promise(r => setTimeout(() => r("Rápida (1s)"), 1000));
+const tareaLenta = new Promise(r => setTimeout(() => r("Lenta (3s)"), 3000));
+const tareaMedia = new Promise(r => setTimeout(() => r("Media (2s)"), 2000));
+
+async function ejecutarTodo() {
+    console.time("Tiempo Total"); // Iniciamos cronómetro
+    console.log("Iniciando 3 tareas en paralelo...");
+    
+    // Promise.all recibe un array de promesas y las ejecuta A LA VEZ.
+    // Espera a que TODAS terminen.
+    // Si usáramos await una por una, tardaría 1+3+2 = 6 segundos.
+    // Con Promise.all tarda lo que la más lenta (3 segundos).
+    
+    const resultados = await Promise.all([tareaRapida, tareaLenta, tareaMedia]);
+    
+    console.log("Resultados:", resultados); // Array con los 3 resultados
+    console.timeEnd("Tiempo Total"); // Muestra el tiempo transcurrido (~3s)
+}
+
+ejecutarTodo();`
+            },
+            {
+                title: "8. Carrera de Promesas (Promise.race)",
+                desc: "La primera promesa que termine gana. Útil para timeouts.",
+                code: `// Una petición que tarda mucho (5s)
+const peticionLenta = new Promise(r => setTimeout(() => r("Datos recibidos"), 5000));
+
+// Un timeout que falla a los 2s
+const timeout = new Promise((_, reject) => 
+    setTimeout(() => reject("Tiempo de espera agotado (Timeout)"), 2000)
+);
+
+async function peticionConTimeout() {
+    console.log("Iniciando petición con límite de 2s...");
+    
+    try {
+        // Promise.race toma la PRIMERA promesa que se resuelva o rechace.
+        // En este caso, el timeout (2s) gana a la petición (5s).
+        const resultado = await Promise.race([peticionLenta, timeout]);
+        console.log(resultado);
+    } catch (error) {
+        console.error("❌ Error: " + error);
+    }
+}
+
+peticionConTimeout();`
+            }
+        ];
+
+        // --- ESTADO ---
+        let currentLessonIndex = 0;
+        let editorInstance;
+
+        // --- DOM ELEMENTS ---
+        const dom = {
+            lessonList: document.getElementById('lesson-list'),
+            title: document.getElementById('lesson-title'),
+            desc: document.getElementById('lesson-desc'),
+            editorContainer: document.getElementById('code-editor'),
+            console: document.getElementById('console-output'),
+            btnRun: document.querySelector('.btn-run'),
+            btnClear: document.querySelector('.btn-clear')
+        };
+
+        // --- CONSOLA VIRTUAL ---
+        const originalConsole = {
+            log: console.log,
+            error: console.error
+        };
+
+        function logToVirtualConsole(msg, type = 'log') {
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            if (type === 'error') div.classList.add('log-error');
+            if (type === 'info') div.classList.add('log-info');
+            if (type === 'warn') div.style.color = '#ffcc00'; // Inline style for warn
+            
+            const time = new Date().toLocaleTimeString().split(' ')[0];
+            // Convert newlines to <br> for better formatting
+            const formattedMsg = msg.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;');
+            div.innerHTML = `<span class="log-time">[${time}]</span> ${formattedMsg}`;
+            
+            dom.console.appendChild(div);
+            dom.console.scrollTop = dom.console.scrollHeight;
+        }
+
+        // --- MONACO INIT ---
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+
+        require(['vs/editor/editor.main'], function() {
+            editorInstance = monaco.editor.create(dom.editorContainer, {
+                value: lessons[0].code,
+                language: 'javascript',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                minimap: { enabled: false }
+            });
+
+            // Add Ctrl+Enter shortcut
+            editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, function() {
+                runCode();
+            });
+
+            init();
+        });
+
+        // --- FUNCIONES ---
+        function init() {
+            renderSidebar();
+            loadLesson(0);
+            setupListeners();
+        }
+
+        function renderSidebar() {
+            dom.lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.textContent = lesson.title;
+                btn.onclick = () => loadLesson(index);
+                dom.lessonList.appendChild(btn);
+            });
+        }
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            const lesson = lessons[index];
+
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                if (i === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            dom.title.textContent = lesson.title;
+            dom.desc.textContent = lesson.desc;
+            
+            if(editorInstance) {
+                editorInstance.setValue(lesson.code);
+            }
+            
+            dom.console.innerHTML = '<div class="log-entry" style="color: #aaa;">// Consola lista...</div>';
+        }
+
+        function runCode() {
+            if(!editorInstance) return;
+            const userCode = editorInstance.getValue();
+            
+            const timers = {};
+
+            // Interceptar console.log
+            const console = {
+                log: (...args) => {
+                    const text = args.map(arg => 
+                        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+                    ).join(' ');
+                    logToVirtualConsole(text, 'log');
+                    originalConsole.log(...args);
+                },
+                error: (...args) => {
+                    const text = args.map(arg => 
+                        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+                    ).join(' ');
+                    logToVirtualConsole(text, 'error');
+                    originalConsole.error(...args);
+                },
+                warn: (...args) => {
+                    const text = args.map(arg => 
+                        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+                    ).join(' ');
+                    logToVirtualConsole(text, 'warn');
+                    originalConsole.warn(...args);
+                },
+                info: (...args) => {
+                    const text = args.map(arg => 
+                        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+                    ).join(' ');
+                    logToVirtualConsole(text, 'info');
+                    originalConsole.info(...args);
+                },
+                time: (label = 'default') => {
+                    timers[label] = performance.now();
+                },
+                timeEnd: (label = 'default') => {
+                    if (timers[label]) {
+                        const duration = performance.now() - timers[label];
+                        logToVirtualConsole(`${label}: ${duration.toFixed(2)}ms`, 'info');
+                        delete timers[label];
+                    } else {
+                        logToVirtualConsole(`Timer '${label}' does not exist`, 'warn');
+                    }
+                }
+            };
+
+            try {
+                // Ejecutar con la consola interceptada inyectada en el scope
+                // Usamos una función asíncrona IIFE para permitir await en el nivel superior si fuera necesario,
+                // aunque new Function no soporta await directo sin ser async.
+                // Pero el código de los ejemplos usa funciones async internas, así que está bien.
+                const runFunction = new Function('console', userCode);
+                runFunction(console);
+            } catch (error) {
+                logToVirtualConsole(error.message, 'error');
+            }
+        }
+
+        function setupListeners() {
+            dom.btnRun.onclick = runCode;
+            dom.btnClear.onclick = () => {
+                dom.console.innerHTML = '';
+            };
+
+            // Mobile Menu Toggle
+            const sidebar = document.querySelector('.sidebar');
+            if(sidebar) {
+                const sidebarTitle = sidebar.querySelector('h2');
+                if(sidebarTitle) {
+                    sidebarTitle.onclick = () => {
+                        sidebar.classList.toggle('open');
+                    };
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

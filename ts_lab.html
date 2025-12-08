@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 6: TypeScript Pro - Master Suite JS</title>
+    <!-- Babel for in-browser TypeScript compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Monaco Editor Loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --accent: #007acc; /* TS Blue */
+            --text-primary: #d4d4d4;
+            --text-secondary: #858585;
+            --success: #4caf50;
+            --border: #3e3e42;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--bg-secondary);
+            padding: 0.8rem 2rem;
+            border-bottom: 1px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 220px 1fr 1fr;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .lesson-btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .lesson-btn:hover {
+            background-color: #2a2d2e;
+        }
+
+        .lesson-btn.active {
+            background-color: #37373d;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Editors */
+        .editor-column {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            min-width: 0; /* Prevent overflow */
+        }
+
+        .column-header {
+            padding: 0.5rem 1rem;
+            background-color: #2d2d2d;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-area {
+            flex: 1;
+            background-color: #1e1e1e;
+            /* Monaco handles its own padding/font */
+            overflow: hidden; 
+        }
+
+        .code-area.readonly {
+            background-color: #1a1a1a;
+            color: #9cdcfe;
+        }
+
+        /* Output Section */
+        .output-column {
+            display: flex;
+            flex-direction: column;
+            background-color: #1e1e1e;
+        }
+
+        .console-output {
+            flex: 1;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            overflow-y: auto;
+            font-size: 13px;
+        }
+
+        .log-entry {
+            border-bottom: 1px solid #333;
+            padding: 4px 0;
+            white-space: pre-wrap;
+        }
+        .log-entry.error { color: #f48771; }
+        .log-entry.info { color: #d4d4d4; }
+        .log-entry.system { color: var(--accent); font-style: italic; }
+
+        .btn-run {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .btn-run:hover { opacity: 0.9; }
+
+        /* TS Specific Highlights (Simple CSS for demo) */
+        .ts-keyword { color: #569cd6; }
+        .ts-type { color: #4ec9b0; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { height: auto; overflow: auto; }
+            .main-container { 
+                display: flex; 
+                flex-direction: column; 
+                height: auto;
+                overflow: visible;
+            }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                max-height: 50px; 
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                flex-shrink: 0;
+                position: relative;
+            }
+            .sidebar.open {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            .mobile-menu-title {
+                display: block !important;
+                cursor: pointer;
+                padding: 10px;
+                margin: 0;
+                background: var(--bg-secondary);
+                font-size: 1rem;
+                color: var(--text-primary);
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .editor-column { height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+            .output-column { height: auto; min-height: 400px; }
+            .code-area { min-height: 300px; }
+            .console-output { overflow-x: auto; }
+            .column-header { flex-wrap: wrap; gap: 10px; }
+            .btn-run { width: 100%; padding: 10px; }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="index.html" class="back-btn">← Volver al Hub</a>
+            <h1 style="font-size: 1.2rem;">Módulo 6: <span style="color: var(--accent)">TypeScript</span> Playground</h1>
+        </div>
+        <div style="font-size: 0.8rem; color: #666;">
+            Compilado en tiempo real con Babel
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="lessonList">
+            <h3 class="mobile-menu-title" style="display: none;">☰ Lecciones TS</h3>
+            <!-- Lessons injected here -->
+        </aside>
+
+        <section class="editor-column">
+            <div class="column-header">
+                <span>TypeScript (Input)</span>
+                <button class="btn-run" onclick="compileAndRun()">▶ COMPILAR Y EJECUTAR</button>
+            </div>
+            <div id="tsEditor" class="code-area"></div>
+        </section>
+
+        <section class="editor-column">
+            <div class="column-header">
+                <span>JavaScript (Compilado)</span>
+            </div>
+            <div id="jsPreview" class="code-area readonly"></div>
+            
+            <div class="column-header" style="border-top: 1px solid var(--border);">
+                <span>Consola</span>
+            </div>
+            <div id="consoleOutput" class="console-output"></div>
+        </section>
+    </div>
+
+    <script>
+        // --- Lesson Data ---
+        const lessons = [
+            {
+                title: "1. Tipos Básicos",
+                code: `// TypeScript añade tipos estáticos a JavaScript.
+// Sintaxis: variable: tipo = valor;
+
+// 1. Tipos primitivos
+let nombre: string = "Estudiante"; // Solo acepta texto
+let edad: number = 25;             // Solo acepta números
+let esActivo: boolean = true;      // Solo true/false
+
+// 2. Arrays tipados
+// string[] significa "array de strings"
+let habilidades: string[] = ["JS", "TS", "HTML"];
+
+console.log(\`Hola \${nombre}, tienes \${edad} años.\`);
+console.log("Habilidades:", habilidades);
+
+// 3. Inferencia de tipos
+// TS es inteligente: si no pones el tipo, lo adivina por el valor inicial.
+let curso = "Master JS"; // TS sabe que es string
+
+// Intenta descomentar la siguiente línea para ver un error:
+// edad = "veinticinco"; // ❌ Error: No puedes asignar string a number`
+            },
+            {
+                title: "2. Interfaces",
+                code: `// Las interfaces definen la "forma" o estructura obligatoria de un objeto.
+// Es como un contrato que el objeto debe cumplir.
+
+interface Usuario {
+    id: number;          // Obligatorio
+    username: string;    // Obligatorio
+    email?: string;      // ❓ Opcional (puede faltar)
+}
+
+// Esta función espera un objeto que cumpla la interfaz Usuario
+function registrarUsuario(user: Usuario) {
+    console.log("Registrando a: " + user.username);
+    
+    // Verificamos si existe la propiedad opcional
+    if(user.email) {
+        console.log("Enviando correo a: " + user.email);
+    } else {
+        console.log("Usuario sin email registrado.");
+    }
+}
+
+// Creamos un objeto que cumple la interfaz
+const nuevoUser: Usuario = {
+    id: 1,
+    username: "DevMaster"
+    // email es opcional, así que no da error si falta
+};
+
+registrarUsuario(nuevoUser);`
+            },
+            {
+                title: "3. Clases y Modificadores",
+                code: `class Coche {
+    // Modificadores de acceso: controlan quién puede ver/usar las propiedades
+    private marca: string;      // Solo accesible DENTRO de esta clase
+    public modelo: string;      // Accesible desde CUALQUIER lugar
+    protected velocidad: number; // Accesible en esta clase y sus HIJAS (herencia)
+
+    constructor(marca: string, modelo: string) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.velocidad = 0;
+    }
+
+    // Método público para interactuar con propiedades privadas/protegidas
+    public acelerar(): void {
+        this.velocidad += 10;
+        console.log(\`\${this.marca} \${this.modelo} va a \${this.velocidad} km/h\`);
+    }
+}
+
+const miCoche = new Coche("Toyota", "Corolla");
+miCoche.acelerar(); // ✅ Funciona
+
+console.log(miCoche.modelo); // ✅ Funciona (public)
+
+// Intentar acceder a propiedades privadas da error en TS:
+// console.log(miCoche.marca); // ❌ Error: 'marca' es privada`
+            },
+            {
+                title: "4. Genéricos (Generics)",
+                code: `// Los genéricos permiten crear funciones o clases flexibles que funcionan con varios tipos.
+// <T> es una variable para el TIPO de dato (como un comodín).
+
+function cajaSorpresa<T>(contenido: T): T {
+    console.log("Abriendo caja con tipo: " + typeof contenido);
+    return contenido;
+}
+
+// Al usar la función, definimos qué es T
+let numero = cajaSorpresa<number>(100);      // T es number
+let texto = cajaSorpresa<string>("Regalo");  // T es string
+
+console.log("Valor número:", numero);
+console.log("Valor texto:", texto);
+
+// Ejemplo práctico: Función que devuelve el primer elemento de CUALQUIER array
+function primerElemento<T>(arr: T[]): T {
+    return arr[0];
+}
+
+console.log(primerElemento([1, 2, 3]));       // Devuelve number
+console.log(primerElemento(["a", "b", "c"])); // Devuelve string`
+            },
+            {
+                title: "5. Union Types",
+                code: `// Union Types (|) permiten que una variable acepte MÚLTIPLES tipos.
+type ID = string | number; // Puede ser texto O número
+
+function imprimirId(id: ID) {
+    // "Type Guard": Comprobamos el tipo antes de usar métodos específicos
+    if (typeof id === "string") {
+        console.log("ID String: " + id.toUpperCase()); // ✅ Seguro usar toUpperCase
+    } else {
+        console.log("ID Número: " + id.toFixed(2));    // ✅ Seguro usar toFixed
+    }
+}
+
+imprimirId(101);
+imprimirId("202-abc");
+
+// Literal Types: Restringir a valores específicos exactos
+type Estado = "exito" | "error" | "cargando";
+
+function manejarEstado(estado: Estado) {
+    if (estado === "exito") {
+        console.log("¡Operación completada!");
+    } else if (estado === "error") {
+        console.log("Hubo un fallo.");
+    } else {
+        console.log("Espere por favor...");
+    }
+}
+
+manejarEstado("cargando");
+// manejarEstado("pendiente"); // ❌ Error: "pendiente" no está permitido`
+            },
+            {
+                title: "6. Utility Types",
+                code: `interface Tarea {
+    titulo: string;
+    descripcion: string;
+    completada: boolean;
+}
+
+// TS tiene utilidades integradas para transformar tipos:
+
+// 1. Partial<T>: Crea un tipo con todas las propiedades de T como OPCIONALES
+function actualizarTarea(tarea: Tarea, camposAActualizar: Partial<Tarea>) {
+    return { ...tarea, ...camposAActualizar };
+}
+
+const tarea1: Tarea = {
+    titulo: "Aprender TS",
+    descripcion: "Estudiar Utility Types",
+    completada: false
+};
+
+// Solo pasamos 'completada', no hace falta pasar todo el objeto
+const tareaActualizada = actualizarTarea(tarea1, {
+    completada: true
+});
+
+console.log("Tarea actualizada:", tareaActualizada);
+
+// 2. Pick<T, K>: Crea un nuevo tipo seleccionando solo algunas propiedades (K)
+type TareaResumen = Pick<Tarea, "titulo" | "completada">;
+
+const resumen: TareaResumen = {
+    titulo: "Repasar Genéricos",
+    completada: false
+    // descripcion: "..." // ❌ Error: 'descripcion' fue excluida
+};
+
+console.log("Resumen:", resumen);`
+            },
+            {
+                title: "7. Enums",
+                code: `// Enums: Conjunto de constantes con nombre.
+// Útil para representar un grupo fijo de opciones relacionadas.
+
+enum Direccion {
+    Arriba,    // 0
+    Abajo,     // 1
+    Izquierda, // 2
+    Derecha    // 3
+}
+
+function mover(dir: Direccion) {
+    switch (dir) {
+        case Direccion.Arriba:
+            console.log("Moviendo hacia ARRIBA");
+            break;
+        case Direccion.Abajo:
+            console.log("Moviendo hacia ABAJO");
+            break;
+        case Direccion.Izquierda:
+            console.log("Moviendo hacia IZQUIERDA");
+            break;
+        case Direccion.Derecha:
+            console.log("Moviendo hacia DERECHA");
+            break;
+    }
+}
+
+mover(Direccion.Arriba);
+
+// String Enums: Valores personalizados más legibles
+enum Roles {
+    Admin = "ADMIN",
+    User = "USER",
+    Guest = "GUEST"
+}
+
+const miRol = Roles.Admin;
+console.log("Rol actual:", miRol); // Imprime "ADMIN"`
+            }
+        ];
+
+        let tsEditorInstance;
+        let jsPreviewInstance;
+
+        // --- Initialization ---
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+
+        require(['vs/editor/editor.main'], function() {
+            // Initialize TS Editor
+            tsEditorInstance = monaco.editor.create(document.getElementById('tsEditor'), {
+                value: lessons[0].code,
+                language: 'typescript',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                minimap: { enabled: false },
+                fontSize: 14,
+                scrollBeyondLastLine: false
+            });
+
+            // Initialize JS Preview (Read Only)
+            jsPreviewInstance = monaco.editor.create(document.getElementById('jsPreview'), {
+                value: '// Haz clic en "COMPILAR Y EJECUTAR"',
+                language: 'javascript',
+                theme: 'vs-dark',
+                readOnly: true,
+                automaticLayout: true,
+                minimap: { enabled: false },
+                fontSize: 14,
+                scrollBeyondLastLine: false
+            });
+
+            initUI();
+        });
+
+        function initUI() {
+            const lessonList = document.getElementById('lessonList');
+            
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `lesson-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = lesson.title;
+                btn.onclick = () => loadLesson(index);
+                lessonList.appendChild(btn);
+            });
+
+            // Mobile Menu Toggle
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarTitle = sidebar.querySelector('.mobile-menu-title');
+            if(sidebarTitle) {
+                sidebarTitle.onclick = () => {
+                    sidebar.classList.toggle('open');
+                };
+            }
+        }
+
+        function loadLesson(index) {
+            // Update UI
+            document.querySelectorAll('.lesson-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+
+            // Set Code
+            if(tsEditorInstance) {
+                tsEditorInstance.setValue(lessons[index].code);
+                jsPreviewInstance.setValue('// Haz clic en "COMPILAR Y EJECUTAR" para ver el resultado');
+            }
+            document.getElementById('consoleOutput').innerHTML = '';
+        }
+
+        // --- Compiler & Runner ---
+        function compileAndRun() {
+            if(!tsEditorInstance) return;
+
+            const tsCode = tsEditorInstance.getValue();
+            const consoleDiv = document.getElementById('consoleOutput');
+            
+            consoleDiv.innerHTML = ''; // Clear console
+            logSystem("Compilando...");
+
+            try {
+                // 1. Transpile TS to JS using Babel
+                const result = Babel.transform(tsCode, {
+                    presets: ['typescript'],
+                    filename: 'example.ts'
+                });
+
+                const jsCode = result.code;
+                jsPreviewInstance.setValue(jsCode);
+                logSystem("Compilación exitosa. Ejecutando...");
+
+                // 2. Execute JS
+                runJS(jsCode);
+
+            } catch (error) {
+                jsPreviewInstance.setValue("// Error de compilación");
+                logError(error.message);
+            }
+        }
+
+        function runJS(code) {
+            const consoleDiv = document.getElementById('consoleOutput');
+
+            // Mock Console
+            const mockConsole = {
+                log: (...args) => {
+                    const line = document.createElement('div');
+                    line.className = 'log-entry info';
+                    line.innerText = args.map(arg => 
+                        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+                    ).join(' ');
+                    consoleDiv.appendChild(line);
+                    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+                },
+                error: (...args) => {
+                    logError(args.join(' '));
+                }
+            };
+
+            try {
+                const run = new Function('console', code);
+                run(mockConsole);
+            } catch (e) {
+                logError("Runtime Error: " + e.message);
+            }
+        }
+
+        function logError(msg) {
+            const div = document.getElementById('consoleOutput');
+            const line = document.createElement('div');
+            line.className = 'log-entry error';
+            line.innerText = msg;
+            div.appendChild(line);
+        }
+
+        function logSystem(msg) {
+            const div = document.getElementById('consoleOutput');
+            const line = document.createElement('div');
+            line.className = 'log-entry system';
+            line.innerText = `[Sistema] ${msg}`;
+            div.appendChild(line);
+        }
+
+        // Start
+        // init() is called by Monaco loader
+
+    </script>
+</body>
+</html>
