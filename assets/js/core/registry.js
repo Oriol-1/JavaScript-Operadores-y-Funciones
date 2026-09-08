@@ -141,6 +141,24 @@
     return ex;
   };
 
+  /**
+   * Registro ligero: solo los campos que necesitan las páginas de listado
+   * (catálogo, rutas, inicio, progreso) — id, título, categorización,
+   * tecnologías y los textos cortos que alimentan la búsqueda. Sin
+   * solución, documentación ni fases: eso solo hace falta en prueba.html.
+   * Sin validación de campos obligatorios: un índice generado no necesita
+   * la misma red de seguridad que el contrato completo de un ejercicio.
+   */
+  TT.defineExerciseIndice = function (ex) {
+    if (byId[ex.id]) return;   // ya registrado (o el índice y el detalle coinciden)
+    ex.categorias = ex.categorias || [];
+    ex.tags = ex.tags || [];
+    ex.liviano = true;
+    byId[ex.id] = ex;
+    exercises.push(ex);
+    return ex;
+  };
+
   TT.definePath = function (p) {
     pathById[p.id] = p;
     paths.push(p);
@@ -211,9 +229,30 @@
     }, Promise.resolve());
   };
 
-  /** Punto de entrada de cualquier página de la plataforma. */
-  TT.boot = function (base) {
+  /**
+   * Punto de entrada de cualquier página de la plataforma.
+   *
+   * Por defecto carga el contenido completo (content/manifest.js y cada
+   * archivo de content/exercises/), que es lo que necesita prueba.html
+   * para mostrar solución, documentación y fases.
+   *
+   * Las páginas de listado (inicio, catálogo, rutas, progreso) no
+   * necesitan nada de eso: solo id, título, categorización y los textos
+   * cortos que alimenta la búsqueda. Con { liviano: true } se carga en su
+   * lugar content/indice.js — un archivo generado con
+   * tools/generar-indice.js que registra esos mismos campos mediante
+   * TT.defineExerciseIndice — evitando bajar y parsear el bloque de
+   * documentación, fases y solución de cada prueba.
+   */
+  TT.boot = function (base, opciones) {
     base = base || '';
+    opciones = opciones || {};
+
+    if (opciones.liviano) {
+      return TT.loadContent(base, ['content/taxonomy.js', 'content/indice.js', 'content/paths.js'])
+        .then(function () { return TT; });
+    }
+
     return TT.loadContent(base, ['content/manifest.js'])
       .then(function () {
         return TT.loadContent(base, (TT.MANIFEST || []).map(function (f) { return 'content/' + f; }));

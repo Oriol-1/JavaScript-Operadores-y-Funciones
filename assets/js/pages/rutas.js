@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  TT.boot().then(function () {
+  TT.boot('', { liviano: true }).then(function () {
     var UI = TT.ui;
     UI.mountNav('rutas.html');
     UI.refreshNavLevel();

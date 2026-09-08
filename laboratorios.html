@@ -84,7 +84,7 @@
 <script src="assets/js/core/sandbox.js"></script>
 <script src="assets/js/core/ui.js"></script>
 <script>
-  TT.boot().then(function () {
+  TT.boot('', { liviano: true }).then(function () {
     TT.ui.mountNav('laboratorios.html');
     TT.ui.refreshNavLevel();
     document.getElementById('pie').innerHTML = TT.ui.footer();
