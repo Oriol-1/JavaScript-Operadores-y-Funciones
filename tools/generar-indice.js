@@ -95,8 +95,14 @@ function main() {
   const fuente = generarFuente(entradas);
 
   if (modoComprobacion) {
+    // La comparación ignora el estilo de fin de línea: Windows convierte a
+    // CRLF al hacer checkout (core.autocrlf=true, el valor por defecto de
+    // Git para Windows), mientras que este script siempre escribe LF. Sin
+    // normalizar, cualquier persona en Windows vería un falso positivo
+    // aunque el CONTENIDO esté perfectamente al día.
+    const normalizar = (s) => (s || '').replace(/\r\n/g, '\n');
     const actual = fs.existsSync(SALIDA) ? fs.readFileSync(SALIDA, 'utf8') : null;
-    if (actual === fuente) {
+    if (normalizar(actual) === normalizar(fuente)) {
       console.log('content/indice.js está actualizado (' + entradas.length + ' pruebas).');
       process.exit(0);
     }
