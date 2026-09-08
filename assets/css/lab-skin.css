@@ -1,0 +1,214 @@
+/* ============================================================
+   TechTrack — Capa de armonización de los laboratorios
+   ------------------------------------------------------------
+   Los seis laboratorios y el buscador se escribieron cada uno
+   con su propio CSS embebido, pero todos usan los mismos
+   nombres de variables. Este archivo se enlaza DESPUÉS del
+   <style> embebido, así que redefine esas variables y unifica
+   la tipografía sin tocar el marcado ni la lógica de cada
+   laboratorio. Es la vía de menor riesgo para que todo el
+   proyecto tenga un mismo lenguaje visual.
+   ============================================================ */
+
+:root {
+  /* Reasignación de la paleta antigua a los tokens nuevos */
+  --bg-primary:   var(--bg-0);
+  --bg-secondary: var(--bg-2);
+  --accent:       var(--brand);
+  --highlight:    var(--brand-soft);
+  --card-hover:   var(--bg-3);
+  --text:         #E7EAF0;
+  --primary:      var(--brand);
+  --secondary:    var(--ai);
+  --success:      var(--ok);
+  --danger:       var(--err);
+  --warning:      var(--warn);
+}
+
+:root[data-theme="light"] {
+  --text: #131722;
+}
+
+body {
+  font-family: var(--font) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* La barra va fija: los laboratorios con `display:flex` horizontal se
+   romperían si la barra participara en el flujo como hijo del body. */
+body { padding-top: 44px !important; box-sizing: border-box; }
+
+/* --- Tipografía --- */
+h1, h2, h3, h4 {
+  font-family: var(--font);
+  letter-spacing: -.015em;
+  line-height: 1.25;
+}
+h1 { font-weight: 660; }
+h2, h3 { font-weight: 620; }
+
+pre, code, kbd, samp, textarea.code, .code-block {
+  font-family: var(--mono) !important;
+}
+
+/* --- Controles: el mayor salto visual con el menor riesgo --- */
+button:not(.tab):not(.chip),
+.btn-lab,
+input[type="button"],
+input[type="submit"] {
+  font-family: var(--font);
+  border-radius: var(--r-md);
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+button:not(.tab):not(.chip):active { transform: translateY(1px); }
+
+select, input[type="text"], input[type="search"], input[type="number"], textarea {
+  font-family: inherit;
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  padding: 7px 10px;
+}
+select:focus, input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: var(--ring);
+}
+
+/* --- Superficies --- */
+pre, .code-block, .console, .output {
+  border-radius: var(--r-md);
+}
+
+table { border-collapse: collapse; }
+th { letter-spacing: .03em; }
+
+/* --- Enfoque visible en todo el proyecto --- */
+:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+/* --- Scrollbars coherentes --- */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong); border-radius: var(--r-full);
+  border: 3px solid transparent; background-clip: content-box;
+}
+
+/* --- Barra superior inyectada por lab-nav.js --- */
+.lab-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  display: flex; align-items: center; gap: var(--sp-3);
+  height: 44px; padding: 0 var(--sp-4);
+  background: color-mix(in srgb, var(--bg-1) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font); font-size: var(--fs-sm);
+}
+.lab-bar a { color: var(--text-soft); text-decoration: none; padding: 5px 10px; border-radius: var(--r-sm); }
+.lab-bar a:hover { background: var(--bg-3); color: var(--text); }
+.lab-bar .lab-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--text); }
+.lab-bar .lab-logo {
+  width: 22px; height: 22px; border-radius: 5px; display: grid; place-items: center;
+  background: linear-gradient(140deg, var(--brand), var(--ai));
+  color: #fff; font-size: 11px; font-weight: 800;
+}
+.lab-bar .lab-sep { flex: 1; }
+.lab-bar .lab-tag {
+  font-size: var(--fs-xs); color: var(--text-mute);
+  border: 1px solid var(--border); border-radius: var(--r-full); padding: 2px 9px;
+}
+
+/* ============================================================
+   Módulo 1 (fundamentos.html)
+   ------------------------------------------------------------
+   Es el único laboratorio escrito con superficies claras y un
+   degradado morado. No usa las variables compartidas, así que
+   necesita su propio bloque para entrar en el sistema visual.
+   Se identifica por data-lab en el <html>.
+   ============================================================ */
+
+[data-lab="fundamentos"] body {
+  background: var(--bg-0) !important;
+  color: var(--text);
+  padding: 44px var(--sp-4) var(--sp-7) !important;
+}
+
+[data-lab="fundamentos"] h1 { color: var(--text) !important; font-size: 2rem; }
+
+[data-lab="fundamentos"] .seccion {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: none;
+}
+[data-lab="fundamentos"] .seccion h2 {
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  font-size: 1.3rem;
+}
+[data-lab="fundamentos"] .seccion h3 { color: var(--text); }
+[data-lab="fundamentos"] p,
+[data-lab="fundamentos"] li,
+[data-lab="fundamentos"] td { color: var(--text-soft); }
+[data-lab="fundamentos"] strong { color: var(--text); }
+
+[data-lab="fundamentos"] .btn-cta {
+  background: var(--brand); border-radius: var(--r-md);
+  box-shadow: none; font-size: 1rem; padding: 11px 22px;
+}
+[data-lab="fundamentos"] .btn-cta:hover { background: var(--brand-soft); }
+
+[data-lab="fundamentos"] .filter-btn {
+  background: var(--bg-3); color: var(--text-soft);
+  border: 1px solid var(--border); border-radius: var(--r-full);
+  font-size: var(--fs-xs); padding: 6px 14px;
+}
+[data-lab="fundamentos"] .filter-btn:hover,
+[data-lab="fundamentos"] .filter-btn.active {
+  background: var(--brand-dim); color: var(--brand-soft); border-color: var(--brand-line);
+}
+
+[data-lab="fundamentos"] thead { background: var(--bg-3); color: var(--text); }
+[data-lab="fundamentos"] th,
+[data-lab="fundamentos"] td { border: 1px solid var(--border); }
+[data-lab="fundamentos"] th {
+  font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-mute); padding: 10px 14px;
+}
+[data-lab="fundamentos"] tbody tr:nth-child(even) { background: var(--bg-1); }
+[data-lab="fundamentos"] .simbolo { color: var(--brand-soft); }
+
+[data-lab="fundamentos"] .ejemplo {
+  background: var(--bg-1); border-left: 3px solid var(--brand); color: var(--text-soft);
+}
+[data-lab="fundamentos"] .resultado { color: var(--ok); }
+[data-lab="fundamentos"] .punto { color: var(--brand); }
+
+[data-lab="fundamentos"] .codigo {
+  background: var(--bg-0); border: 1px solid var(--border); border-radius: var(--r-md);
+}
+
+[data-lab="fundamentos"] .boton-interactivo {
+  background: var(--brand); border-radius: var(--r-md); font-family: var(--font);
+}
+[data-lab="fundamentos"] .boton-interactivo:hover { background: var(--brand-soft); }
+
+[data-lab="fundamentos"] .resultado-ejecutar {
+  background: var(--ok-dim); border-left: 4px solid var(--ok); color: var(--ok);
+  border-radius: var(--r-md);
+}
+[data-lab="fundamentos"] .paso {
+  background: var(--brand-dim); border-left: 4px solid var(--brand);
+  color: var(--text-soft); border-radius: var(--r-md);
+}
+[data-lab="fundamentos"] .paso-numero { color: var(--brand-soft); }
+
+/* Las etiquetas de categoría conservan su color pastel a propósito:
+   son la clave de lectura de la tabla y funcionan sobre fondo oscuro. */
+[data-lab="fundamentos"] .categoria { border-radius: var(--r-full); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
