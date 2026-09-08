@@ -1,0 +1,150 @@
+/* ============================================================
+   TechTrack — Design System
+   Fuente única de verdad para tokens visuales.
+   No añadas colores literales fuera de este archivo.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+
+  /* --- Superficies (escala de profundidad) --- */
+  --bg-0:  #080A0F;   /* fondo app */
+  --bg-1:  #0D111A;   /* panel */
+  --bg-2:  #121826;   /* card */
+  --bg-3:  #18202F;   /* card hover / input */
+  --bg-4:  #1F293B;   /* elevado */
+
+  /* --- Bordes --- */
+  --border:        #1E2634;
+  --border-strong: #2C3648;
+  --border-focus:  #3D6BE5;
+
+  /* --- Texto --- */
+  --text:      #E7EAF0;
+  --text-soft: #A8B2C4;
+  --text-mute: #6C778C;
+  --text-inv:  #080A0F;
+
+  /* --- Marca / acentos (paleta corta y disciplinada) --- */
+  --brand:      #4C7DF0;
+  --brand-soft: #7BA2F6;
+  --brand-dim:  rgba(76,125,240,.12);
+  --brand-line: rgba(76,125,240,.35);
+
+  --ok:      #34D399;
+  --ok-dim:  rgba(52,211,153,.12);
+  --warn:    #F5B547;
+  --warn-dim:rgba(245,181,71,.12);
+  --err:     #F2686B;
+  --err-dim: rgba(242,104,107,.12);
+  --info:    #56C7E0;
+  --info-dim:rgba(86,199,224,.12);
+  --ai:      #A78BFA;
+  --ai-dim:  rgba(167,139,250,.12);
+
+  /* --- Niveles (semántica propia de la plataforma) --- */
+  --lvl-junior:     #34D399;
+  --lvl-junior-adv: #56C7E0;
+  --lvl-mid:        #F5B547;
+  --lvl-senior:     #F2686B;
+
+  /* --- Tipografía --- */
+  --font: "Inter", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", "Cascadia Code", "SF Mono", Consolas, "Roboto Mono", monospace;
+
+  --fs-xs: .75rem;
+  --fs-sm: .8125rem;
+  --fs-md: .9375rem;
+  --fs-lg: 1.0625rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.875rem;
+  --fs-3xl: 2.5rem;
+
+  /* --- Espaciado / forma --- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-full: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.35);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.45);
+
+  --ring: 0 0 0 3px rgba(76,125,240,.28);
+  --t-fast: .12s ease;
+  --t-mid: .22s cubic-bezier(.22,.61,.36,1);
+
+  --max-w: 1280px;
+  --nav-h: 56px;
+}
+
+/* --- Tema claro --- */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-0:  #F6F7FA;
+  --bg-1:  #FFFFFF;
+  --bg-2:  #FFFFFF;
+  --bg-3:  #F1F3F8;
+  --bg-4:  #E8ECF4;
+  --border:        #E2E6EE;
+  --border-strong: #CBD2E0;
+  --text:      #131722;
+  --text-soft: #4A5468;
+  --text-mute: #7A8497;
+  --text-inv:  #FFFFFF;
+  --brand:      #2E5FD8;
+  --brand-soft: #1E4AB8;
+  --brand-dim:  rgba(46,95,216,.08);
+  --brand-line: rgba(46,95,216,.25);
+  --ok:   #0E9F6E; --ok-dim: rgba(14,159,110,.10);
+  --warn: #B7791F; --warn-dim: rgba(183,121,31,.10);
+  --err:  #D64550; --err-dim: rgba(214,69,80,.10);
+  --info: #0E7C93; --info-dim: rgba(14,124,147,.10);
+  --ai:   #7C5CE0; --ai-dim: rgba(124,92,224,.10);
+  --lvl-junior:#0E9F6E; --lvl-junior-adv:#0E7C93; --lvl-mid:#B7791F; --lvl-senior:#D64550;
+  --shadow-sm: 0 1px 2px rgba(16,24,40,.06);
+  --shadow-md: 0 4px 16px rgba(16,24,40,.08);
+  --shadow-lg: 0 16px 48px rgba(16,24,40,.12);
+}
+
+/* ============================================================
+   Reset y base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg-0);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,h2,h3,h4 { margin: 0; line-height: 1.25; font-weight: 650; letter-spacing: -.015em; }
+h1 { font-size: var(--fs-2xl); }
+h2 { font-size: var(--fs-xl); }
+h3 { font-size: var(--fs-lg); }
+p  { margin: 0 0 var(--sp-3); }
+a  { color: var(--brand-soft); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre, kbd { font-family: var(--mono); font-size: .875em; }
+hr { border: 0; border-top: 1px solid var(--border); margin: var(--sp-5) 0; }
+
+:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; border-radius: var(--r-sm); }
+
+::selection { background: var(--brand-line); color: var(--text); }
+
+/* Scrollbars discretas */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--r-full); border: 3px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--text-mute); background-clip: content-box; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

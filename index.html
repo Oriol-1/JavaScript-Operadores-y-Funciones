@@ -1,217 +1,151 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Suite JS/TS - Aprende JavaScript a Fondo</title>
-    <style>
-        :root {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --accent: #0f3460;
-            --highlight: #e94560;
-            --text: #e0e0e0;
-            --card-hover: #1f2b4d;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 800px;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #e94560, #ff9800);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p.subtitle {
-            font-size: 1.2rem;
-            color: #aaa;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 20px;
-            max-width: 1200px;
-            width: 100%;
-            margin-bottom: 50px;
-        }
-
-        .card {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--accent);
-            border-radius: 15px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            color: var(--text);
-        }
-
-        .card:hover:not(.disabled) {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            border-color: var(--highlight);
-            background-color: var(--card-hover);
-        }
-
-        .card.disabled {
-            opacity: 0.6;
-            cursor: default;
-            border-style: dashed;
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-
-        .card h2 {
-            margin: 0 0 10px 0;
-            color: var(--highlight);
-        }
-
-        .card p {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: #ccc;
-            flex-grow: 1;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-top: 15px;
-            align-self: flex-start;
-        }
-
-        .status-ready {
-            background-color: rgba(76, 175, 80, 0.2);
-            color: #4caf50;
-            border: 1px solid #4caf50;
-        }
-
-        .status-wip {
-            background-color: rgba(255, 152, 0, 0.2);
-            color: #ff9800;
-            border: 1px solid #ff9800;
-        }
-
-        .status-locked {
-            background-color: rgba(158, 158, 158, 0.2);
-            color: #9e9e9e;
-            border: 1px solid #9e9e9e;
-        }
-
-        footer {
-            margin-top: auto;
-            padding: 20px;
-            text-align: center;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid var(--accent);
-            width: 100%;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            header { padding: 20px; }
-            .grid-container { grid-template-columns: 1fr; padding: 10px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TechTrack — Prepárate para pruebas técnicas reales</title>
+<meta name="description" content="Plataforma para aprender programación resolviendo pruebas técnicas como las que hacen hoy las empresas.">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/app.css">
 </head>
 <body>
 
-    <header>
-        <h1>Master Suite JS/TS</h1>
-        <p class="subtitle">Tu camino interactivo para dominar JavaScript y TypeScript desde cero hasta experto.</p>
-    </header>
-
-    <div class="grid-container">
-        <!-- Módulo 1 -->
-        <a href="fundamentos.html" class="card">
-            <div class="card-icon">📚</div>
-            <h2>Módulo 1: Fundamentos</h2>
-            <p>Aprende la sintaxis básica, operadores, tipos de datos y cómo funcionan las funciones en JavaScript.</p>
-            <span class="status-badge status-ready">DISPONIBLE</span>
-        </a>
-
-        <!-- Módulo 2 -->
-        <a href="algoritmos.html" class="card">
-            <div class="card-icon">🧠</div>
-            <h2>Módulo 2: Lógica & Algoritmos</h2>
-            <p>Visualizador interactivo para entender métodos de Arrays (map, filter, reduce) y algoritmos de ordenamiento.</p>
-            <span class="status-badge status-ready">DISPONIBLE</span>
-        </a>
-
-        <!-- Módulo 3 -->
-        <a href="dom_lab.html" class="card">
-            <div class="card-icon">🎨</div>
-            <h2>Módulo 3: Laboratorio DOM</h2>
-            <p>Manipula el HTML y CSS en tiempo real. Aprende selectores, eventos y creación dinámica de elementos.</p>
-            <span class="status-badge status-ready">DISPONIBLE</span>
-        </a>
-
-        <!-- Módulo 4 -->
-        <a href="async_lab.html" class="card">
-            <div class="card-icon">⚡</div>
-            <h2>Módulo 4: Asincronía</h2>
-            <p>Domina el tiempo: Callbacks, Promesas, Async/Await y consumo de APIs con Fetch.</p>
-            <span class="status-badge status-ready">DISPONIBLE</span>
-        </a>
-
-        <!-- Módulo 5 -->
-        <a href="scope_lab.html" class="card">
-            <div class="card-icon">📦</div>
-            <h2>Módulo 5: Scope & Closures</h2>
-            <p>Entiende cómo JavaScript guarda las variables, el contexto 'this' y los patrones de diseño avanzados.</p>
-            <span class="status-badge status-ready">DISPONIBLE</span>
-        </a>
-
-        <!-- Módulo 6 -->
-        <a href="ts_lab.html" class="card">
-            <div class="card-icon">🔷</div>
-            <h2>Módulo 6: TypeScript Pro</h2>
-            <p>Aprende el superset que domina la industria: Tipado estático, Interfaces y Genéricos.</p>
-            <span class="status-badge status-ready">DISPONIBLE</span>
-        </a>
-
-        <!-- Buscador de Métodos -->
-        <a href="buscador.html" class="card" style="border-color: #00bcd4;">
-            <div class="card-icon">🔍</div>
-            <h2 style="color: #00bcd4;">Buscador de Métodos</h2>
-            <p>Encuentra rápidamente el método que necesitas buscando por funcionalidad (ej: "filtrar", "mayúsculas").</p>
-            <span class="status-badge status-ready" style="color: #00bcd4; border-color: #00bcd4; background-color: rgba(0, 188, 212, 0.1);">HERRAMIENTA</span>
-        </a>
+<main>
+  <!-- ---------- Hero ---------- -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Aprender · Practicar · Equivocarse · Entender · Resolver</p>
+      <h1>Prepárate para las pruebas técnicas que hacen hoy las empresas.</h1>
+      <p>
+        No son ejercicios de libro. Cada prueba parte de una situación real de empresa, se resuelve con código,
+        se corrige con tests y termina explicando <strong>qué se hace, por qué, cómo funciona, qué alternativas
+        existen y qué errores evitar</strong>.
+      </p>
+      <div class="row row-wrap" style="margin-top:var(--sp-5)">
+        <a class="btn btn-primary btn-lg" href="catalogo.html">Ver todas las pruebas</a>
+        <a class="btn btn-lg" href="rutas.html">Empezar por una ruta</a>
+        <a class="btn btn-ghost btn-lg" href="laboratorios.html">Laboratorios interactivos</a>
+      </div>
     </div>
+  </section>
 
-    <footer>
-        <p>Proyecto Educativo 2026 - Creado con ❤️ y Código</p>
-    </footer>
+  <!-- ---------- Estado del usuario ---------- -->
+  <section class="wrap" id="panel-usuario"></section>
 
+  <!-- ---------- Recomendación ---------- -->
+  <section class="wrap" style="margin-top:var(--sp-6)" id="panel-recomendacion"></section>
+
+  <!-- ---------- Cómo funciona (esquema) ---------- -->
+  <section class="wrap" style="margin-top:var(--sp-7)">
+    <h2>Cómo funciona una prueba</h2>
+    <p class="soft" style="max-width:70ch">
+      El recorrido está diseñado para que primero te enfrentes al problema y solo después veas la solución.
+      Consultarla antes no está prohibido, pero queda registrado: la plataforma lo usa para calibrar tu nivel real.
+    </p>
+
+    <div class="card" style="margin-top:var(--sp-4);overflow-x:auto">
+      <svg class="diagram" viewBox="0 0 900 190" role="img" aria-label="Flujo de una prueba: contexto, resolver, tests, solución explicada, refuerzo" style="min-width:760px">
+        <defs>
+          <marker id="flecha" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 z" fill="var(--border-strong)"/>
+          </marker>
+        </defs>
+
+        <g>
+          <rect class="d-box" x="10"  y="45" width="150" height="72" rx="10" stroke-width="1"/>
+          <text class="d-label" x="85" y="72" text-anchor="middle" font-size="14">1. Contexto</text>
+          <text x="85" y="92" text-anchor="middle" font-size="11.5">Situación real</text>
+          <text x="85" y="107" text-anchor="middle" font-size="11.5">de empresa</text>
+
+          <rect class="d-box" x="190" y="45" width="150" height="72" rx="10" stroke-width="1"/>
+          <text class="d-label" x="265" y="72" text-anchor="middle" font-size="14">2. Resolver</text>
+          <text x="265" y="92" text-anchor="middle" font-size="11.5">Con pistas</text>
+          <text x="265" y="107" text-anchor="middle" font-size="11.5">progresivas</text>
+
+          <rect class="d-box-accent" x="370" y="45" width="150" height="72" rx="10" stroke-width="1"/>
+          <text class="d-label" x="445" y="72" text-anchor="middle" font-size="14">3. Tests</text>
+          <text x="445" y="92" text-anchor="middle" font-size="11.5">Ejecución aislada</text>
+          <text x="445" y="107" text-anchor="middle" font-size="11.5">en sandbox</text>
+
+          <rect class="d-box" x="550" y="45" width="150" height="72" rx="10" stroke-width="1"/>
+          <text class="d-label" x="625" y="72" text-anchor="middle" font-size="14">4. Solución</text>
+          <text x="625" y="92" text-anchor="middle" font-size="11.5">Qué, por qué,</text>
+          <text x="625" y="107" text-anchor="middle" font-size="11.5">cómo y alternativas</text>
+
+          <rect class="d-box" x="730" y="45" width="150" height="72" rx="10" stroke-width="1"/>
+          <text class="d-label" x="805" y="72" text-anchor="middle" font-size="14">5. Refuerzo</text>
+          <text x="805" y="92" text-anchor="middle" font-size="11.5">Qué repasar</text>
+          <text x="805" y="107" text-anchor="middle" font-size="11.5">y qué sigue</text>
+
+          <path class="d-line" d="M162,81 L186,81" stroke-width="1.5" marker-end="url(#flecha)"/>
+          <path class="d-line" d="M342,81 L366,81" stroke-width="1.5" marker-end="url(#flecha)"/>
+          <path class="d-line" d="M522,81 L546,81" stroke-width="1.5" marker-end="url(#flecha)"/>
+          <path class="d-line" d="M702,81 L726,81" stroke-width="1.5" marker-end="url(#flecha)"/>
+
+          <path class="d-line" d="M445,121 L445,150 L265,150 L265,121" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#flecha)"/>
+          <text x="355" y="167" text-anchor="middle" font-size="11" fill="var(--text-mute)">si fallan, vuelves a intentarlo</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ---------- Rutas ---------- -->
+  <section class="wrap" style="margin-top:var(--sp-7)">
+    <div class="row">
+      <h2>Rutas de aprendizaje</h2>
+      <span class="spacer"></span>
+      <a class="btn btn-sm" href="rutas.html">Ver todas</a>
+    </div>
+    <div class="grid grid-2" style="margin-top:var(--sp-4)" id="panel-rutas"></div>
+  </section>
+
+  <!-- ---------- Áreas ---------- -->
+  <section class="wrap" style="margin-top:var(--sp-7)">
+    <h2>Áreas que cubre la plataforma</h2>
+    <p class="soft">Cada área se practica resolviendo, no leyendo.</p>
+    <div class="grid grid-4" style="margin-top:var(--sp-4)" id="panel-areas"></div>
+  </section>
+
+  <!-- ---------- Qué evalúan hoy ---------- -->
+  <section class="wrap" style="margin-top:var(--sp-7)">
+    <h2>Qué evalúan las empresas ahora</h2>
+    <p class="soft" style="max-width:72ch">
+      El contenido está construido a partir de cómo han cambiado los procesos de selección: se asume que usas
+      herramientas de IA y lo que se mide es el criterio que aportas por encima de ellas.
+    </p>
+    <div class="grid grid-2" style="margin-top:var(--sp-4)">
+      <div class="card">
+        <div class="card-title">Lo que ha perdido peso</div>
+        <ul class="check-list x-list">
+          <li>Ejercicios de algoritmos aislados como filtro principal.</li>
+          <li>Pruebas para llevar a casa sin ronda de defensa posterior.</li>
+          <li>Preguntas de memoria sobre sintaxis o sobre la API de un framework.</li>
+          <li>Escribir código estándar desde cero: es la parte más automatizable.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Lo que ha ganado peso</div>
+        <ul class="check-list">
+          <li>Defender decisiones: explicar cada línea que entregas, la generes tú o una herramienta.</li>
+          <li>Revisar, depurar y refactorizar código que ya existe.</li>
+          <li>Diseño de sistemas y de frontend a escala.</li>
+          <li>Seguridad, coste y observabilidad como requisitos, no como extras.</li>
+          <li>Fiabilidad en sistemas con IA: validación, evaluación y control de gasto.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="tiny muted" style="margin-top:var(--sp-3)">
+      Metodología y fuentes en <a href="docs/INVESTIGACION.md">docs/INVESTIGACION.md</a>.
+    </p>
+  </section>
+
+  <div id="pie"></div>
+</main>
+
+<script src="assets/js/core/registry.js"></script>
+<script src="assets/js/core/store.js"></script>
+<script src="assets/js/core/sandbox.js"></script>
+<script src="assets/js/core/ui.js"></script>
+<script src="assets/js/pages/inicio.js"></script>
 </body>
 </html>

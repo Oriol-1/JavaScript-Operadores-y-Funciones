@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratorios interactivos — TechTrack</title>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<main class="wrap" style="padding-top:var(--sp-6)">
+  <h1>Laboratorios interactivos</h1>
+  <p class="soft" style="max-width:74ch">
+    Los laboratorios explican el concepto con código que puedes ejecutar y modificar en el momento.
+    Son el paso previo a las pruebas: aquí entiendes cómo funciona algo, y en la prueba lo aplicas
+    a una situación de empresa con tests que te corrigen.
+  </p>
+
+  <div class="grid grid-3" style="margin-top:var(--sp-6)">
+
+    <a class="card stack" href="fundamentos.html">
+      <div class="row"><span style="font-size:1.5rem">📚</span><span class="badge badge-neutral">Fundamentos</span></div>
+      <div class="card-title">Operadores y funciones</div>
+      <p class="small soft" style="margin:0">Sintaxis, tipos, operadores, funciones y métodos de array, con tabla de referencia filtrable y ejercicios resueltos.</p>
+      <div class="tiny muted">Ruta Frontend · pasos 1 y 2</div>
+    </a>
+
+    <a class="card stack" href="algoritmos.html">
+      <div class="row"><span style="font-size:1.5rem">🧠</span><span class="badge badge-neutral">Lógica</span></div>
+      <div class="card-title">Algoritmos visualizados</div>
+      <p class="small soft" style="margin:0">Ejecución paso a paso de map, filter, reduce, ordenación por burbuja, búsqueda binaria y recursión, con el estado de las variables a la vista.</p>
+      <div class="tiny muted">Ruta Frontend · paso 3</div>
+    </a>
+
+    <a class="card stack" href="dom_lab.html">
+      <div class="row"><span style="font-size:1.5rem">🎨</span><span class="badge badge-neutral">Navegador</span></div>
+      <div class="card-title">Laboratorio DOM</div>
+      <p class="small soft" style="margin:0">Selectores, eventos, creación dinámica de elementos y estilos, con editor y resultado en vivo.</p>
+      <div class="tiny muted">Ruta Frontend · paso 4</div>
+    </a>
+
+    <a class="card stack" href="scope_lab.html">
+      <div class="row"><span style="font-size:1.5rem">📦</span><span class="badge badge-neutral">Lenguaje</span></div>
+      <div class="card-title">Scope y closures</div>
+      <p class="small soft" style="margin:0">Visualización del ámbito, la cadena de scope y el contexto de <code class="mono">this</code>. La base de la mitad de los bugs sutiles.</p>
+      <div class="tiny muted">Ruta Frontend · paso 5</div>
+    </a>
+
+    <a class="card stack" href="async_lab.html">
+      <div class="row"><span style="font-size:1.5rem">⚡</span><span class="badge badge-neutral">Asincronía</span></div>
+      <div class="card-title">Promesas y async/await</div>
+      <p class="small soft" style="margin:0">Callbacks, promesas, encadenado, control de errores, timeouts y consumo de APIs, con consola virtual.</p>
+      <div class="tiny muted">Rutas Frontend y Backend</div>
+    </a>
+
+    <a class="card stack" href="ts_lab.html">
+      <div class="row"><span style="font-size:1.5rem">🔷</span><span class="badge badge-neutral">Tipado</span></div>
+      <div class="card-title">TypeScript</div>
+      <p class="small soft" style="margin:0">Tipos, interfaces, uniones, genéricos y utilidades, compilando y ejecutando en el navegador.</p>
+      <div class="tiny muted">Ruta Frontend · paso 9</div>
+    </a>
+
+    <a class="card stack" href="buscador.html" style="border-color:var(--info)">
+      <div class="row"><span style="font-size:1.5rem">🔍</span><span class="badge badge-info">Herramienta</span></div>
+      <div class="card-title">Buscador de métodos</div>
+      <p class="small soft" style="margin:0">Busca por lo que quieres hacer ("filtrar", "mayúsculas") y te devuelve el método, su sintaxis y un ejemplo.</p>
+      <div class="tiny muted">Referencia rápida durante las pruebas</div>
+    </a>
+
+  </div>
+
+  <div class="note" style="margin-top:var(--sp-6)">
+    <strong>Del laboratorio a la prueba.</strong> Cuando termines un laboratorio, la ruta te indica qué prueba
+    lo evalúa. Es el orden que funciona: entender, aplicar, fallar, corregir.
+    <a href="rutas.html">Ver las rutas</a>.
+  </div>
+
+  <div id="pie"></div>
+</main>
+
+<script src="assets/js/core/registry.js"></script>
+<script src="assets/js/core/store.js"></script>
+<script src="assets/js/core/sandbox.js"></script>
+<script src="assets/js/core/ui.js"></script>
+<script>
+  TT.boot().then(function () {
+    TT.ui.mountNav('laboratorios.html');
+    TT.ui.refreshNavLevel();
+    document.getElementById('pie').innerHTML = TT.ui.footer();
+  });
+</script>
+</body>
+</html>

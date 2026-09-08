@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba — TechTrack</title>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* Estilos propios del runner: no se reutilizan en otras páginas. */
+  .editor {
+    width: 100%; min-height: 380px; resize: vertical;
+    background: var(--bg-0); color: var(--text);
+    border: 1px solid var(--border-strong); border-radius: 0 0 var(--r-md) var(--r-md);
+    padding: var(--sp-4); font-family: var(--mono); font-size: var(--fs-sm);
+    line-height: 1.65; tab-size: 2; white-space: pre; overflow-wrap: normal; overflow-x: auto;
+  }
+  .editor:focus { outline: none; border-color: var(--brand); box-shadow: var(--ring); }
+
+  .paso {
+    display: grid; grid-template-columns: 28px 1fr; gap: var(--sp-3);
+    padding: var(--sp-4) 0; border-bottom: 1px solid var(--border);
+  }
+  .paso:last-child { border-bottom: 0; }
+  .paso-num {
+    width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--brand-dim); color: var(--brand-soft);
+    font-size: var(--fs-xs); font-weight: 700; border: 1px solid var(--brand-line);
+  }
+  .paso-q { font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .paso-linea { display: grid; grid-template-columns: 78px 1fr; gap: var(--sp-3); font-size: var(--fs-sm); margin-top: 6px; }
+  .paso-etiq { color: var(--text-mute); font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding-top: 2px; }
+  .paso-txt { color: var(--text-soft); }
+
+  .err-item { border: 1px solid var(--border); border-radius: var(--r-md); padding: var(--sp-4); background: var(--bg-2); }
+  .err-item + .err-item { margin-top: var(--sp-3); }
+  .err-titulo { color: var(--err); font-weight: 620; font-size: var(--fs-sm); margin-bottom: 6px; }
+
+  .check-item { display: flex; gap: var(--sp-3); padding: 11px var(--sp-3); border: 1px solid var(--border); border-radius: var(--r-md); cursor: pointer; }
+  .check-item + .check-item { margin-top: 6px; }
+  .check-item:hover { border-color: var(--border-strong); background: var(--bg-3); }
+  .check-item input { margin-top: 3px; accent-color: var(--brand); flex-shrink: 0; }
+  .check-item span { font-size: var(--fs-sm); color: var(--text-soft); }
+  .check-item input:checked + span { color: var(--text); }
+
+  .fase-num {
+    width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center;
+    background: var(--brand); color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+
+  .gate { text-align: center; padding: var(--sp-7) var(--sp-5); }
+  .panel { display: none; }
+  .panel.activo { display: block; animation: fadeIn .25s ease both; }
+</style>
+</head>
+<body>
+
+<main class="wrap" style="padding-top:var(--sp-5)" id="app">
+  <p class="muted small">Cargando prueba…</p>
+</main>
+
+<script src="assets/js/core/registry.js"></script>
+<script src="assets/js/core/store.js"></script>
+<script src="assets/js/core/sandbox.js"></script>
+<script src="assets/js/core/ui.js"></script>
+<script src="assets/js/pages/prueba.js"></script>
+</body>
+</html>
