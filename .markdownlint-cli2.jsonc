@@ -1,0 +1,7 @@
+{
+  // La documentación se lee en el editor y en GitHub, no en una terminal
+  // de 80 columnas: el límite de longitud de línea no aporta aquí.
+  "config": {
+    "MD013": false
+  }
+}
