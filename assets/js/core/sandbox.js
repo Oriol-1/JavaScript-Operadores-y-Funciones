@@ -137,20 +137,4 @@
       '})();'
     ].join('\n');
   }
-
-  /**
-   * Sandbox visual: renderiza HTML+CSS+JS del usuario en un iframe
-   * aislado. Se usa en las pruebas de frontend.
-   */
-  TT.renderPreview = function (container, html, css, js) {
-    container.innerHTML = '';
-    var iframe = document.createElement('iframe');
-    iframe.setAttribute('sandbox', 'allow-scripts');
-    iframe.style.cssText = 'width:100%;height:100%;border:0;background:#fff;border-radius:8px';
-    iframe.srcdoc = '<!doctype html><meta charset="utf-8"><style>' + (css || '') + '</style>' +
-      (html || '') + '<script>try{' + (js || '') + '}catch(e){document.body.innerHTML+="<pre style=\\"color:red\\">"+e.message+"</pre>";}<\/script>';
-    container.appendChild(iframe);
-    return iframe;
-  };
-
 })(window);

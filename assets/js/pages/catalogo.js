@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  TT.boot().then(function () {
+  TT.boot('', { liviano: true }).then(function () {
     var UI = TT.ui;
     UI.mountNav('catalogo.html');
     UI.refreshNavLevel();
@@ -73,7 +73,12 @@
       if (estado.level) p.set('nivel', estado.level);
       if (estado.kind) p.set('tipo', estado.kind);
       var qs = p.toString();
-      history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+      // Si history.replaceState lanza (algunos navegadores restringen la
+      // API de historial sobre file://), la aplicación del filtro no debe
+      // depender de que la sincronización de la URL tenga éxito.
+      try {
+        history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+      } catch (e) { /* la URL no se pudo actualizar; el filtro sigue aplicándose */ }
       render();
     }
 

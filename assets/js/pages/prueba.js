@@ -32,7 +32,7 @@
       cabecera() +
       '<div class="exercise-layout" style="margin-top:var(--sp-5)">' +
         '<div>' +
-          '<div class="tabs" id="tabs">' +
+          '<div class="tabs" id="tabs" role="tablist" aria-label="Secciones de la prueba">' +
             tab('enunciado', 'Enunciado', true) +
             tab('documentacion', 'Documentación') +
             tab('resolver', 'Resolver') +
@@ -40,11 +40,11 @@
             tab('analisis', 'Análisis') +
           '</div>' +
           '<div style="margin-top:var(--sp-5)">' +
-            '<div class="panel activo" id="p-enunciado">' + panelEnunciado() + '</div>' +
-            '<div class="panel" id="p-documentacion">' + panelDocumentacion() + '</div>' +
-            '<div class="panel" id="p-resolver">' + panelResolver() + '</div>' +
-            '<div class="panel" id="p-solucion">' + panelSolucionBloqueada() + '</div>' +
-            '<div class="panel" id="p-analisis">' + panelAnalisis() + '</div>' +
+            '<div class="panel activo" id="p-enunciado" role="tabpanel" aria-labelledby="tab-enunciado" tabindex="0">' + panelEnunciado() + '</div>' +
+            '<div class="panel" id="p-documentacion" role="tabpanel" aria-labelledby="tab-documentacion" tabindex="0" hidden>' + panelDocumentacion() + '</div>' +
+            '<div class="panel" id="p-resolver" role="tabpanel" aria-labelledby="tab-resolver" tabindex="0" hidden>' + panelResolver() + '</div>' +
+            '<div class="panel" id="p-solucion" role="tabpanel" aria-labelledby="tab-solucion" tabindex="0" hidden>' + panelSolucionBloqueada() + '</div>' +
+            '<div class="panel" id="p-analisis" role="tabpanel" aria-labelledby="tab-analisis" tabindex="0" hidden>' + panelAnalisis() + '</div>' +
           '</div>' +
         '</div>' +
         '<aside class="sticky-side stack">' + lateral() + '</aside>' +
@@ -69,7 +69,9 @@
     }
 
     function tab(clave, etiqueta, activo) {
-      return '<button class="tab" role="tab" data-tab="' + clave + '" aria-selected="' + !!activo + '">' + etiqueta + '</button>';
+      return '<button class="tab" role="tab" id="tab-' + clave + '" data-tab="' + clave + '"' +
+        ' aria-selected="' + !!activo + '" aria-controls="p-' + clave + '"' +
+        ' tabindex="' + (activo ? '0' : '-1') + '">' + etiqueta + '</button>';
     }
 
     function panelEnunciado() {
@@ -411,18 +413,46 @@
     /* ================= Comportamiento ================= */
 
     function conectar() {
-      /* --- Pestañas --- */
-      document.getElementById('tabs').addEventListener('click', function (e) {
-        var b = e.target.closest('.tab');
+      /* --- Pestañas: patrón ARIA completo con navegación por flechas --- */
+      var listaTabs = document.getElementById('tabs');
+
+      function activarTab(b) {
         if (!b) return;
-        document.querySelectorAll('.tab').forEach(function (t) { t.setAttribute('aria-selected', t === b); });
-        document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('activo'); });
-        document.getElementById('p-' + b.dataset.tab).classList.add('activo');
+        document.querySelectorAll('.tab').forEach(function (t) {
+          var esta = t === b;
+          t.setAttribute('aria-selected', esta);
+          t.tabIndex = esta ? 0 : -1;
+        });
+        document.querySelectorAll('.panel').forEach(function (p) {
+          var esta = p.id === 'p-' + b.dataset.tab;
+          p.classList.toggle('activo', esta);
+          p.hidden = !esta;
+        });
+        b.focus();
+      }
+
+      listaTabs.addEventListener('click', function (e) {
+        var b = e.target.closest('.tab');
+        if (b) activarTab(b);
       });
 
-      /* --- Cronómetro: mide el tiempo real dedicado --- */
-      var reloj = document.getElementById('reloj');
+      listaTabs.addEventListener('keydown', function (e) {
+        var actual = document.activeElement.closest('.tab');
+        if (!actual) return;
+        var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+        var i = tabs.indexOf(actual);
+        if (e.key === 'ArrowRight') { e.preventDefault(); activarTab(tabs[(i + 1) % tabs.length]); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); activarTab(tabs[(i - 1 + tabs.length) % tabs.length]); }
+        else if (e.key === 'Home') { e.preventDefault(); activarTab(tabs[0]); }
+        else if (e.key === 'End') { e.preventDefault(); activarTab(tabs[tabs.length - 1]); }
+      });
+
+      /* --- Cronómetro: mide el tiempo real dedicado ---
+         refrescarEstado() reemplaza el innerHTML de la tarjeta en cada
+         pista, ejecución o desbloqueo, así que el nodo #reloj se recrea.
+         Buscarlo en cada tick evita quedarnos con una referencia muerta. */
       cronometro = UI.timer(ex.id, function (s) {
+        var reloj = document.getElementById('reloj');
         if (!reloj) return;
         var m = Math.floor(s / 60), r = s % 60;
         reloj.textContent = (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
