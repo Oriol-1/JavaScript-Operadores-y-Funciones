@@ -10,6 +10,7 @@
    ============================================================ */
 window.TT.MANIFEST = [
   'taxonomy.js',
+  'exercises/junior.js',
   'exercises/frontend.js',
   'exercises/backend.js',
   'exercises/testing.js',

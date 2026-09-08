@@ -19,13 +19,13 @@ laboratorios.html   Los laboratorios interactivos
 
 ## Qué hay dentro
 
-**17 pruebas completas** con los 26 bloques del contrato (contexto de empresa,
+**19 pruebas completas** con los 26 bloques del contrato (contexto de empresa,
 requisitos, pistas progresivas, tests, solución explicada, alternativas, errores
 frecuentes, seguridad, rendimiento, rúbrica y refuerzo), **más dos bloques
 propios**: documentación que hace cada prueba autosuficiente (9 000–19 000
 caracteres de material por ejercicio) y, en 6 de ellas, la construcción **por
 fases con el archivo completo en cada punto**.
-**14 se corrigen solas** con 116 aserciones ejecutadas en un sandbox aislado;
+**16 se corrigen solas** con 130 aserciones ejecutadas en un sandbox aislado;
 las 3 pruebas de empresa se evalúan con la rúbrica que usaría el equipo que te
 entrevista.
 
@@ -34,10 +34,11 @@ en el sistema visual y enlazados desde las rutas: fundamentos, algoritmos
 visualizados, DOM, asincronía, scope y closures, TypeScript y el buscador de
 métodos.
 
-Cubre frontend, JavaScript a fondo, backend, APIs, bases de datos y rendimiento,
-testing, debugging, refactorización, seguridad, revisión de código, system design,
-IA aplicada (salidas estructuradas, RAG, MCP) y agentes (guardrails, control de
-coste, depuración de agentes, evals).
+Cubre los cuatro niveles, desde ejercicios guiados de un solo método hasta
+problemas abiertos de nivel senior: frontend, JavaScript a fondo, backend, APIs,
+bases de datos y rendimiento, testing, debugging, refactorización, seguridad,
+revisión de código, system design, IA aplicada (salidas estructuradas, RAG, MCP)
+y agentes (guardrails, control de coste, depuración de agentes, evals).
 
 ## Cómo funciona una prueba
 
@@ -85,6 +86,34 @@ que las rúbricas sumen 100, que las rutas no apunten a contenido inexistente y
 **ejecuta cada solución de referencia contra sus propios tests**.
 
 El núcleo no conoce ningún ejercicio: todo el contenido se auto-registra.
+
+Al terminar, regenera el índice ligero (ver siguiente sección) para que el
+ejercicio nuevo aparezca en el catálogo, las rutas y la búsqueda:
+
+```bash
+node tools/generar-indice.js
+```
+
+## Carga ligera para las páginas de listado
+
+`prueba.html` necesita la solución, la documentación y las fases de una
+prueba: eso es lo que carga `TT.boot()`. Pero el catálogo, las rutas, el
+inicio y el progreso solo necesitan id, título, categoría, nivel y los textos
+cortos que alimentan la búsqueda — cargar ahí el contenido completo baja
+cientos de KB que nunca se usan.
+
+Esas cuatro páginas llaman en su lugar a `TT.boot('', { liviano: true })`,
+que carga `content/indice.js` en vez de `content/manifest.js`. Ese archivo
+se genera con `tools/generar-indice.js` a partir de `content/exercises/`:
+
+```bash
+node tools/generar-indice.js          # regenera content/indice.js
+node tools/generar-indice.js --check  # falla si está desactualizado
+```
+
+La integración continua ejecuta `--check` en cada push: si editas un
+ejercicio y olvidas regenerar el índice, el build falla en vez de dejar el
+catálogo desincronizado en silencio.
 
 ## Documentación
 

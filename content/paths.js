@@ -19,6 +19,8 @@
     steps: [
       { titulo: 'HTML semántico y CSS', detalle: 'La base de la accesibilidad y del rendimiento percibido.', lab: 'fundamentos.html' },
       { titulo: 'JavaScript: operadores, funciones y arrays', detalle: 'Sintaxis y métodos que aparecen en cualquier criba técnica.', lab: 'fundamentos.html' },
+      { titulo: 'Limpiar datos con arrays y regex', detalle: 'Normalización, validación de formato y eliminación de duplicados.', exercise: 'js-limpiar-correos' },
+      { titulo: 'Calcular un resumen con reduce', detalle: 'Acumular totales, aplicar reglas y redondear con precisión.', exercise: 'js-resumen-carrito' },
       { titulo: 'Lógica y algoritmos', detalle: 'map, filter, reduce, ordenación y búsqueda vistos paso a paso.', lab: 'algoritmos.html' },
       { titulo: 'DOM y eventos', detalle: 'Manipulación, delegación y creación dinámica.', lab: 'dom_lab.html' },
       { titulo: 'Scope, cierres y this', detalle: 'El origen de la mitad de los bugs sutiles de JavaScript.', lab: 'scope_lab.html' },

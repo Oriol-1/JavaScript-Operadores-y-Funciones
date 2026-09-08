@@ -68,12 +68,15 @@ assets/js/core/ui.js        Navegación, tema, formateo y componentes
 assets/js/pages/*.js        Un archivo por página
 assets/js/lab-nav.js        Barra inyectada en los laboratorios
 
-content/manifest.js         Qué se carga (único punto de registro)
+content/manifest.js         Qué se carga en prueba.html (contenido completo)
+content/indice.js           GENERADO — qué se carga en las páginas de listado
 content/taxonomy.js         Categorías y tipos de prueba
 content/paths.js            Rutas de aprendizaje
 content/exercises/*.js      Pruebas, agrupadas por área
 
 tools/verificar.js          Suite de verificación del contenido
+tools/generar-indice.js     Genera content/indice.js a partir de content/exercises/
+.github/workflows/          Integración continua: verificar.js + generar-indice.js --check
 docs/                       Esta documentación y la investigación
 ```
 
@@ -301,14 +304,50 @@ invalida intentos anteriores (cambian los tests o los requisitos), se incrementa
 Los intentos guardados registran la fecha, de modo que el progreso puede
 distinguirse por versión si en el futuro hace falta.
 
-## 9. Qué queda pendiente
+## 9. Carga ligera para las páginas de listado
+
+`prueba.html` necesita la solución, la documentación y las fases completas de
+un ejercicio. El catálogo, las rutas, el inicio y el progreso no: solo id,
+título, categoría, nivel y los textos cortos de búsqueda. Cargar el contenido
+completo en esas cuatro páginas escala mal — a 50 pruebas serían más de 2 MB
+por carga de página que nunca se usan.
+
+`TT.boot(base, { liviano: true })` carga en su lugar `content/indice.js`, un
+archivo **generado** (no editado a mano) por `tools/generar-indice.js`, que lee
+`content/exercises/` con el mismo mecanismo que `tools/verificar.js` y extrae
+solo los campos ligeros de cada ejercicio, registrándolos con
+`TT.defineExerciseIndice` — una función de registro sin la validación completa
+de `defineExercise`, porque un índice derivado no necesita la misma red de
+seguridad que el contrato de un ejercicio.
+
+`node tools/generar-indice.js --check` falla si el índice no coincide con el
+contenido actual; es el paso que ejecuta la integración continua para que
+nadie olvide regenerarlo tras editar un ejercicio.
+
+Con las 19 pruebas actuales, `content/indice.js` pesa 28 KB frente a los más de
+750 KB del contenido completo: las páginas de listado bajan menos del 4 % de
+ese peso.
+
+## 10. Integración continua
+
+`.github/workflows/verificar.yml` ejecuta en cada push y cada pull request:
+
+1. `node tools/verificar.js` — estructura del contrato, documentación, fases,
+   rutas y las soluciones de referencia contra sus propios tests.
+2. `node tools/generar-indice.js --check` — que el índice ligero esté al día.
+
+Sin dependencias: los dos scripts son Node puro, así que el flujo de trabajo no
+instala nada más que el propio Node.
+
+## 11. Qué queda pendiente
 
 - Editor con resaltado de sintaxis en el runner (hoy es un `textarea` con soporte
   de tabulador; Monaco ya se usa en los laboratorios y podría reutilizarse).
 - Tests automáticos para lenguajes distintos de JavaScript.
-- Vista previa visual para las pruebas de frontend (`TT.renderPreview` ya existe
-  en `sandbox.js`, falta el ejercicio que la use).
-- Más pruebas: el catálogo tiene 17 completas. Quedan sin contenido las categorías
-  de Git y GitHub, Arquitectura y Automatizaciones, además de multiagente y
-  observabilidad dentro de IA. Añadirlas no requiere tocar el núcleo.
-- Retrofit de `fases` a las 11 pruebas anteriores, que hoy usan `walkthrough`.
+- Vista previa visual para las pruebas de frontend: no existe todavía ningún
+  ejercicio ni utilidad para renderizar HTML/CSS/JS del usuario en un iframe.
+- Más pruebas: el catálogo tiene 19 completas, 2 de nivel junior. Quedan sin
+  contenido las categorías de Git y GitHub, Arquitectura y Automatizaciones,
+  además de multiagente y observabilidad dentro de IA. Añadirlas no requiere
+  tocar el núcleo.
+- Retrofit de `fases` a las pruebas que hoy usan `walkthrough`.
