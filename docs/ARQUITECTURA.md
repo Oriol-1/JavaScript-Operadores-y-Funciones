@@ -80,6 +80,8 @@ content/exercises/*.js      Pruebas, agrupadas por área
 tools/verificar.js          Suite de verificación del contenido
 tools/generar-indice.js     Genera content/indice.js a partir de content/exercises/
 tools/humo.js               Ejecuta el JS de cada página sobre un DOM mínimo
+tools/navegador.js          Controlador de Chrome por el protocolo DevTools
+tools/e2e.js                Laboratorios e interacción en un navegador real
 .github/workflows/          Integración continua: los tres scripts de tools/
 docs/                       Esta documentación y la investigación
 ```
@@ -458,9 +460,9 @@ Al actualizar, la comprobación mínima es que las rutas exactas que usa el cód
 sigan existiendo en la versión nueva. La API de Monaco que se utiliza —
 `require.config`, `monaco.editor.create`, `KeyMod`/`KeyCode` y `addCommand`— es
 estable desde hace años, y ninguna de las opciones que se le pasan está obsoleta.
-Aun así, **abrir los laboratorios en un navegador es lo único que no cubre
-ninguna prueba automática**, y es el paso que hay que dar a mano tras subir
-Monaco.
+Y desde ahora eso **sí** se comprueba: `node tools/e2e.js` abre los laboratorios
+en un Chrome real y verifica que los editores se crean con contenido y que Babel
+compila. Es el paso a dar tras subir cualquiera de las tres librerías.
 
 ## 11. Estilo de JavaScript: qué es restricción y qué era inercia
 
@@ -503,8 +505,35 @@ comprobaciones y 88 000 caracteres de HTML. Idéntico.
    `assets/js/pages/`. Doce escenarios: listados, fichas, runner, simulación,
    filtros por URL y el caso de identificador inexistente.
 
-Sin dependencias: los dos scripts son Node puro, así que el flujo de trabajo no
+Sin dependencias: los tres scripts son Node puro, así que el flujo de trabajo no
 instala nada más que el propio Node.
+
+### Lo que la integración continua NO puede comprobar
+
+Queda un cuarto script, `tools/e2e.js`, que **no** está en el flujo de trabajo
+porque necesita un Chrome instalado y salida a internet. Cubre justo lo que a las
+otras se les escapa:
+
+- **Los laboratorios**, que cargan Monaco, Babel y highlight.js desde un CDN.
+  Comprueba que los editores se crean con contenido y que Babel compila
+  TypeScript de verdad. Es la única red bajo una subida de versión de esas
+  librerías.
+- **Los manejadores de eventos**: clics en los chips de filtro, sincronización
+  con la URL, cambio de pestañas, conmutador de tema.
+- **El sandbox de principio a fin**: escribe la solución de referencia en el
+  editor, pulsa Ejecutar y comprueba que los tests pasan dentro del `iframe`
+  aislado — y que una solución incorrecta falla.
+
+Se apoya en `tools/navegador.js`, un controlador del protocolo DevTools escrito
+sin dependencias: Node 22 ya trae `fetch` y `WebSocket` globales. Si no encuentra
+navegador, se omite sin dar error.
+
+```bash
+node tools/e2e.js
+```
+
+Conviene ejecutarlo tras tocar dependencias externas o el JavaScript de las
+páginas.
 
 ## 13. El modo simulación
 

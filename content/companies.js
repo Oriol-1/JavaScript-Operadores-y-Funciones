@@ -1070,7 +1070,11 @@
     id: 'minsait',
     nombre: 'Minsait (Indra)',
     pais: 'España (Madrid, Barcelona y toda la península)',
-    ciudad: 'Barcelona',
+    // Sede en Madrid. Contrata en toda España, incluida Barcelona, pero el
+    // filtro de ubicación señala dónde está el equipo, no dónde hay vacantes:
+    // marcarla como Barcelona la confundiría con las empresas de producto
+    // que sí tienen allí su ingeniería.
+    ciudad: 'Madrid',
     sector: 'Consultoría tecnológica y servicios de IT',
     tamano: 'Muy grande · cotizada · miles de personas en tecnología',
     tech: ['Java', 'Spring', 'Angular', '.NET', 'SQL', 'Cloud', 'SAP'],

@@ -171,6 +171,7 @@ Después añade el archivo a `content/manifest.js` y verifica:
 node tools/verificar.js       # contenido: contrato, docs, fases, empresas y tests
 node tools/generar-indice.js  # regenera el índice ligero
 node tools/humo.js            # ejecuta el JavaScript de cada página
+node tools/e2e.js             # opcional: Chrome real (laboratorios e interacción)
 ```
 
 El verificador comprueba la estructura de cada prueba, que la documentación esté
