@@ -3,31 +3,31 @@
   'use strict';
 
   TT.boot('', { liviano: true }).then(function () {
-    var UI = TT.ui;
+    const UI = TT.ui;
     UI.mountNav('rutas.html');
     UI.refreshNavLevel();
 
     document.getElementById('rutas').innerHTML = TT.paths().map(function (p) {
-      var pr = TT.store.pathProgress(p);
-      var primeroPendiente = true;
+      const pr = TT.store.pathProgress(p);
+      let primeroPendiente = true;
 
-      var nodos = p.steps.map(function (paso, i) {
-        var ex = paso.exercise ? TT.get(paso.exercise) : null;
-        var intento = ex ? TT.store.attempt(ex.id) : null;
-        var hecho = intento && intento.status === 'passed';
+      const nodos = p.steps.map(function (paso, i) {
+        const ex = paso.exercise ? TT.get(paso.exercise) : null;
+        const intento = ex ? TT.store.attempt(ex.id) : null;
+        const hecho = intento && intento.status === 'passed';
 
-        var clase = hecho ? 'done' : '';
+        let clase = hecho ? 'done' : '';
         if (!hecho && ex && primeroPendiente) { clase = 'current'; primeroPendiente = false; }
 
-        var destino = ex ? 'prueba.html?id=' + encodeURIComponent(ex.id)
+        const destino = ex ? 'prueba.html?id=' + encodeURIComponent(ex.id)
                          : (paso.lab || null);
 
-        var etiqueta = ex
+        const etiqueta = ex
           ? '<span class="badge badge-brand">Prueba</span>'
           : paso.lab ? '<span class="badge badge-neutral">Laboratorio</span>'
                      : '<span class="badge badge-neutral" style="opacity:.6">Próximamente</span>';
 
-        var interior =
+        const interior =
           '<div class="path-num">' + (hecho ? '✓' : i + 1) + '</div>' +
           '<div>' +
             '<div class="path-node-title">' + UI.esc(paso.titulo) + '</div>' +
@@ -60,7 +60,7 @@
 
     // Si se llega con ancla desde el inicio, se enfoca la ruta.
     if (location.hash) {
-      var t = document.querySelector(location.hash);
+      const t = document.querySelector(location.hash);
       if (t) t.scrollIntoView();
     }
 

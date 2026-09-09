@@ -9,6 +9,24 @@
      ================================================================== */
   TT.defineExercise({
     id: 'ai-evals-juez',
+    empresa: {
+      empresas: ['ia-generalista'],
+      evidencia: 'inspirada',
+      puesto: 'AI Engineer',
+      rol: 'ai-engineer',
+      formato: 'ai-case',
+      dificultad: 4,
+      evalua: [
+        'Decidir si un cambio de modelo mejora algo de verdad, antes de desplegarlo.',
+        'Diseñar un conjunto de evaluación y un juez automático con sus propios sesgos controlados.',
+        'Medir en lugar de opinar: la competencia que más se repite en estas entrevistas.'
+      ],
+      nota: '"¿Cómo sabes que la versión nueva es mejor?" es la pregunta central de las entrevistas de IA de 2026. El caso es nuestro.',
+      fuentes: [
+        { titulo: 'How to interview for an AI Engineer role in 2026', url: 'https://chiraghasija.cc/posts/how-to-interview-ai-engineer-role-2026/' },
+        { titulo: 'AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales', url: 'https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms' }
+      ]
+    },
     categorias: ['ai', 'testing'],
     title: 'Evals: saber si tu cambio de prompt mejora o empeora',
     category: 'agents',
@@ -1267,6 +1285,24 @@
      ================================================================== */
   TT.defineExercise({
     id: 'ai-mcp-servidor',
+    empresa: {
+      empresas: ['ia-generalista', 'microsoft'],
+      evidencia: 'inspirada',
+      puesto: 'AI Engineer',
+      rol: 'ai-engineer',
+      formato: 'mini-app',
+      dificultad: 4,
+      evalua: [
+        'Exponer capacidades a un agente con un contrato de herramientas explícito y validado.',
+        'Límites de confianza entre la instrucción del sistema y los datos del usuario.',
+        'Diseño de API pensado para que lo consuma un modelo, no una persona.'
+      ],
+      nota: 'Construir un servidor de herramientas para un agente es el equivalente actual del "haz una pequeña API". El enunciado es nuestro.',
+      fuentes: [
+        { titulo: 'AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales', url: 'https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms' },
+        { titulo: 'Take-Home Engineering Challenge (Microsoft CSE)', url: 'https://github.com/seushermsft/Take-Home-Engineering-Challenge' }
+      ]
+    },
     categorias: ['agents'],
     title: 'MCP: publica herramientas que un modelo pueda usar sin romperse',
     category: 'ai',

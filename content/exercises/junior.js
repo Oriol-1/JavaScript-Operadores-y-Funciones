@@ -15,6 +15,25 @@
      ================================================================== */
   TT.defineExercise({
     id: 'js-limpiar-correos',
+    empresa: {
+      empresas: ['factorial', 'typeform', 'caixabank-tech'],
+      evidencia: 'inspirada',
+      puesto: 'Full Stack Engineer (Junior)',
+      rol: 'fullstack',
+      formato: 'take-home',
+      dificultad: 1,
+      evalua: [
+        'Limpieza de datos de entrada, que es la mitad del trabajo real en producto de RRHH y formularios.',
+        'Casos límite silenciosos: espacios, mayúsculas, duplicados y valores vacíos.',
+        'Código legible en una función pequeña, sin librerías.'
+      ],
+      nota: 'Ninguna de las tres publica esta prueba. Se construye a partir de su dominio —datos introducidos por personas en formularios, fichas de empleado o formularios bancarios— y del nivel de entrada de sus ofertas: CaixaBank Tech es de las pocas empresas del ecosistema que publica vacantes con seis meses de experiencia mínima.',
+      fuentes: [
+        { titulo: 'Careers in Factorial', url: 'https://factorialhr.com/join-factorial' },
+        { titulo: 'Engineering Jobs — Careers at Typeform', url: 'https://www.typeform.com/careers/engineering' },
+        { titulo: 'CaixaBank Tech — Junior Software Engineer Java + Python', url: 'https://caixabanktech.com/en/job/junior-software-engineer-java-python-3/' }
+      ]
+    },
     title: 'Limpia una lista de correos para una newsletter',
     category: 'javascript',
     categorias: ['frontend'],
@@ -482,6 +501,24 @@
      ================================================================== */
   TT.defineExercise({
     id: 'js-resumen-carrito',
+    empresa: {
+      empresas: ['glovo', 'wallapop'],
+      evidencia: 'inspirada',
+      puesto: 'Backend Engineer (Junior)',
+      rol: 'backend',
+      formato: 'take-home',
+      dificultad: 2,
+      evalua: [
+        'Agregar y resumir una colección sin perder precisión en los importes.',
+        'Reglas de negocio pequeñas pero con casos límite: carrito vacío, cantidades cero, descuentos.',
+        'Elegir la estructura de datos adecuada en vez de encadenar bucles.'
+      ],
+      nota: 'Inspirada en el dominio de marketplace de ambas empresas (carrito, precios, totales). No es su prueba: ninguna la publica.',
+      fuentes: [
+        { titulo: 'Pruebas técnicas en procesos de selección en España', url: 'https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion' },
+        { titulo: 'Companies that don’t have a broken hiring process', url: 'https://github.com/poteto/hiring-without-whiteboards' }
+      ]
+    },
     title: 'Calcula el resumen de un carrito de la compra',
     category: 'javascript',
     categorias: ['frontend'],

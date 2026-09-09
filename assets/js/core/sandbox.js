@@ -15,8 +15,8 @@
 (function (global) {
   'use strict';
 
-  var TT = global.TT || (global.TT = {});
-  var DEFAULT_TIMEOUT = 4000;
+  const TT = global.TT || (global.TT = {});
+  const DEFAULT_TIMEOUT = 4000;
 
   /**
    * @param {string} userCode  código del usuario
@@ -27,16 +27,16 @@
    */
   TT.runTests = function (userCode, cases, opts) {
     opts = opts || {};
-    var timeout = opts.timeout || DEFAULT_TIMEOUT;
-    var token = 'tt_' + Math.random().toString(36).slice(2);
+    const timeout = opts.timeout || DEFAULT_TIMEOUT;
+    const token = 'tt_' + Math.random().toString(36).slice(2);
 
     return new Promise(function (resolve) {
-      var iframe = document.createElement('iframe');
+      const iframe = document.createElement('iframe');
       iframe.setAttribute('sandbox', 'allow-scripts');
       iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;left:-9999px';
 
-      var settled = false;
-      var timer = setTimeout(function () {
+      let settled = false;
+      const timer = setTimeout(function () {
         finish({
           timedOut: true,
           results: cases.map(function (c) {
@@ -68,8 +68,21 @@
     });
   };
 
+  /**
+   * OJO al `var` de aquí abajo: NO es código antiguo sin actualizar.
+   *
+   * Todo lo que sigue son cadenas que se inyectan en el iframe y se
+   * concatenan, dentro de una misma función, con el código que ha
+   * escrito la persona que resuelve la prueba. Con `let` o `const`,
+   * que ese código declarase por su cuenta una variable con el mismo
+   * nombre sería un SyntaxError de redeclaración y tumbaría el arnés
+   * entero antes de ejecutar un solo test. `var` lo tolera.
+   *
+   * Los nombres internos van con `__guiones__` por el mismo motivo:
+   * reducir al mínimo la probabilidad de colisión. No lo modernices.
+   */
   function buildDoc(token, setup, userCode, cases) {
-    var payload = JSON.stringify({ token: token, cases: cases });
+    const payload = JSON.stringify({ token: token, cases: cases });
     return '<!doctype html><meta charset="utf-8"><body><script>(function(){\n' +
       'var CFG = ' + payload + ';\n' +
       'var results = [];\n' +

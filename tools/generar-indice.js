@@ -31,7 +31,11 @@ const SALIDA = path.join(ROOT, 'content', 'indice.js');
 /** Campos que necesitan las páginas de listado, y solo esos. */
 const CAMPOS_LIGEROS = [
   'id', 'title', 'category', 'categorias', 'kind', 'level',
-  'context', 'situation', 'goal', 'tech', 'skills', 'tags', 'time'
+  'context', 'situation', 'goal', 'tech', 'skills', 'tags', 'time',
+  // El bloque `empresa` es pequeño (una decena de líneas) y lo necesitan
+  // el catálogo, las fichas de empresa y la búsqueda. Sin él, filtrar por
+  // empresa o por formato obligaría a cargar el contenido completo.
+  'empresa'
 ];
 
 function cargarCatalogo() {

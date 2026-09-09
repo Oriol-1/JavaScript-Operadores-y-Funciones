@@ -9,6 +9,24 @@
      ================================================================== */
   TT.defineExercise({
     id: 'db-n-mas-uno',
+    empresa: {
+      empresas: ['travelperk', 'wallapop'],
+      evidencia: 'inspirada',
+      puesto: 'Backend Engineer',
+      rol: 'backend',
+      formato: 'optimizacion',
+      dificultad: 3,
+      evalua: [
+        'Medir antes de optimizar: identificar el cuello de botella con datos.',
+        'El patrón N+1, que es el problema de rendimiento más frecuente en producto con base de datos.',
+        'Índices y consultas que escalan con el volumen real, no con el de tu portátil.'
+      ],
+      nota: 'Ambas trabajan con catálogos y búsquedas de gran volumen. La optimización concreta es nuestra.',
+      fuentes: [
+        { titulo: 'How do we hire engineers @ TravelPerk?', url: 'https://medium.com/@alexander.ludwick/how-do-we-hire-engineers-travelperk-afabbf82aedc' },
+        { titulo: 'Pruebas técnicas en procesos de selección en España', url: 'https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion' }
+      ]
+    },
     categorias: ['backend', 'performance'],
     title: 'La consulta que se multiplica: resolver un N+1',
     category: 'databases',
@@ -998,6 +1016,24 @@
      ================================================================== */
   TT.defineExercise({
     id: 'sec-control-acceso',
+    empresa: {
+      empresas: ['revolut', 'cloudflare'],
+      evidencia: 'inspirada',
+      puesto: 'Backend / Security Engineer',
+      rol: 'security',
+      formato: 'code-review',
+      dificultad: 4,
+      evalua: [
+        'Autorización a nivel de recurso, no solo autenticación: el fallo de acceso más común y más caro.',
+        'Pensar como quien ataca: qué pasa si cambio el identificador de la URL.',
+        'Defensa en profundidad y registro de auditoría.'
+      ],
+      nota: 'En banca digital y en seguridad de red el control de acceso es tema obligado en el proceso. El endpoint vulnerable es nuestro.',
+      fuentes: [
+        { titulo: 'Companies that don’t have a broken hiring process', url: 'https://github.com/poteto/hiring-without-whiteboards' },
+        { titulo: 'Experiencias de entrevista en Cloudflare — Taro', url: 'https://www.jointaro.com/interviews/companies/cloudflare/experiences/software-engineer-october-17-2025-no-offer-neutral-ff798d3e/' }
+      ]
+    },
     categorias: ['backend', 'apis'],
     title: 'Control de acceso roto: el endpoint que edita facturas ajenas',
     category: 'security',

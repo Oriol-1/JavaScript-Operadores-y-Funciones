@@ -12,6 +12,24 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'ai-salidas-estructuradas',
+    empresa: {
+      empresas: ['ia-generalista', 'microsoft'],
+      evidencia: 'inspirada',
+      puesto: 'AI Engineer',
+      rol: 'ai-engineer',
+      formato: 'ai-case',
+      dificultad: 3,
+      evalua: [
+        'Convertir la salida de un modelo en un contrato de datos fiable, con validación y reintento.',
+        'Tratar al modelo como una dependencia poco fiable, igual que una API externa.',
+        'Fallar de forma controlada cuando la salida no cumple el esquema.'
+      ],
+      nota: 'Las salidas estructuradas y su validación son tema recurrente en las convocatorias públicas de AI Engineer de 2026. El caso concreto es nuestro.',
+      fuentes: [
+        { titulo: 'AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales', url: 'https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms' },
+        { titulo: 'Take-Home Engineering Challenge (Microsoft CSE)', url: 'https://github.com/seushermsft/Take-Home-Engineering-Challenge' }
+      ]
+    },
     title: 'Salidas estructuradas que no rompen el sistema',
     category: 'ai',
     kind: 'ai-build',
@@ -601,6 +619,24 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'ai-rag-con-evidencia',
+    empresa: {
+      empresas: ['ia-generalista'],
+      evidencia: 'inspirada',
+      puesto: 'AI Engineer',
+      rol: 'ai-engineer',
+      formato: 'ai-case',
+      dificultad: 4,
+      evalua: [
+        'Recuperación con citas comprobables: distinguir lo que el modelo sabe de lo que ha leído.',
+        'Depurar un RAG que devuelve basura sabiendo si el fallo está en el índice o en el prompt.',
+        'Fidelidad y relevancia como métricas, no como impresión.'
+      ],
+      nota: 'Depurar un RAG y justificar sus métricas es uno de los casos prácticos más repetidos en procesos de IA. El escenario es nuestro.',
+      fuentes: [
+        { titulo: 'AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales', url: 'https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms' },
+        { titulo: 'How to interview for an AI Engineer role in 2026', url: 'https://chiraghasija.cc/posts/how-to-interview-ai-engineer-role-2026/' }
+      ]
+    },
     title: 'RAG que sabe decir "no lo sé"',
     category: 'ai',
     kind: 'ai-build',
@@ -1122,6 +1158,24 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'ai-agente-en-bucle',
+    empresa: {
+      empresas: ['ia-generalista'],
+      evidencia: 'inspirada',
+      puesto: 'AI Engineer (Senior)',
+      rol: 'ai-engineer',
+      formato: 'debugging',
+      dificultad: 5,
+      evalua: [
+        'Diagnosticar por qué un agente se queda en bucle en vez de limitarse a subir el límite de pasos.',
+        'Coste y latencia por petición como restricción de diseño.',
+        'Observabilidad: qué habría que registrar para que este fallo fuera evidente.'
+      ],
+      nota: 'Los fallos de agentes y el control de coste son preguntas explícitas en las ofertas de AI Engineer. La traza concreta es nuestra.',
+      fuentes: [
+        { titulo: 'How to interview for an AI Engineer role in 2026', url: 'https://chiraghasija.cc/posts/how-to-interview-ai-engineer-role-2026/' },
+        { titulo: 'AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales', url: 'https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms' }
+      ]
+    },
     categorias: ['ai', 'debugging', 'performance'],
     title: 'AI Debugging Challenge: el agente que quemó el presupuesto',
     category: 'agents',

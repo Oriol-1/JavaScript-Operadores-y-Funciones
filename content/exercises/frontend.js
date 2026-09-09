@@ -12,6 +12,24 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'fe-buscador-debounce',
+    empresa: {
+      empresas: ['meta', 'airbnb'],
+      evidencia: 'inspirada',
+      puesto: 'Frontend Engineer',
+      rol: 'frontend',
+      formato: 'live-coding',
+      dificultad: 3,
+      evalua: [
+        'JavaScript y DOM por debajo del framework: temporizadores, cancelación y eventos.',
+        'Condiciones de carrera en la interfaz: respuestas que llegan desordenadas.',
+        'Escribir código ejecutable, no pseudocódigo — es un requisito explícito en ambos procesos.'
+      ],
+      nota: 'El buscador con debounce y cancelación es un clásico del live coding de frontend. Meta y Airbnb documentan el formato (código ejecutable, tiempo corto); el enunciado concreto es nuestro.',
+      fuentes: [
+        { titulo: 'Preparing for your software engineering interview at Meta', url: 'https://www.metacareers.com/blog/preparing-for-your-software-engineering-interview-at-meta/' },
+        { titulo: 'Airbnb interview questions — interviewing.io', url: 'https://interviewing.io/airbnb-interview-questions' }
+      ]
+    },
     categorias: ['javascript'],
     title: 'Buscador en vivo sin peticiones de más',
     category: 'frontend',
@@ -496,6 +514,24 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'js-orden-ejecucion',
+    empresa: {
+      empresas: ['meta', 'google'],
+      evidencia: 'inspirada',
+      puesto: 'Frontend / JavaScript Engineer',
+      rol: 'frontend',
+      formato: 'quiz',
+      dificultad: 3,
+      evalua: [
+        'Modelo mental del bucle de eventos: microtareas, macrotareas y orden de resolución.',
+        'Explicar el porqué, no solo acertar la salida: es lo que separa a un mid de un junior.',
+        'Precisión bajo presión de tiempo, sin ejecutar el código.'
+      ],
+      nota: 'Formato de pregunta rápida eliminatoria. Ambas empresas publican que se espera razonar sin compilador; el ejercicio concreto es nuestro.',
+      fuentes: [
+        { titulo: 'Preparing for your software engineering interview at Meta', url: 'https://www.metacareers.com/blog/preparing-for-your-software-engineering-interview-at-meta/' },
+        { titulo: 'Software Engineer interview prep guide — Google Careers', url: 'https://www.google.com/about/careers/applications/candidate-prep/swe' }
+      ]
+    },
     title: 'Predecir la salida: microtareas, macrotareas y cierres',
     category: 'javascript',
     kind: 'complete',
@@ -851,6 +887,26 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'fe-estados-accesibles',
+    empresa: {
+      empresas: ['airbnb', 'vercel', 'typeform', 'spotify'],
+      evidencia: 'inspirada',
+      puesto: 'Frontend Engineer',
+      rol: 'frontend',
+      formato: 'mini-app',
+      dificultad: 3,
+      evalua: [
+        'Todos los estados de una interfaz, no solo el feliz: carga, vacío, error y éxito.',
+        'Accesibilidad real con ARIA y foco, no como añadido final.',
+        'Criterio de producto: qué ve el usuario mientras algo falla.'
+      ],
+      nota: 'Construir un componente completo con todos sus estados es el formato habitual de frontend en las cuatro. El componente concreto es nuestro.',
+      fuentes: [
+        { titulo: 'Airbnb interview questions — interviewing.io', url: 'https://interviewing.io/airbnb-interview-questions' },
+        { titulo: 'Engineering Jobs — Careers at Typeform', url: 'https://www.typeform.com/careers/engineering' },
+        { titulo: 'Start Your Journey — Life at Spotify', url: 'https://www.lifeatspotify.com/start-your-journey' },
+        { titulo: 'Companies that don’t have a broken hiring process', url: 'https://github.com/poteto/hiring-without-whiteboards' }
+      ]
+    },
     title: 'Los cinco estados de una lista de datos',
     category: 'frontend',
     kind: 'build',

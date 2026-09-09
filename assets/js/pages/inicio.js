@@ -3,14 +3,14 @@
   'use strict';
 
   TT.boot('', { liviano: true }).then(function () {
-    var UI = TT.ui;
+    const UI = TT.ui;
     UI.mountNav('index.html');
     UI.refreshNavLevel();
 
-    var s = TT.store.summary();
+    const s = TT.store.summary();
 
     /* ---------- Panel de estado ---------- */
-    var panel = document.getElementById('panel-usuario');
+    const panel = document.getElementById('panel-usuario');
     if (s.started === 0) {
       panel.innerHTML =
         '<div class="card row row-wrap" style="gap:var(--sp-5);align-items:center">' +
@@ -39,8 +39,8 @@
     }
 
     /* ---------- Recomendación ---------- */
-    var recos = TT.store.recommend(3);
-    var cont = document.getElementById('panel-recomendacion');
+    const recos = TT.store.recommend(3);
+    const cont = document.getElementById('panel-recomendacion');
     if (recos.length) {
       cont.innerHTML =
         '<div class="row"><h2>' + (s.started ? 'Tu siguiente paso' : 'Por dónde empezar') + '</h2></div>' +
@@ -59,7 +59,7 @@
 
     /* ---------- Rutas ---------- */
     document.getElementById('panel-rutas').innerHTML = TT.paths().map(function (p) {
-      var pr = TT.store.pathProgress(p);
+      const pr = TT.store.pathProgress(p);
       return '<a class="card stack" href="rutas.html#' + p.id + '">' +
         '<div class="row"><span style="font-size:1.3rem">' + p.icon + '</span>' +
           '<span class="card-title" style="margin:0">' + UI.esc(p.title) + '</span>' +
@@ -73,17 +73,17 @@
 
     /* ---------- Áreas ---------- */
     document.getElementById('panel-areas').innerHTML = Object.keys(TT.CATEGORIES).map(function (id) {
-      var c = TT.CATEGORIES[id];
-      var n = TT.query({ category: id }).length;
+      const c = TT.CATEGORIES[id];
+      const n = TT.query({ category: id }).length;
       // Las áreas sin pruebas todavía se muestran igualmente: la plataforma
       // enseña su alcance completo, pero no finge tener contenido que no tiene.
-      var etiqueta = n
+      const etiqueta = n
         ? '<span class="tiny muted">' + n + '</span>'
         : '<span class="tiny muted" style="font-size:10px">pronto</span>';
-      var apertura = n
+      const apertura = n
         ? '<a class="card card-tight stack" style="gap:var(--sp-2)" href="catalogo.html?categoria=' + id + '">'
         : '<div class="card card-tight stack" style="gap:var(--sp-2);opacity:.5">';
-      var cierre = n ? '</a>' : '</div>';
+      const cierre = n ? '</a>' : '</div>';
 
       return apertura +
         '<div class="row"><span style="font-size:1.15rem">' + c.icon + '</span>' +
@@ -92,6 +92,38 @@
         '<p class="tiny muted" style="margin:0;line-height:1.5">' + UI.esc(c.desc) + '</p>' +
       cierre;
     }).join('');
+
+    /* ---------- Empresas ----------
+       Se muestran primero las que publican su proceso: son las fichas en
+       las que podemos afirmar más cosas, y por tanto las más útiles. */
+    const counts = TT.companyCounts();
+    document.getElementById('panel-empresas').innerHTML = TT.companies()
+      .slice()
+      .sort(function (a, b) {
+        const da = a.verificacion === 'documentado' ? 0 : 1;
+        const db = b.verificacion === 'documentado' ? 0 : 1;
+        return da - db || (counts[b.id] || 0) - (counts[a.id] || 0) || a.nombre.localeCompare(b.nombre);
+      })
+      .slice(0, 8)
+      .map(function (c) {
+        const n = counts[c.id] || 0;
+        return '<a class="card card-tight stack" style="gap:var(--sp-2)" href="empresas.html?id=' +
+            encodeURIComponent(c.id) + '">' +
+          '<div class="row" style="gap:var(--sp-3)">' +
+            '<span class="empresa-logo" style="width:30px;height:30px;font-size:var(--fs-sm)">' +
+              UI.esc(c.nombre.charAt(0)) + '</span>' +
+            '<strong style="font-size:var(--fs-sm)">' + UI.esc(c.nombre) + '</strong>' +
+          '</div>' +
+          '<p class="tiny muted" style="margin:0;line-height:1.5">' + UI.esc(c.sector) + '</p>' +
+          '<div class="row tiny muted" style="gap:6px">' +
+            (c.verificacion === 'documentado'
+              ? '<span style="color:var(--ok)">✔ publicado</span>'
+              : '<span style="color:var(--warn)">≈ reconstruido</span>') +
+            '<span class="spacer"></span>' +
+            '<span>' + n + (n === 1 ? ' prueba' : ' pruebas') + '</span>' +
+          '</div>' +
+        '</a>';
+      }).join('');
 
     document.getElementById('pie').innerHTML = UI.footer();
   });

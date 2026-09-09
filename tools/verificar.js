@@ -31,6 +31,8 @@ ctx.TT.MANIFEST.forEach(f => load('content/' + f));
 const TT = ctx.TT;
 
 // --- Harness idéntico al del sandbox ---
+// El `var` de estas cadenas es deliberado: se concatenan con el código
+// de la solución, y con let/const una redeclaración sería SyntaxError.
 function harnessSource() {
   return [
     'return (async function () {',
@@ -136,6 +138,87 @@ function expect(actual) {
     if (suma !== 100) { console.log('  RUBRICA de ' + ex.id + ' suma ' + suma + ', no 100'); fallos++; }
   }
 
+  // --- Fichas de empresa: ninguna afirmación sin fuente ---
+  //
+  // Esta sección existe por un requisito explícito del proyecto: nunca
+  // presentar como prueba oficial algo que no podamos demostrar. Si
+  // alguien añade una empresa sin enlace, o marca una prueba como
+  // documentada sin evidencia, la verificación falla y no llega a la
+  // rama principal.
+  const EMPRESA_REQ = ['id', 'nombre', 'pais', 'sector', 'tech', 'perfiles',
+                       'formatos', 'proceso', 'evalua', 'verificacion', 'fuentes'];
+
+  for (const c of TT.companies()) {
+    const falta = EMPRESA_REQ.filter(k => !c[k] || (Array.isArray(c[k]) && !c[k].length));
+    if (falta.length) { console.log('  EMPRESA ' + c.id + ' faltan: ' + falta.join(', ')); fallos++; }
+
+    const conUrl = (c.fuentes || []).filter(f => f && f.url && /^https?:\/\//.test(f.url));
+    if (!conUrl.length) {
+      console.log('  EMPRESA ' + c.id + ': ninguna fuente con URL válida'); fallos++;
+    }
+    if (c.verificacion !== 'documentado' && c.verificacion !== 'parcial') {
+      console.log('  EMPRESA ' + c.id + ": verificacion debe ser 'documentado' o 'parcial'"); fallos++;
+    }
+    if (c.verificacion === 'documentado' &&
+        !conUrl.some(f => f.tipo === 'oficial' || f.tipo === 'ingenieria')) {
+      console.log('  EMPRESA ' + c.id + ': declarada documentado sin fuente oficial ni de ingeniería'); fallos++;
+    }
+    for (const f of c.formatos) {
+      if (!TT.FORMATOS[f]) { console.log('  EMPRESA ' + c.id + ': formato desconocido "' + f + '"'); fallos++; }
+    }
+    for (const p of c.perfiles) {
+      if (!TT.ROLES[p]) { console.log('  EMPRESA ' + c.id + ': perfil desconocido "' + p + '"'); fallos++; }
+    }
+    if (!TT.DIFICULTAD[c.dificultad]) {
+      console.log('  EMPRESA ' + c.id + ': dificultad fuera de la escala 1-5'); fallos++;
+    }
+    if (!TT.PRUEBA_CODIGO[c.pruebaCodigo]) {
+      console.log('  EMPRESA ' + c.id + ": pruebaCodigo debe ser 'si', 'no' o 'depende'"); fallos++;
+    }
+    // Coherencia: si se dice que NO hay prueba de código, no puede
+    // declararse a la vez un formato que consiste en escribir código.
+    const FORMATOS_CON_CODIGO = ['algoritmos', 'live-coding', 'pair-programming', 'bug-squash',
+                                 'refactor', 'take-home', 'mini-app', 'api-integration', 'sql'];
+    if (c.pruebaCodigo === 'no' && c.formatos.some(f => FORMATOS_CON_CODIGO.indexOf(f) !== -1)) {
+      console.log('  EMPRESA ' + c.id + ': dice no tener prueba de código pero declara un formato que la implica');
+      fallos++;
+    }
+    for (const fase of c.proceso) {
+      if (!fase.fase || !fase.que) { console.log('  EMPRESA ' + c.id + ': fase del proceso incompleta'); fallos++; }
+      if (fase.formato && !TT.FORMATOS[fase.formato]) {
+        console.log('  EMPRESA ' + c.id + ': fase con formato desconocido "' + fase.formato + '"'); fallos++;
+      }
+    }
+  }
+
+  // --- Bloque `empresa` de cada prueba ---
+  for (const ex of TT.all()) {
+    const e = ex.empresa;
+    if (!e) continue;
+    if (e.evidencia !== 'documentada' && e.evidencia !== 'inspirada') {
+      console.log('  VINCULO ' + ex.id + ": evidencia debe ser 'documentada' o 'inspirada'"); fallos++;
+    }
+    if (!e.empresas || !e.empresas.length) {
+      console.log('  VINCULO ' + ex.id + ': sin empresas asociadas'); fallos++;
+    }
+    for (const id of (e.empresas || [])) {
+      if (!TT.company(id)) { console.log('  VINCULO ' + ex.id + ': empresa inexistente "' + id + '"'); fallos++; }
+    }
+    if (!TT.ROLES[e.rol]) { console.log('  VINCULO ' + ex.id + ': rol desconocido "' + e.rol + '"'); fallos++; }
+    if (!TT.FORMATOS[e.formato]) { console.log('  VINCULO ' + ex.id + ': formato desconocido "' + e.formato + '"'); fallos++; }
+    if (!TT.DIFICULTAD[e.dificultad]) { console.log('  VINCULO ' + ex.id + ': dificultad fuera de 1-5'); fallos++; }
+    if (!e.evalua || !e.evalua.length) { console.log('  VINCULO ' + ex.id + ': falta "evalua"'); fallos++; }
+    if (!e.nota) { console.log('  VINCULO ' + ex.id + ': falta "nota" (qué es nuestro y qué de la empresa)'); fallos++; }
+    // La regla que impide vender como oficial algo que no lo es.
+    const fuentesOk = (e.fuentes || []).filter(f => f && f.url && /^https?:\/\//.test(f.url));
+    if (!fuentesOk.length) {
+      console.log('  VINCULO ' + ex.id + ': ninguna fuente con URL'); fallos++;
+    }
+    if (e.evidencia === 'documentada' && !fuentesOk.length) {
+      console.log('  VINCULO ' + ex.id + ': declarada documentada sin fuente comprobable'); fallos++;
+    }
+  }
+
   // --- Referencias de las rutas ---
   for (const p of TT.paths()) {
     for (const s of p.steps) {
@@ -184,8 +267,18 @@ function expect(actual) {
 
   const conFases = TT.all().filter(e => e.fases).length;
   const conDocs = TT.all().filter(e => e.docs).length;
+  const conEmpresa = TT.all().filter(e => e.empresa).length;
+  const documentadas = TT.all().filter(e => e.empresa && e.empresa.evidencia === 'documentada').length;
+  const empDoc = TT.companies().filter(c => c.verificacion === 'documentado').length;
   console.log('\n' + TT.all().length + ' pruebas · ' + conTests + ' con tests automáticos · ' + total +
               ' aserciones · ' + conDocs + ' con documentación · ' + conFases + ' con fases');
+  const porPrueba = { si: 0, no: 0, depende: 0 };
+  TT.companies().forEach(c => { porPrueba[c.pruebaCodigo]++; });
+  console.log(TT.companies().length + ' empresas (' + empDoc + ' con proceso publicado) · ' +
+              conEmpresa + ' pruebas vinculadas · ' + documentadas + ' documentadas · ' +
+              (conEmpresa - documentadas) + ' inspiradas');
+  console.log('Prueba de código: ' + porPrueba.si + ' sí · ' + porPrueba.depende +
+              ' según equipo o nivel · ' + porPrueba.no + ' no');
   console.log(fallos === 0 ? 'TODO CORRECTO' : fallos + ' PROBLEMA(S)');
   process.exit(fallos ? 1 : 0);
 })();

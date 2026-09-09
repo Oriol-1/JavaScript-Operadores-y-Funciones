@@ -12,8 +12,9 @@
 <main class="wrap" style="padding-top:var(--sp-6)">
   <h1>Catálogo de pruebas</h1>
   <p class="soft" style="max-width:70ch">
-    Filtra por área, nivel o por lo que se te pide hacer. Las pruebas con tests automáticos se corrigen solas;
-    las de empresa se evalúan con la rúbrica que usaría el equipo que te entrevista.
+    Filtra por área, nivel o por lo que se te pide hacer, y también por el proceso de selección:
+    empresa, formato de prueba, puesto, dificultad y duración. Las pruebas con tests automáticos se
+    corrigen solas; las de empresa se evalúan con la rúbrica que usaría el equipo que te entrevista.
   </p>
 
   <div class="card" style="margin-top:var(--sp-5)">
@@ -34,6 +35,45 @@
         <span class="field-label">Qué se te pide hacer</span>
         <div class="row row-wrap" id="f-kinds" style="gap:6px"></div>
       </div>
+
+      <!-- Los ejes de empresa van agrupados y plegados: son cinco filtros
+           más y, abiertos por defecto, empujarían el catálogo fuera de la
+           pantalla en la primera visita. Se abren solos si la URL trae
+           alguno de ellos (por ejemplo, al llegar desde una ficha). -->
+      <details class="acc" id="filtros-empresa">
+        <summary>Filtrar por proceso de selección</summary>
+        <div class="acc-body stack">
+          <div>
+            <span class="field-label">Empresa</span>
+            <div class="row row-wrap" id="f-empresas" style="gap:6px"></div>
+          </div>
+          <div>
+            <span class="field-label">Formato de la prueba</span>
+            <div class="row row-wrap" id="f-formatos" style="gap:6px"></div>
+          </div>
+          <div>
+            <span class="field-label">Tipo de puesto</span>
+            <div class="row row-wrap" id="f-roles" style="gap:6px"></div>
+          </div>
+          <div>
+            <span class="field-label">Dificultad</span>
+            <div class="row row-wrap" id="f-dificultad" style="gap:6px"></div>
+          </div>
+          <div>
+            <span class="field-label">Duración</span>
+            <div class="row row-wrap" id="f-duracion" style="gap:6px"></div>
+          </div>
+          <div>
+            <span class="field-label">Evidencia</span>
+            <div class="row row-wrap" id="f-evidencia" style="gap:6px"></div>
+            <p class="tiny muted" style="margin:var(--sp-2) 0 0">
+              <strong>Documentada:</strong> hay evidencia pública de que la empresa usa una prueba así.
+              <strong>Inspirada:</strong> construida a partir de su pila, su puesto y su proceso conocido,
+              sin afirmar que sea suya.
+            </p>
+          </div>
+        </div>
+      </details>
     </div>
   </div>
 

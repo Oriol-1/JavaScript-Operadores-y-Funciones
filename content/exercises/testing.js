@@ -9,6 +9,24 @@
      ================================================================== */
   TT.defineExercise({
     id: 'test-tests-que-detectan',
+    empresa: {
+      empresas: ['github', 'cabify'],
+      evidencia: 'inspirada',
+      puesto: 'Backend / QA Engineer',
+      rol: 'qa',
+      formato: 'testing',
+      dificultad: 2,
+      evalua: [
+        'Distinguir cobertura de detección: un test que no puede fallar no prueba nada.',
+        'Escribir el caso límite antes que el camino feliz.',
+        'Tests como documentación del comportamiento esperado.'
+      ],
+      nota: 'GitHub evalúa las entregas con tests automáticos y rúbrica; en Cabify la calidad de los tests pesa más que la funcionalidad extra. El ejercicio es nuestro.',
+      fuentes: [
+        { titulo: 'How GitHub does take home technical interviews — The GitHub Blog', url: 'https://github.blog/developer-skills/career-growth/how-github-does-take-home-technical-interviews/' },
+        { titulo: 'Pruebas técnicas en procesos de selección en España', url: 'https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion' }
+      ]
+    },
     title: 'Escribe tests que detecten bugs de verdad',
     category: 'testing',
     kind: 'test-write',
@@ -905,6 +923,24 @@
      ================================================================== */
   TT.defineExercise({
     id: 'dbg-carrito-fantasma',
+    empresa: {
+      empresas: ['stripe', 'netflix'],
+      evidencia: 'inspirada',
+      puesto: 'Backend Engineer',
+      rol: 'backend',
+      formato: 'bug-squash',
+      dificultad: 3,
+      evalua: [
+        'Depuración metódica y narrada: leer el síntoma, formular una hipótesis y comprobarla antes de tocar código.',
+        'Encontrar la causa raíz en lugar de tapar el síntoma.',
+        'Moverse por código que no escribiste tú.'
+      ],
+      nota: 'El formato reproduce la ronda "Bug Squash" de Stripe (repositorio ajeno, fallo real, diagnóstico en voz alta) documentada por testimonios de candidatos. El bug concreto es nuestro.',
+      fuentes: [
+        { titulo: 'La ronda Bug Squash de Stripe, según testimonios de candidatos', url: 'https://www.coditioning.com/blog/804/stripe-swe-bug-squash-interview' },
+        { titulo: 'Demystifying Interviewing for Backend Engineers @ Netflix', url: 'https://netflixtechblog.com/demystifying-interviewing-for-backend-engineers-netflix-aceb26a83495' }
+      ]
+    },
     categorias: ['javascript'],
     title: 'Debugging Challenge: el carrito que suma mal',
     category: 'debugging',

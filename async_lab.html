@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratorio Asincronía - Módulo 4</title>
     <!-- Monaco Editor Loader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.56.0/min/vs/loader.min.js"></script>
     <style>
         :root {
             --bg-primary: #1a1a2e;
@@ -512,7 +512,7 @@ peticionConTimeout();`
         }
 
         // --- MONACO INIT ---
-        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.56.0/min/vs' }});
 
         require(['vs/editor/editor.main'], function() {
             editorInstance = monaco.editor.create(dom.editorContainer, {

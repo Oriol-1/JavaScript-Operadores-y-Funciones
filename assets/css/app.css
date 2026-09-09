@@ -279,3 +279,85 @@ kbd { background: var(--bg-3); border: 1px solid var(--border-strong); border-bo
 .hero h1 { font-size: clamp(2rem, 4.5vw, var(--fs-3xl)); max-width: 18ch; }
 .hero p { font-size: var(--fs-lg); color: var(--text-soft); max-width: 62ch; }
 .eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brand-soft); margin-bottom: var(--sp-3); }
+
+/* ============================================================
+   Empresas, evidencia y simulación de prueba técnica
+   ------------------------------------------------------------
+   Todo se apoya en los tokens ya existentes: ni un color nuevo.
+   ============================================================ */
+
+/* Línea de empresas en la tarjeta de una prueba */
+.empresa-linea {
+  color: var(--brand-soft);
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+/* Dificultad del proceso, de 1 a 5 */
+.dif { display: inline-flex; gap: 3px; align-items: center; vertical-align: middle; }
+.dif-paso {
+  width: 14px; height: 5px; border-radius: var(--r-full);
+  background: var(--bg-4, var(--bg-3)); display: block;
+}
+.dif-paso.on { background: var(--brand); }
+
+/* Ficha de empresa */
+.empresa-card { display: flex; flex-direction: column; gap: var(--sp-3); }
+.empresa-logo {
+  width: 40px; height: 40px; border-radius: var(--r-md); flex-shrink: 0;
+  display: grid; place-items: center; font-weight: 700; font-size: var(--fs-lg);
+  background: var(--brand-dim); color: var(--brand-soft); border: 1px solid var(--brand-line);
+}
+
+/* El proceso de selección, como una secuencia de fases */
+.proceso { list-style: none; margin: 0; padding: 0; }
+.proceso li {
+  display: grid; grid-template-columns: 30px 1fr; gap: var(--sp-3);
+  padding: var(--sp-4) 0; border-bottom: 1px solid var(--border);
+}
+.proceso li:last-child { border-bottom: 0; }
+.proceso-num {
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--brand-dim); color: var(--brand-soft);
+  border: 1px solid var(--brand-line); font-size: var(--fs-xs); font-weight: 700;
+}
+.proceso-fase { font-weight: 620; color: var(--text); }
+.proceso-meta { color: var(--text-mute); font-size: var(--fs-xs); margin: 3px 0 6px; }
+
+/* Fuentes: siempre visibles, nunca en letra pequeña escondida */
+.fuente { display: flex; gap: var(--sp-3); padding: 9px 0; border-bottom: 1px solid var(--border); font-size: var(--fs-sm); }
+.fuente:last-child { border-bottom: 0; }
+.fuente-tipo {
+  flex-shrink: 0; font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  font-weight: 700; padding: 2px 7px; border-radius: var(--r-full); align-self: flex-start;
+  background: var(--bg-3); color: var(--text-mute); border: 1px solid var(--border);
+}
+.fuente-tipo.oficial    { background: var(--ok-dim);    color: var(--ok); }
+.fuente-tipo.ingenieria { background: var(--brand-dim); color: var(--brand-soft); }
+
+/* ---------- Modo simulación ---------- */
+.sim-barra {
+  position: sticky; top: 0; z-index: 40;
+  background: var(--bg-2); border-bottom: 1px solid var(--border-strong);
+  padding: var(--sp-3) 0; margin-bottom: var(--sp-4);
+}
+.sim-reloj {
+  font-family: var(--mono); font-size: var(--fs-xl); font-weight: 700;
+  color: var(--text); font-variant-numeric: tabular-nums;
+}
+.sim-reloj.aviso  { color: var(--warn); }
+.sim-reloj.agotado { color: var(--err); }
+.sim-cabecera {
+  border: 1px solid var(--brand-line); background: var(--brand-dim);
+  border-radius: var(--r-lg); padding: var(--sp-5);
+}
+.sim-dato { display: flex; flex-direction: column; gap: 2px; }
+.sim-dato .k {
+  font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-mute); font-weight: 700;
+}
+.sim-dato .v { color: var(--text); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .proceso li { grid-template-columns: 24px 1fr; }
+}

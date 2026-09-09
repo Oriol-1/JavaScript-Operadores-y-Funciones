@@ -7,13 +7,14 @@
   'use strict';
 
   TT.boot().then(function () {
-    var UI = TT.ui;
+    const UI = TT.ui;
     UI.mountNav('');
     UI.refreshNavLevel();
 
-    var id = new URLSearchParams(location.search).get('id');
-    var ex = TT.get(id);
-    var app = document.getElementById('app');
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const ex = TT.get(id);
+    const app = document.getElementById('app');
 
     if (!ex) {
       app.innerHTML = '<h1>Prueba no encontrada</h1>' +
@@ -23,35 +24,48 @@
     }
 
     document.title = ex.title + ' — TechTrack';
-    var intento = TT.store.attempt(ex.id) || {};
-    var cronometro = null;
+    let intento = TT.store.attempt(ex.id) || {};
+    let cronometro = null;
+
+    /* --- Modo simulación ---------------------------------------------
+       Con ?sim=1 la prueba se presenta como en un proceso real: cabecera
+       de empresa, cuenta atrás y NADA de documentación, solución ni
+       análisis. No es una restricción técnica (el contenido está
+       cargado): es que verlo mientras resuelves destruye el valor del
+       ejercicio, que es justamente enfrentarte a él sin red.
+
+       Solo tiene sentido en pruebas vinculadas a una empresa: una prueba
+       de estudio puro no simula ningún proceso. */
+    const sim = params.get('sim') === '1' && !!ex.empresa;
+    let cuentaAtras = null;
 
     /* ================= Render ================= */
 
     app.innerHTML =
-      cabecera() +
+      (sim ? barraSimulacion() + cabeceraSimulacion() : cabecera()) +
       '<div class="exercise-layout" style="margin-top:var(--sp-5)">' +
         '<div>' +
           '<div class="tabs" id="tabs" role="tablist" aria-label="Secciones de la prueba">' +
             tab('enunciado', 'Enunciado', true) +
-            tab('documentacion', 'Documentación') +
+            (sim ? '' : tab('documentacion', 'Documentación')) +
             tab('resolver', 'Resolver') +
-            tab('solucion', 'Solución') +
-            tab('analisis', 'Análisis') +
+            (sim ? '' : tab('solucion', 'Solución')) +
+            (sim ? '' : tab('analisis', 'Análisis')) +
           '</div>' +
           '<div style="margin-top:var(--sp-5)">' +
             '<div class="panel activo" id="p-enunciado" role="tabpanel" aria-labelledby="tab-enunciado" tabindex="0">' + panelEnunciado() + '</div>' +
-            '<div class="panel" id="p-documentacion" role="tabpanel" aria-labelledby="tab-documentacion" tabindex="0" hidden>' + panelDocumentacion() + '</div>' +
+            (sim ? '' : '<div class="panel" id="p-documentacion" role="tabpanel" aria-labelledby="tab-documentacion" tabindex="0" hidden>' + panelDocumentacion() + '</div>') +
             '<div class="panel" id="p-resolver" role="tabpanel" aria-labelledby="tab-resolver" tabindex="0" hidden>' + panelResolver() + '</div>' +
-            '<div class="panel" id="p-solucion" role="tabpanel" aria-labelledby="tab-solucion" tabindex="0" hidden>' + panelSolucionBloqueada() + '</div>' +
-            '<div class="panel" id="p-analisis" role="tabpanel" aria-labelledby="tab-analisis" tabindex="0" hidden>' + panelAnalisis() + '</div>' +
+            (sim ? '' : '<div class="panel" id="p-solucion" role="tabpanel" aria-labelledby="tab-solucion" tabindex="0" hidden>' + panelSolucionBloqueada() + '</div>') +
+            (sim ? '' : '<div class="panel" id="p-analisis" role="tabpanel" aria-labelledby="tab-analisis" tabindex="0" hidden>' + panelAnalisis() + '</div>') +
           '</div>' +
         '</div>' +
-        '<aside class="sticky-side stack">' + lateral() + '</aside>' +
+        '<aside class="sticky-side stack">' + (sim ? lateralSimulacion() : lateral()) + '</aside>' +
       '</div>' +
       UI.footer();
 
     conectar();
+    if (sim) conectarSimulacion();
 
     /* ---------- Bloques 1-9: cabecera ---------- */
     function cabecera() {
@@ -64,8 +78,133 @@
             (ex.tests.mode === 'js' ? ex.tests.cases.length + ' tests automáticos' : 'Evaluación con rúbrica') +
             '</span>' : '') +
           (ex.docs ? '<span class="badge badge-info">Documentación incluida</span>' : '') +
+          (ex.empresa ? UI.evidenciaBadge(ex.empresa.evidencia) : '') +
         '</div>' +
+        (ex.empresa
+          ? '<div class="row row-wrap" style="gap:5px;margin-bottom:var(--sp-2)">' +
+              '<span class="tiny muted">Prueba de acceso a</span>' +
+              UI.companyLinks(ex.empresa.empresas) +
+              '<span class="tiny muted">· ' + UI.esc(ex.empresa.puesto) + '</span>' +
+            '</div>'
+          : '') +
         '<h1>' + UI.esc(ex.title) + '</h1>';
+    }
+
+    /* ---------- Bloque de empresa (vista normal) ----------
+       Responde, sin que haya que buscarlo, a las preguntas que el
+       proyecto exige que toda prueba conteste: qué empresa, qué puesto,
+       qué formato, qué nivel, cuánto dura, qué comprueba y —lo más
+       importante— con qué evidencia lo afirmamos. */
+    function bloqueEmpresa() {
+      const e = ex.empresa;
+      if (!e) return '';
+      const ev = UI.EVIDENCIA[e.evidencia];
+
+      return '<div class="card" style="border-color:var(--brand-line)">' +
+
+        '<div class="row row-wrap" style="gap:6px;margin-bottom:var(--sp-3)">' +
+          UI.evidenciaBadge(e.evidencia) +
+          '<span class="badge badge-neutral">' + UI.esc(UI.formatoLabel(e.formato)) + '</span>' +
+          '<span class="badge badge-info">' + UI.esc(UI.rolLabel(e.rol)) + '</span>' +
+        '</div>' +
+
+        '<div class="card-title" style="margin-bottom:var(--sp-2)">Prueba de acceso a empresa</div>' +
+        '<p class="small soft" style="margin:0 0 var(--sp-4)">' + UI.esc(ev.explica) + '</p>' +
+
+        '<div class="card table-scroll" style="padding:0"><table class="table"><tbody>' +
+          fila('Empresas', UI.companyLinks(e.empresas)) +
+          fila('Puesto relacionado', UI.esc(e.puesto)) +
+          fila('Tipo de prueba', UI.esc(UI.formatoLabel(e.formato)) +
+               ' — <span class="soft">' + UI.esc(TT.FORMATOS[e.formato].desc) + '</span>') +
+          fila('Nivel aproximado', UI.levelBadge(ex.level)) +
+          fila('Tecnologías evaluadas', ex.tech.map(function (t) {
+            return '<span class="badge badge-neutral">' + UI.esc(t) + '</span>';
+          }).join(' ')) +
+          fila('Tiempo aproximado', UI.minutes(ex.time)) +
+          fila('Dificultad', UI.dificultadBarra(e.dificultad) +
+               ' <span class="soft">' + UI.esc(UI.dificultadLabel(e.dificultad)) + '</span>') +
+        '</tbody></table></div>' +
+
+        '<div class="field-label" style="margin-top:var(--sp-4)">Qué intenta comprobar la empresa</div>' +
+        '<ul class="check-list" style="margin:0">' +
+          e.evalua.map(function (s) { return '<li>' + UI.md(s) + '</li>'; }).join('') +
+        '</ul>' +
+
+        '<div class="note note-warn" style="margin-top:var(--sp-4)">' +
+          '<strong>Qué es de la empresa y qué es nuestro.</strong> ' + UI.md(e.nota) + '</div>' +
+
+        '<div class="field-label" style="margin-top:var(--sp-4)">Fuentes</div>' +
+        e.fuentes.map(function (f) {
+          return '<div class="fuente"><a href="' + UI.esc(f.url) + '" target="_blank" ' +
+                 'rel="noopener noreferrer">' + UI.esc(f.titulo) + ' ↗</a></div>';
+        }).join('') +
+
+      '</div>';
+    }
+
+    function fila(k, v) {
+      return '<tr><td style="width:34%;color:var(--text);font-weight:560">' + k + '</td><td>' + v + '</td></tr>';
+    }
+
+    /* ---------- Simulación: barra, cabecera y lateral ---------- */
+
+    function barraSimulacion() {
+      return '<div class="sim-barra"><div class="row row-wrap" style="gap:var(--sp-4)">' +
+        '<span class="badge badge-err badge-dot">Prueba en curso</span>' +
+        '<div class="sim-dato"><span class="k">Tiempo restante</span>' +
+          '<span class="sim-reloj" id="sim-reloj">' + UI.minutes(ex.time) + '</span></div>' +
+        '<span class="spacer"></span>' +
+        '<button class="btn btn-sm btn-ghost" id="sim-salir">Salir de la simulación</button>' +
+        '<button class="btn btn-sm btn-primary" id="sim-terminar">He terminado · ver solución explicada</button>' +
+      '</div></div>';
+    }
+
+    function cabeceraSimulacion() {
+      const e = ex.empresa;
+      const dato = function (k, v) {
+        return '<div class="sim-dato"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>';
+      };
+      return '<div class="sim-cabecera">' +
+        '<div class="grid grid-4" style="gap:var(--sp-4)">' +
+          dato('Empresa', UI.esc(UI.companyNames(e.empresas).join(' · '))) +
+          dato('Puesto', UI.esc(e.puesto)) +
+          dato('Nivel', UI.esc(TT.LEVELS[ex.level].label)) +
+          dato('Tiempo recomendado', UI.minutes(ex.time)) +
+          dato('Formato', UI.esc(UI.formatoLabel(e.formato))) +
+          dato('Dificultad', UI.dificultadBarra(e.dificultad)) +
+          dato('Evaluación', ex.tests
+            ? (ex.tests.mode === 'js' ? ex.tests.cases.length + ' casos de prueba' : 'Rúbrica')
+            : 'Rúbrica') +
+          dato('Evidencia', UI.evidenciaBadge(e.evidencia, true)) +
+        '</div>' +
+        '<p class="small soft" style="margin:var(--sp-4) 0 0">' +
+          'Estás en <strong>modo simulación</strong>: no hay documentación, ni pistas resueltas, ni ' +
+          'solución a la vista, igual que en una prueba real. Cuando termines —o cuando se acabe el ' +
+          'tiempo— pulsa <strong>He terminado</strong> y aparecerá la resolución completa paso a paso.' +
+        '</p>' +
+      '</div>' +
+      '<h1 style="margin-top:var(--sp-5)">' + UI.esc(ex.title) + '</h1>';
+    }
+
+    function lateralSimulacion() {
+      return '<div class="card card-tight stack" id="tarjeta-estado">' + estadoHTML() + '</div>' +
+        '<div class="card card-tight">' +
+          '<div class="field-label">Requisitos obligatorios</div>' +
+          '<ul class="check-list dot-list" style="margin:0">' +
+            ex.requirements.map(function (r) { return '<li>' + UI.md(r) + '</li>'; }).join('') +
+          '</ul>' +
+        '</div>' +
+        '<div class="card card-tight">' +
+          '<div class="field-label">Tecnologías</div>' +
+          '<div class="row row-wrap" style="gap:5px">' +
+            ex.tech.map(function (t) { return '<span class="badge badge-neutral">' + UI.esc(t) + '</span>'; }).join('') +
+          '</div>' +
+        '</div>' +
+        '<div class="note note-warn small">' +
+          '<strong>El reloj es orientativo.</strong> Cuando llegue a cero no se te expulsa: la mayoría ' +
+          'de las empresas valoran más una solución razonada que una entrega apresurada. Pero anota ' +
+          'cuánto te has pasado; ese dato dice más de tu nivel que la nota.' +
+        '</div>';
     }
 
     function tab(clave, etiqueta, activo) {
@@ -76,6 +215,11 @@
 
     function panelEnunciado() {
       return '<div class="stack">' +
+
+        /* En simulación el bloque de empresa ya está en la cabecera, y la
+           invitación a la documentación sobra: no existe esa pestaña. */
+        (sim ? '' : bloqueEmpresa()) +
+
         bloque('Contexto de empresa', UI.md(ex.context)) +
         bloque('Situación que hay que resolver', UI.md(ex.situation)) +
         '<div class="note"><strong>Objetivo.</strong> ' + UI.md(ex.goal) + '</div>' +
@@ -83,19 +227,24 @@
         (ex.optional.length ? listaBloque('Requisitos opcionales', ex.optional, 'dot-list') : '') +
         (ex.starter ? '<div><div class="code-head">Proyecto inicial · ' + UI.esc(ex.starter.lang) + '</div>' +
           '<pre class="code">' + UI.esc(ex.starter.code) + '</pre></div>' : '') +
-        '<div class="note"><strong>¿No sabes por dónde empezar?</strong> ' +
-          'La pestaña <strong>Documentación</strong> contiene todo lo que necesitas saber para resolver ' +
-          'esta prueba: los conceptos, la sintaxis y un ejemplo resuelto parecido. Está pensada para que ' +
-          'no tengas que buscar nada fuera. No es la solución.</div>' +
-        '<div class="note note-warn"><strong>Antes de mirar la solución.</strong> ' +
-          'Intenta resolverlo aunque no llegues al final. El valor está en el intento: la explicación ' +
-          'se entiende de otra manera cuando ya te has peleado con el problema.</div>' +
+
+        (sim
+          ? '<div class="note note-warn"><strong>Estás en una simulación.</strong> ' +
+              'Resuélvela con lo que sabes y con lo que buscarías en el trabajo real, igual que harías ' +
+              'en la prueba de verdad. Nadie te va a corregir el enfoque a mitad de camino.</div>'
+          : '<div class="note"><strong>¿No sabes por dónde empezar?</strong> ' +
+              'La pestaña <strong>Documentación</strong> contiene todo lo que necesitas saber para resolver ' +
+              'esta prueba: los conceptos, la sintaxis y un ejemplo resuelto parecido. Está pensada para que ' +
+              'no tengas que buscar nada fuera. No es la solución.</div>' +
+            '<div class="note note-warn"><strong>Antes de mirar la solución.</strong> ' +
+              'Intenta resolverlo aunque no llegues al final. El valor está en el intento: la explicación ' +
+              'se entiende de otra manera cuando ya te has peleado con el problema.</div>') +
       '</div>';
     }
 
     /* ---------- Documentación: hace la prueba autosuficiente ---------- */
     function panelDocumentacion() {
-      var d = ex.docs;
+      const d = ex.docs;
       if (!d) return UI.empty('Esta prueba todavía no tiene documentación propia.');
 
       return '<div class="stack">' +
@@ -165,14 +314,16 @@
         return '<div class="note">Esta prueba se resuelve en tu propio entorno. Usa la pestaña Análisis cuando termines.</div>';
       }
 
-      var pistas = ex.hints.map(function (h, i) {
+      // En una prueba real nadie te va dando pistas: en simulación no se
+      // ofrecen, aunque el contenido esté cargado.
+      const pistas = sim ? '' : ex.hints.map(function (h, i) {
         return '<details class="acc" data-pista="' + i + '">' +
           '<summary>Pista ' + (i + 1) + ' de ' + ex.hints.length + '</summary>' +
           '<div class="acc-body small soft">' + UI.md(h) + '</div>' +
         '</details>';
       }).join('');
 
-      var zona = ex.tests.mode === 'checklist'
+      const zona = ex.tests.mode === 'checklist'
         ? '<div class="card"><div class="card-title">' + UI.esc(ex.tests.titulo) + '</div>' +
             '<p class="small muted">Resuelve la prueba en tu entorno y después marca con honestidad lo que cumpliste. ' +
             'La puntuación solo sirve si es real.</p>' +
@@ -236,7 +387,7 @@
           'exactamente la solución final.</p>' +
 
         ex.fases.map(function (f, i) {
-          var ultima = i === ex.fases.length - 1;
+          const ultima = i === ex.fases.length - 1;
           return '<details class="acc"' + (i === 0 ? ' open' : '') + ' style="margin-top:var(--sp-3)">' +
             '<summary>' +
               '<span class="fase-num">' + (i + 1) + '</span>' +
@@ -361,6 +512,18 @@
     /* ---------- Lateral ---------- */
     function lateral() {
       return '<div class="card card-tight stack" id="tarjeta-estado">' + estadoHTML() + '</div>' +
+        (ex.empresa
+          ? '<div class="card card-tight" style="border-color:var(--brand-line)">' +
+              '<div class="card-title" style="font-size:var(--fs-md)">Simular prueba de empresa</div>' +
+              '<p class="small soft" style="margin:0 0 var(--sp-3)">' +
+                'Sin documentación, sin pistas y sin solución a la vista, con el reloj corriendo: ' +
+                'exactamente como en el proceso de ' +
+                UI.esc(UI.companyNames(ex.empresa.empresas)[0]) + '. La solución explicada aparece al terminar.' +
+              '</p>' +
+              '<a class="btn btn-primary btn-sm" style="width:100%" href="prueba.html?id=' +
+                encodeURIComponent(ex.id) + '&sim=1">▶ Empezar la simulación</a>' +
+            '</div>'
+          : '') +
         '<div class="card card-tight">' +
           '<div class="field-label">Tecnologías necesarias</div>' +
           '<div class="row row-wrap" style="gap:5px">' +
@@ -379,10 +542,10 @@
     }
 
     function estadoHTML() {
-      var a = TT.store.attempt(ex.id);
-      var pct = a && a.maxScore ? Math.round(a.score / a.maxScore * 100) : 0;
-      var etiqueta = !a ? 'Sin empezar' : a.status === 'passed' ? 'Superada' : 'En curso';
-      var clase = !a ? 'badge-neutral' : a.status === 'passed' ? 'badge-ok' : 'badge-warn';
+      const a = TT.store.attempt(ex.id);
+      const pct = a && a.maxScore ? Math.round(a.score / a.maxScore * 100) : 0;
+      const etiqueta = !a ? 'Sin empezar' : a.status === 'passed' ? 'Superada' : 'En curso';
+      const clase = !a ? 'badge-neutral' : a.status === 'passed' ? 'badge-ok' : 'badge-warn';
 
       return '<div class="row"><span class="badge ' + clase + ' badge-dot">' + etiqueta + '</span>' +
           '<span class="spacer"></span><span class="tiny mono muted" id="reloj">00:00</span></div>' +
@@ -414,17 +577,17 @@
 
     function conectar() {
       /* --- Pestañas: patrón ARIA completo con navegación por flechas --- */
-      var listaTabs = document.getElementById('tabs');
+      const listaTabs = document.getElementById('tabs');
 
       function activarTab(b) {
         if (!b) return;
         document.querySelectorAll('.tab').forEach(function (t) {
-          var esta = t === b;
+          const esta = t === b;
           t.setAttribute('aria-selected', esta);
           t.tabIndex = esta ? 0 : -1;
         });
         document.querySelectorAll('.panel').forEach(function (p) {
-          var esta = p.id === 'p-' + b.dataset.tab;
+          const esta = p.id === 'p-' + b.dataset.tab;
           p.classList.toggle('activo', esta);
           p.hidden = !esta;
         });
@@ -432,15 +595,15 @@
       }
 
       listaTabs.addEventListener('click', function (e) {
-        var b = e.target.closest('.tab');
+        const b = e.target.closest('.tab');
         if (b) activarTab(b);
       });
 
       listaTabs.addEventListener('keydown', function (e) {
-        var actual = document.activeElement.closest('.tab');
+        const actual = document.activeElement.closest('.tab');
         if (!actual) return;
-        var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
-        var i = tabs.indexOf(actual);
+        const tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+        const i = tabs.indexOf(actual);
         if (e.key === 'ArrowRight') { e.preventDefault(); activarTab(tabs[(i + 1) % tabs.length]); }
         else if (e.key === 'ArrowLeft') { e.preventDefault(); activarTab(tabs[(i - 1 + tabs.length) % tabs.length]); }
         else if (e.key === 'Home') { e.preventDefault(); activarTab(tabs[0]); }
@@ -452,25 +615,25 @@
          pista, ejecución o desbloqueo, así que el nodo #reloj se recrea.
          Buscarlo en cada tick evita quedarnos con una referencia muerta. */
       cronometro = UI.timer(ex.id, function (s) {
-        var reloj = document.getElementById('reloj');
+        const reloj = document.getElementById('reloj');
         if (!reloj) return;
-        var m = Math.floor(s / 60), r = s % 60;
+        let m = Math.floor(s / 60), r = s % 60;
         reloj.textContent = (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
       });
 
       /* --- Editor --- */
-      var editor = document.getElementById('editor');
+      const editor = document.getElementById('editor');
       if (editor) {
         editor.value = intento.code || (ex.starter ? ex.starter.code : '');
         // Tab inserta indentación en vez de saltar de campo.
         editor.addEventListener('keydown', function (e) {
           if (e.key !== 'Tab') return;
           e.preventDefault();
-          var i = editor.selectionStart;
+          const i = editor.selectionStart;
           editor.value = editor.value.slice(0, i) + '  ' + editor.value.slice(editor.selectionEnd);
           editor.selectionStart = editor.selectionEnd = i + 2;
         });
-        var guardar;
+        let guardar;
         editor.addEventListener('input', function () {
           clearTimeout(guardar);
           guardar = setTimeout(function () { TT.store.update(ex.id, { code: editor.value }); }, 600);
@@ -491,11 +654,11 @@
       });
 
       /* --- Checklist --- */
-      var btnCheck = document.getElementById('btn-checklist');
+      const btnCheck = document.getElementById('btn-checklist');
       if (btnCheck) btnCheck.addEventListener('click', puntuarChecklist);
 
       /* --- Desbloqueo de la solución --- */
-      var btnSol = document.getElementById('btn-desbloquear');
+      const btnSol = document.getElementById('btn-desbloquear');
       if (btnSol) btnSol.addEventListener('click', function () {
         TT.store.update(ex.id, { solutionSeen: true });
         intento = TT.store.attempt(ex.id);
@@ -503,27 +666,79 @@
         refrescarEstado();
       });
 
-      document.getElementById('btn-reiniciar').addEventListener('click', function () {
+      // El lateral de la simulación no incluye este botón: reiniciar el
+      // progreso a media prueba no tiene sentido ahí.
+      const btnReiniciar = document.getElementById('btn-reiniciar');
+      if (btnReiniciar) btnReiniciar.addEventListener('click', function () {
         if (!confirm('¿Borrar tu progreso en esta prueba? No afecta al resto.')) return;
         TT.store.reset(ex.id);
         location.reload();
       });
+
+      /* Volver de la simulación abre directamente la solución explicada:
+         es la promesa del botón "He terminado", así que no puede quedarse
+         en dejar al usuario en el enunciado buscando la pestaña. */
+      if (location.hash === '#solucion') {
+        const destino = document.querySelector('.tab[data-tab="solucion"]');
+        if (destino) activarTab(destino);
+      }
+    }
+
+    /* ---------- Comportamiento del modo simulación ----------
+       La cuenta atrás es informativa a propósito: al llegar a cero no se
+       bloquea nada. Expulsar al usuario a mitad de un razonamiento no
+       enseña nada y no es lo que hacen la mayoría de las empresas con
+       una prueba para casa. Lo que sí hace es dejar constancia. */
+    function conectarSimulacion() {
+      let restante = ex.time * 60;
+      const reloj = document.getElementById('sim-reloj');
+
+      function pinta() {
+        const vencido = restante <= 0;
+        const abs = Math.abs(restante);
+        let m = Math.floor(abs / 60), s = abs % 60;
+        reloj.textContent = (vencido ? '+' : '') +
+          (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        reloj.className = 'sim-reloj' +
+          (vencido ? ' agotado' : restante <= 300 ? ' aviso' : '');
+      }
+
+      pinta();
+      cuentaAtras = setInterval(function () { restante--; pinta(); }, 1000);
+      window.addEventListener('beforeunload', function () { clearInterval(cuentaAtras); });
+
+      document.getElementById('sim-salir').addEventListener('click', function () {
+        if (!confirm('¿Salir de la simulación? Tu código se conserva y verás la prueba con documentación, ' +
+                     'pistas y solución disponibles.')) return;
+        location.href = 'prueba.html?id=' + encodeURIComponent(ex.id);
+      });
+
+      document.getElementById('sim-terminar').addEventListener('click', function () {
+        if (!confirm('¿Dar la prueba por terminada? Se abrirá la solución explicada paso a paso.\n\n' +
+                     'Consultar la solución queda registrado y limita la puntuación de esta prueba al 60 %, ' +
+                     'igual que fuera de la simulación.')) return;
+        clearInterval(cuentaAtras);
+        TT.store.update(ex.id, { solutionSeen: true });
+        // Se vuelve a la vista completa con la pestaña de solución abierta:
+        // en simulación esa pestaña ni siquiera se ha renderizado.
+        location.href = 'prueba.html?id=' + encodeURIComponent(ex.id) + '#solucion';
+      });
     }
 
     function refrescarEstado() {
-      var t = document.getElementById('reloj') ? document.getElementById('reloj').textContent : '00:00';
+      const t = document.getElementById('reloj') ? document.getElementById('reloj').textContent : '00:00';
       document.getElementById('tarjeta-estado').innerHTML = estadoHTML();
-      var r = document.getElementById('reloj');
+      let r = document.getElementById('reloj');
       if (r) r.textContent = t;
       UI.refreshNavLevel();
     }
 
     /* ---------- Ejecución de tests ---------- */
     function ejecutar() {
-      var editor = document.getElementById('editor');
-      var estado = document.getElementById('run-estado');
-      var salida = document.getElementById('resultados');
-      var boton = document.getElementById('btn-run');
+      const editor = document.getElementById('editor');
+      const estado = document.getElementById('run-estado');
+      const salida = document.getElementById('resultados');
+      const boton = document.getElementById('btn-run');
 
       boton.disabled = true;
       estado.textContent = 'Ejecutando en sandbox aislado…';
@@ -563,8 +778,8 @@
 
     /* ---------- Puntuación ---------- */
     function registrar(pasados, total) {
-      var bruto = Math.round(pasados / total * ex.scoring.max);
-      var penalizado = aplicarPenalizaciones(bruto);
+      let bruto = Math.round(pasados / total * ex.scoring.max);
+      const penalizado = aplicarPenalizaciones(bruto);
       TT.store.update(ex.id, {
         score: penalizado,
         maxScore: ex.scoring.max,
@@ -576,18 +791,18 @@
     }
 
     function puntuarChecklist() {
-      var marcados = Array.prototype.filter.call(
+      const marcados = Array.prototype.filter.call(
         document.querySelectorAll('#checklist input'), function (i) { return i.checked; });
-      var bruto = marcados.reduce(function (acc, i) { return acc + Number(i.dataset.peso); }, 0);
+      let bruto = marcados.reduce(function (acc, i) { return acc + Number(i.dataset.peso); }, 0);
       bruto = Math.round(bruto / 100 * ex.scoring.max);
-      var penalizado = aplicarPenalizaciones(bruto);
+      const penalizado = aplicarPenalizaciones(bruto);
 
       TT.store.update(ex.id, {
         score: penalizado, maxScore: ex.scoring.max,
         status: penalizado >= ex.scoring.max * 0.7 ? 'passed' : 'failed'
       });
 
-      var live = document.getElementById('check-live');
+      const live = document.getElementById('check-live');
       live.textContent = penalizado + ' / ' + ex.scoring.max +
         (penalizado >= ex.scoring.max * 0.7 ? ' · superada' : ' · por debajo del 70 %, conviene repasar');
       refrescarEstado();
@@ -599,8 +814,8 @@
      * limita la nota. Es lo que hace que el nivel estimado signifique algo.
      */
     function aplicarPenalizaciones(bruto) {
-      var a = TT.store.attempt(ex.id) || {};
-      var n = bruto;
+      const a = TT.store.attempt(ex.id) || {};
+      let n = bruto;
       if (a.hintsUsed) n = Math.round(n * (1 - Math.min(a.hintsUsed * 0.05, 0.2)));
       if (a.solutionSeen) n = Math.min(n, Math.round(ex.scoring.max * 0.6));
       return n;

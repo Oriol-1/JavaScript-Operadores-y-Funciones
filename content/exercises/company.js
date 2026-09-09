@@ -11,6 +11,24 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'emp-code-review',
+    empresa: {
+      empresas: ['gitlab', 'github'],
+      evidencia: 'documentada',
+      puesto: 'Senior Backend Engineer',
+      rol: 'backend',
+      formato: 'code-review',
+      dificultad: 4,
+      evalua: [
+        'Revisión de un Merge Request como ronda técnica principal: es literalmente el formato que GitLab publica en su handbook.',
+        'Priorizar por impacto y comunicar sin atacar a la persona.',
+        'Detectar ausencias — transacción, idempotencia, tests — y no solo lo que está escrito.'
+      ],
+      nota: 'GitLab documenta en su handbook público que su entrevista técnica es la revisión de un Merge Request, y GitHub que sus entregas se revisan como un Pull Request con rúbrica. El PR concreto de este ejercicio es nuestro.',
+      fuentes: [
+        { titulo: 'Technical Interviews — The GitLab Handbook', url: 'https://handbook.gitlab.com/handbook/hiring/interviewing/technical/' },
+        { titulo: 'How GitHub does take home technical interviews — The GitHub Blog', url: 'https://github.blog/developer-skills/career-growth/how-github-does-take-home-technical-interviews/' }
+      ]
+    },
     categorias: ['security', 'backend', 'databases'],
     title: 'Code Review Challenge: revisa este Pull Request',
     category: 'company',
@@ -648,6 +666,24 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'emp-frontend-challenge',
+    empresa: {
+      empresas: ['github', 'shopify'],
+      evidencia: 'documentada',
+      puesto: 'Frontend Engineer',
+      rol: 'frontend',
+      formato: 'take-home',
+      dificultad: 3,
+      evalua: [
+        'Entrega con límite de tiempo declarado y evaluada con rúbrica: el formato que GitHub describe en su blog de ingeniería.',
+        'Saber qué dejar fuera: entregar de más no suma puntos.',
+        'Decisiones de producto y de accesibilidad justificadas por escrito.'
+      ],
+      nota: 'GitHub publica el formato de su take-home (límite de tiempo, entrega anonimizada, rúbrica y scorecard en el Pull Request) y Shopify el suyo de ejercicio práctico. El enunciado del ejercicio es nuestro.',
+      fuentes: [
+        { titulo: 'How GitHub does take home technical interviews — The GitHub Blog', url: 'https://github.blog/developer-skills/career-growth/how-github-does-take-home-technical-interviews/' },
+        { titulo: 'Shopify’s Technical Interview Process', url: 'https://shopify.engineering/nail-your-technical-shopify-interview' }
+      ]
+    },
     categorias: ['frontend', 'testing'],
     title: 'Frontend Developer Challenge: panel de incidencias',
     category: 'company',
@@ -1303,6 +1339,26 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'emp-system-design',
+    empresa: {
+      empresas: ['atlassian', 'netflix', 'cloudflare', 'adevinta'],
+      evidencia: 'documentada',
+      puesto: 'Senior Backend Engineer',
+      rol: 'backend',
+      formato: 'system-design',
+      dificultad: 4,
+      evalua: [
+        'Ronda de system design de 60 minutos: la publican Atlassian en su guía oficial y Netflix en su blog de ingeniería.',
+        'Defender compromisos explícitos en vez de dibujar la arquitectura de moda.',
+        'Fallos parciales, consistencia y coste como parte del diseño.'
+      ],
+      nota: 'La existencia y el formato de esta ronda están documentados por Atlassian, Netflix y Cloudflare. Adevinta Spain se añade porque sus ofertas de Barcelona piden exactamente este perfil —sistemas de alta disponibilidad y baja latencia, Kubernetes y datos en streaming con Kafka y Flink—, aunque no publica el detalle de su proceso. El sistema concreto que se pide diseñar es nuestro.',
+      fuentes: [
+        { titulo: 'Atlassian Engineering Interview Guide', url: 'https://www.atlassian.com/company/careers/resources/interviewing/engineering' },
+        { titulo: 'Demystifying Interviewing for Backend Engineers @ Netflix', url: 'https://netflixtechblog.com/demystifying-interviewing-for-backend-engineers-netflix-aceb26a83495' },
+        { titulo: 'Experiencias de entrevista en Cloudflare — Taro', url: 'https://www.jointaro.com/interviews/companies/cloudflare/experiences/software-engineer-october-17-2025-no-offer-neutral-ff798d3e/' },
+        { titulo: 'Product & Tech — Adevinta Careers', url: 'https://adevinta.com/careers/product-tech/' }
+      ]
+    },
     categorias: ['architecture', 'performance'],
     title: 'System Design: 2 millones de eventos por minuto',
     category: 'system-design',

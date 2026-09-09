@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Módulo 6: TypeScript Pro - Master Suite JS</title>
     <!-- Babel for in-browser TypeScript compilation -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@8.0.4/babel.min.js"></script>
     <!-- Monaco Editor Loader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.56.0/min/vs/loader.min.js"></script>
     <style>
         :root {
             --bg-primary: #1e1e1e;
@@ -490,7 +490,7 @@ console.log("Rol actual:", miRol); // Imprime "ADMIN"`
         let jsPreviewInstance;
 
         // --- Initialization ---
-        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.56.0/min/vs' }});
 
         require(['vs/editor/editor.main'], function() {
             // Initialize TS Editor

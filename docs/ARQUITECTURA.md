@@ -42,9 +42,11 @@ de código, cada uno con su CSS y su JavaScript embebidos.
 ## 3. Estructura
 
 ```text
-index.html            Panel de inicio: estado, recomendación, rutas, áreas
+index.html            Panel de inicio: estado, recomendación, rutas, áreas, empresas
 catalogo.html         Explorador de pruebas con filtros en la URL
+empresas.html         Listado de empresas y ficha de proceso de selección
 prueba.html           Runner: enunciado, resolución, solución y análisis
+                      (+ modo simulación con ?sim=1)
 rutas.html            Rutas de aprendizaje con estado por paso
 progreso.html         Seguimiento, puntos fuertes y débiles, exportación
 laboratorios.html     Índice de los laboratorios interactivos
@@ -71,12 +73,14 @@ assets/js/lab-nav.js        Barra inyectada en los laboratorios
 content/manifest.js         Qué se carga en prueba.html (contenido completo)
 content/indice.js           GENERADO — qué se carga en las páginas de listado
 content/taxonomy.js         Categorías y tipos de prueba
+content/companies.js        Empresas, sus procesos y sus FUENTES
 content/paths.js            Rutas de aprendizaje
 content/exercises/*.js      Pruebas, agrupadas por área
 
 tools/verificar.js          Suite de verificación del contenido
 tools/generar-indice.js     Genera content/indice.js a partir de content/exercises/
-.github/workflows/          Integración continua: verificar.js + generar-indice.js --check
+tools/humo.js               Ejecuta el JS de cada página sobre un DOM mínimo
+.github/workflows/          Integración continua: los tres scripts de tools/
 docs/                       Esta documentación y la investigación
 ```
 
@@ -117,6 +121,7 @@ Es el contrato central. Los 26 bloques de la especificación, más dos añadidos
 | 24-26 Evaluación | `companyLooksFor`, `scoring`, `reinforce` |
 | + Estudio | `docs` (ver abajo) |
 | + Construcción | `fases` (ver abajo) |
+| + Empresa | `empresa` (ver abajo) |
 
 ### El bloque `docs`: la prueba es autosuficiente
 
@@ -187,6 +192,87 @@ ejecutar cada solución de referencia contra sus propios tests.
 `walkthrough` no es una lista de texto: cada paso es `{ what, why, how }`. Esa
 forma es la que garantiza que ninguna solución sea solo código, que era el
 requisito explícito del proyecto.
+
+### Empresa (`company`)
+
+Segunda entidad de primer nivel, añadida para que la plataforma no solo enseñe a
+programar sino a **entrar en una empresa concreta**. Vive en `content/companies.js`
+y se registra con `TT.defineCompany`.
+
+```js
+TT.defineCompany({
+  id, nombre, pais, sector, tamano,
+  tech: [],            // pila habitual
+  perfiles: [],        // ids de TT.ROLES
+  formatos: [],        // ids de TT.FORMATOS
+  dificultad: 1..5,    // TT.DIFICULTAD
+  proceso: [{ fase, formato, duracion, que }],
+  evalua: [],          // qué intenta comprobar
+  consejo: '',
+  pruebaCodigo: 'si' | 'no' | 'depende',   // TT.PRUEBA_CODIGO
+  verificacion: 'documentado' | 'parcial',
+  fuentes: [{ titulo, url, tipo }]   // tipo: oficial | ingenieria | testimonios | comunidad
+});
+```
+
+**La regla que define esta entidad: sin al menos una fuente con URL, la ficha no se
+registra.** `defineCompany` la descarta con un error en consola y `verificar.js`
+falla el build. El motivo es directo: toda esta sección afirma cosas sobre empresas
+reales, y una afirmación no comprobable sobre un proceso de selección puede hacer
+que alguien prepare lo que no toca.
+
+`pruebaCodigo` responde a una pregunta muy concreta —¿en algún momento escribes
+código que alguien evalúa?— y existe porque hay una parte enorme del mercado donde
+la respuesta es **no**, y esa es la información que más falta a quien se prepara.
+Hablar de código no cuenta; un test psicotécnico, tampoco. Cuando falta el valor,
+`registry.js` asume `'depende'` en vez de `'si'`: dar por hecho que hay prueba es
+el sesgo natural de quien escribe sobre entrevistas técnicas. Y `verificar.js`
+comprueba la coherencia — una empresa no puede declarar `'no'` y a la vez un formato
+que implica escribir código.
+
+`verificacion` distingue dos niveles de evidencia y la interfaz los muestra siempre,
+no en letra pequeña:
+
+- **`documentado`** — la empresa publica su proceso. Exige al menos una fuente de
+  tipo `oficial` o `ingenieria`; si no la hay, el verificador avisa.
+- **`parcial`** — reconstruido a partir de testimonios públicos. La ficha abre con
+  una nota que lo dice y advierte de que puede haber cambiado o variar entre equipos.
+
+### El bloque `empresa` de una prueba
+
+Es el vínculo entre las dos entidades, y el lugar donde el proyecto podría mentir
+con más facilidad, así que es el que más se valida.
+
+```js
+empresa: {
+  empresas: ['gitlab', 'github'],      // deben existir en el registro
+  evidencia: 'documentada' | 'inspirada',
+  puesto: 'Senior Backend Engineer',
+  rol: 'backend',                      // id de TT.ROLES
+  formato: 'code-review',              // id de TT.FORMATOS
+  dificultad: 4,                       // 1-5
+  evalua: [],                          // qué comprueba la empresa con esto
+  nota: 'Qué es de la empresa y qué es nuestro.',
+  fuentes: [{ titulo, url }]
+}
+```
+
+| `evidencia` | Qué se afirma |
+| --- | --- |
+| `documentada` | Hay constancia pública de que la empresa usa una prueba **de ese tipo**. El enunciado sigue siendo original |
+| `inspirada` | **No** se afirma que sea su prueba: está construida a partir de su pila, el puesto y su proceso conocido |
+
+Tres defensas, en tres capas distintas:
+
+1. `registry.js` **degrada a `inspirada`** cualquier prueba declarada `documentada`
+   sin fuente. Prefiere afirmar de menos que afirmar de más.
+2. `verificar.js` exige `nota`, `evalua`, fuente con URL, y que el rol, el formato,
+   la dificultad y todas las empresas referenciadas existan.
+3. La interfaz nunca muestra un nombre de empresa sin su etiqueta de evidencia al
+   lado, ni una ficha sin sus fuentes enlazadas al final.
+
+El bloque es **opcional**: hay pruebas de estudio puro que no simulan ningún
+proceso. Pero si existe, se valida entero.
 
 ### Ruta (`path`)
 
@@ -274,6 +360,21 @@ la barra como hijo del `body` habría roto su maquetación, así que la barra es
 3. Si el archivo es nuevo, añádelo a `content/manifest.js`.
 4. Ejecuta `node tools/verificar.js`.
 
+### Añadir una empresa
+
+1. Añade un `empresa({ ... })` en `content/companies.js`.
+2. **Busca las fuentes primero, no después.** Sin al menos una con URL, el registro
+   descarta la ficha y el verificador falla. Si solo encuentras testimonios, la
+   ficha es `verificacion: 'parcial'` y punto: no se fuerza a `documentado`.
+3. Vincula al menos una prueba con su bloque `empresa`. Una ficha sin pruebas se
+   renderiza con un estado vacío honesto, pero no aporta gran cosa.
+4. `node tools/verificar.js` y `node tools/generar-indice.js`.
+
+Los ejes `TT.ROLES`, `TT.FORMATOS` y `TT.DIFICULTAD` viven también en ese archivo:
+añadir un formato de evaluación nuevo es un objeto más, y los filtros del catálogo
+y de la página de empresas lo recogen solos, porque solo ofrecen los valores que
+existen en el contenido cargado.
+
 ### Añadir un área o un tipo de prueba
 
 Un objeto más en `content/taxonomy.js`. Los filtros del catálogo, las insignias y
@@ -324,30 +425,138 @@ seguridad que el contrato de un ejercicio.
 contenido actual; es el paso que ejecuta la integración continua para que
 nadie olvide regenerarlo tras editar un ejercicio.
 
-Con las 19 pruebas actuales, `content/indice.js` pesa 28 KB frente a los más de
-750 KB del contenido completo: las páginas de listado bajan menos del 4 % de
+Con las 23 pruebas actuales, `content/indice.js` pesa 64 KB frente a los más de
+1 MB del contenido completo: las páginas de listado bajan alrededor del 6 % de
 ese peso.
 
-## 10. Integración continua
+## 10. Dependencias externas: fijadas y al día
 
-`.github/workflows/verificar.yml` ejecuta en cada push y cada pull request:
+La plataforma no tiene dependencias, pero los laboratorios heredados sí cargan
+tres librerías desde CDN. La política es **una versión exacta, siempre**:
+
+| Librería | Dónde | Versión |
+| --- | --- | --- |
+| Monaco Editor | ts_lab, async_lab, scope_lab, dom_lab | 0.56.0 |
+| highlight.js | algoritmos | 11.11.2 |
+| @babel/standalone | ts_lab | 8.0.4 |
+
+El motivo de fijarlas no es teórico. `ts_lab.html` cargaba Babel desde una URL
+**sin versión**, de modo que servía siempre la última publicada. Entre que se
+escribió el laboratorio y hoy, Babel cruzó de la 7 a la 8 —un cambio de versión
+mayor— sin que nadie se enterara. Se comprobó ejecutando en ambas versiones la
+misma llamada que hace el laboratorio:
+
+```js
+Babel.transform(codigo, { presets: ['typescript'], filename: 'example.ts' })
+```
+
+La salida es idéntica, así que no llegó a romperse. Pero la próxima vez podría
+no haber suerte, y el fallo aparecería **sin ningún cambio en el repositorio**,
+que es la peor clase de avería: nadie la busca donde está.
+
+Al actualizar, la comprobación mínima es que las rutas exactas que usa el código
+sigan existiendo en la versión nueva. La API de Monaco que se utiliza —
+`require.config`, `monaco.editor.create`, `KeyMod`/`KeyCode` y `addCommand`— es
+estable desde hace años, y ninguna de las opciones que se le pasan está obsoleta.
+Aun así, **abrir los laboratorios en un navegador es lo único que no cubre
+ninguna prueba automática**, y es el paso que hay que dar a mano tras subir
+Monaco.
+
+## 11. Estilo de JavaScript: qué es restricción y qué era inercia
+
+La restricción de diseño número 1 dice "scripts clásicos, no ES modules". Durante
+un tiempo eso se interpretó de más: **el núcleo entero estaba escrito con `var`**,
+sin una sola `const`, mientras que los laboratorios heredados —la parte
+supuestamente antigua del proyecto— usaban `const`, `let` y funciones flecha.
+
+La restricción es real pero se aplica solo a `import`/`export`, que fallan por CORS
+con `file://`. La sintaxis moderna funciona igual en un `<script>` clásico desde
+2016. Hoy el núcleo y las páginas usan `const` y `let`.
+
+Quedan tres sitios con `var`, y los tres a propósito:
+
+1. **El arnés del sandbox** (`sandbox.js`) y su gemelo en `verificar.js`. Son
+   cadenas que se concatenan con el código que escribe quien resuelve la prueba.
+   Si esa persona declara una variable con el mismo nombre, `var` lo tolera y
+   `let` sería un SyntaxError de redeclaración que tumbaría el arnés entero.
+2. **El código de los casos de prueba**, por el mismo motivo: se evalúa junto a
+   la solución del usuario.
+3. **Dos ejercicios**: `js-orden-ejecucion`, donde `var` en un bucle *es* el tema,
+   y `dbg-carrito-fantasma`, donde el código a depurar es deliberadamente
+   heredado — depurar código viejo que no escribiste tú es justamente el ejercicio.
+
+Cómo se verificó que la conversión no cambió nada: una prueba diferencial que
+carga la versión anterior y la nueva del núcleo y compara, carácter a carácter,
+la salida de todas las funciones públicas sobre todo el catálogo — 295
+comprobaciones y 88 000 caracteres de HTML. Idéntico.
+
+## 12. Integración continua
+
+`.github/workflows/verificar.yml` ejecuta en cada push y cada pull request, sobre Node 24:
 
 1. `node tools/verificar.js` — estructura del contrato, documentación, fases,
    rutas y las soluciones de referencia contra sus propios tests.
 2. `node tools/generar-indice.js --check` — que el índice ligero esté al día.
+3. `node tools/humo.js` — arranca el JavaScript de cada página sobre un DOM
+   mínimo y comprueba que renderiza sin lanzar. Cubre el hueco que dejaba
+   `verificar.js`, que valida contenido pero no ejecutaba ni una línea de
+   `assets/js/pages/`. Doce escenarios: listados, fichas, runner, simulación,
+   filtros por URL y el caso de identificador inexistente.
 
 Sin dependencias: los dos scripts son Node puro, así que el flujo de trabajo no
 instala nada más que el propio Node.
 
-## 11. Qué queda pendiente
+## 13. El modo simulación
+
+`prueba.html?id=…&sim=1` presenta la prueba como en un proceso real. Solo se
+activa en pruebas con bloque `empresa`: una prueba de estudio puro no simula
+ningún proceso.
+
+Qué cambia respecto de la vista normal:
+
+| | Vista normal | Simulación |
+| --- | --- | --- |
+| Pestañas | Enunciado · Documentación · Resolver · Solución · Análisis | Enunciado · Resolver |
+| Cabecera | Categoría, nivel y bloque de empresa desplegado | Ficha de prueba: empresa, puesto, nivel, tiempo, formato, dificultad y evidencia |
+| Pistas | Progresivas, se registran al abrirlas | No se ofrecen |
+| Reloj | Cronómetro ascendente | **Cuenta atrás** desde `ex.time`, en ámbar a los 5 min y en rojo al pasarse |
+| Salida | — | "He terminado · ver solución explicada" |
+
+Dos decisiones que conviene entender:
+
+**Las pestañas ocultas no se renderizan, no se esconden con CSS.** El contenido
+está cargado en memoria —es la misma página— así que ocultarlo con `display:none`
+sería teatro. No generarlo evita además construir HTML que nadie va a ver.
+
+**La cuenta atrás no bloquea nada al llegar a cero.** Sigue contando en negativo.
+Expulsar a alguien a mitad de un razonamiento no enseña nada, y la mayoría de las
+empresas con prueba para casa valoran más una solución razonada que una entrega
+apresurada. Lo que sí hace el reloj es dejar constancia de cuánto te pasaste, que
+es el dato interesante.
+
+Al pulsar "He terminado" se marca `solutionSeen` —con la misma penalización del
+60 % que fuera de la simulación, porque el nivel estimado solo vale si es honesto—
+y se vuelve a la vista completa con `#solucion`, que abre directamente la pestaña
+de la solución explicada.
+
+## 14. Qué queda pendiente
 
 - Editor con resaltado de sintaxis en el runner (hoy es un `textarea` con soporte
   de tabulador; Monaco ya se usa en los laboratorios y podría reutilizarse).
 - Tests automáticos para lenguajes distintos de JavaScript.
 - Vista previa visual para las pruebas de frontend: no existe todavía ningún
   ejercicio ni utilidad para renderizar HTML/CSS/JS del usuario en un iframe.
-- Más pruebas: el catálogo tiene 19 completas, 2 de nivel junior. Quedan sin
-  contenido las categorías de Git y GitHub, Arquitectura y Automatizaciones,
+- Más pruebas: el catálogo tiene 23 completas, 2 de nivel junior. Quedan sin
+  contenido las categorías de Git y GitHub, Rendimiento y Automatizaciones,
   además de multiagente y observabilidad dentro de IA. Añadirlas no requiere
   tocar el núcleo.
 - Retrofit de `fases` a las pruebas que hoy usan `walkthrough`.
+- Dos formatos de `TT.FORMATOS` no tienen ejercicio propio, y no por descuido:
+  **pair programming** necesita una segunda persona y **proyecto de prueba
+  remunerado** necesita semanas de trabajo real. Se documentan en las fichas de
+  empresa; simularlos en solitario y en una sesión sería falsear el formato.
+- Comprobación automática de que las URL de `fuentes` siguen vivas. Hoy el
+  verificador comprueba que existan y tengan forma de URL, no que respondan: eso
+  exigiría red en la integración continua y haría el build dependiente de
+  servidores de terceros. La fecha de `revisado` de cada ficha es, de momento, la
+  señal de frescura.

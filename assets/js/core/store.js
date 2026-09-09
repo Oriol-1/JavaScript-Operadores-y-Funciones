@@ -8,10 +8,10 @@
 (function (global) {
   'use strict';
 
-  var TT = global.TT || (global.TT = {});
-  var KEY = 'techtrack.progress.v1';
+  const TT = global.TT || (global.TT = {});
+  const KEY = 'techtrack.progress.v1';
 
-  var EMPTY = {
+  const EMPTY = {
     schema: 1,
     createdAt: null,
     attempts: {},   // exerciseId -> { status, score, maxScore, seconds, hintsUsed, solutionSeen, tests, updatedAt, notes }
@@ -20,9 +20,9 @@
 
   function read() {
     try {
-      var raw = localStorage.getItem(KEY);
+      const raw = localStorage.getItem(KEY);
       if (!raw) return JSON.parse(JSON.stringify(EMPTY));
-      var data = JSON.parse(raw);
+      const data = JSON.parse(raw);
       if (data.schema !== 1) return JSON.parse(JSON.stringify(EMPTY));
       return data;
     } catch (e) {
@@ -41,19 +41,19 @@
     return data;
   }
 
-  var Store = {
+  const Store = {
 
     raw: read,
 
     attempt: function (id) {
-      var d = read();
+      const d = read();
       return d.attempts[id] || null;
     },
 
     /** Fusiona campos en el intento de un ejercicio. */
     update: function (id, patch) {
-      var d = read();
-      var a = d.attempts[id] || {
+      const d = read();
+      const a = d.attempts[id] || {
         status: 'in-progress', score: 0, maxScore: 0, seconds: 0,
         hintsUsed: 0, solutionSeen: false, tests: null, notes: '', attempts: 0
       };
@@ -66,17 +66,17 @@
 
     addSeconds: function (id, secs) {
       if (!secs || secs < 1) return;
-      var a = Store.attempt(id) || {};
+      const a = Store.attempt(id) || {};
       Store.update(id, { seconds: (a.seconds || 0) + Math.round(secs) });
     },
 
     useHint: function (id, index) {
-      var a = Store.attempt(id) || {};
+      const a = Store.attempt(id) || {};
       Store.update(id, { hintsUsed: Math.max(a.hintsUsed || 0, index + 1) });
     },
 
     reset: function (id) {
-      var d = read();
+      const d = read();
       delete d.attempts[id];
       write(d);
     },
@@ -86,7 +86,7 @@
     export: function () { return JSON.stringify(read(), null, 2); },
 
     import: function (json) {
-      var data = JSON.parse(json);
+      const data = JSON.parse(json);
       if (data.schema !== 1) throw new Error('Formato de progreso no compatible');
       write(data);
     },
@@ -98,9 +98,9 @@
      * Todo se calcula al vuelo: el almacén guarda hechos, no conclusiones.
      */
     summary: function () {
-      var d = read();
-      var all = TT.all();
-      var out = {
+      const d = read();
+      const all = TT.all();
+      const out = {
         total: all.length,
         started: 0, passed: 0, failed: 0,
         score: 0, maxScore: 0, seconds: 0,
@@ -110,12 +110,12 @@
       };
 
       all.forEach(function (ex) {
-        var cat = out.byCategory[ex.category] || (out.byCategory[ex.category] = { total: 0, passed: 0, started: 0, score: 0, max: 0 });
+        const cat = out.byCategory[ex.category] || (out.byCategory[ex.category] = { total: 0, passed: 0, started: 0, score: 0, max: 0 });
         cat.total++;
-        var lv = out.byLevel[ex.level] || (out.byLevel[ex.level] = { total: 0, passed: 0 });
+        const lv = out.byLevel[ex.level] || (out.byLevel[ex.level] = { total: 0, passed: 0 });
         lv.total++;
 
-        var a = d.attempts[ex.id];
+        const a = d.attempts[ex.id];
         if (!a) return;
 
         out.started++;
@@ -126,16 +126,16 @@
         cat.score += a.score || 0;
         cat.max += a.maxScore || 0;
 
-        var ratio = a.maxScore ? (a.score / a.maxScore) : 0;
+        const ratio = a.maxScore ? (a.score / a.maxScore) : 0;
         if (a.status === 'passed') { out.passed++; cat.passed++; lv.passed++; }
         else if (a.status === 'failed') { out.failed++; }
 
         ex.skills.forEach(function (s) {
-          var bucket = ratio >= 0.7 ? out.strongSkills : out.weakSkills;
+          const bucket = ratio >= 0.7 ? out.strongSkills : out.weakSkills;
           bucket[s] = (bucket[s] || 0) + 1;
         });
         ex.tech.forEach(function (t) {
-          var tt = out.byTech[t] || (out.byTech[t] = { done: 0, ratio: 0, n: 0 });
+          const tt = out.byTech[t] || (out.byTech[t] = { done: 0, ratio: 0, n: 0 });
           tt.done++; tt.n++; tt.ratio = ((tt.ratio * (tt.n - 1)) + ratio) / tt.n;
         });
 
@@ -158,10 +158,10 @@
      */
     recommend: function (limit) {
       limit = limit || 3;
-      var d = read();
-      var s = Store.summary();
-      var picks = [];
-      var seen = {};
+      const d = read();
+      const s = Store.summary();
+      const picks = [];
+      const seen = {};
 
       function push(ex, reason) {
         if (!ex || seen[ex.id] || picks.length >= limit) return;
@@ -171,14 +171,14 @@
 
       // 1. Pruebas suspendidas o con puntuación baja: repetir antes de avanzar.
       TT.all().forEach(function (ex) {
-        var a = d.attempts[ex.id];
+        const a = d.attempts[ex.id];
         if (a && a.maxScore && (a.score / a.maxScore) < 0.6) {
           push(ex, 'La dejaste por debajo del 60 %. Repetirla consolida ' + ex.skills.slice(0, 2).join(' y ') + '.');
         }
       });
 
       // 2. Habilidades flojas: ejercicios sin empezar que las entrenan.
-      var weak = Object.keys(s.weakSkills).sort(function (a, b) { return s.weakSkills[b] - s.weakSkills[a]; });
+      const weak = Object.keys(s.weakSkills).sort(function (a, b) { return s.weakSkills[b] - s.weakSkills[a]; });
       weak.forEach(function (skill) {
         TT.all().forEach(function (ex) {
           if (!d.attempts[ex.id] && ex.skills.indexOf(skill) !== -1) {
@@ -189,7 +189,7 @@
 
       // 3. Continuar la ruta con más avance.
       TT.paths().forEach(function (p) {
-        var next = p.steps.filter(function (st) { return st.exercise && !d.attempts[st.exercise]; })[0];
+        const next = p.steps.filter(function (st) { return st.exercise && !d.attempts[st.exercise]; })[0];
         if (next) push(TT.get(next.exercise), 'Siguiente parada de la ruta "' + p.title + '".');
       });
 
@@ -202,10 +202,10 @@
     },
 
     pathProgress: function (path) {
-      var d = read();
-      var withEx = path.steps.filter(function (s) { return s.exercise; });
-      var done = withEx.filter(function (s) {
-        var a = d.attempts[s.exercise];
+      const d = read();
+      const withEx = path.steps.filter(function (s) { return s.exercise; });
+      const done = withEx.filter(function (s) {
+        const a = d.attempts[s.exercise];
         return a && a.status === 'passed';
       });
       return {
@@ -218,9 +218,9 @@
 
   /** Nivel estimado: exige volumen y precisión, no solo intentos. */
   function estimateLevel(s, d) {
-    var byLevelPassed = { junior: 0, 'junior-adv': 0, mid: 0, senior: 0 };
+    const byLevelPassed = { junior: 0, 'junior-adv': 0, mid: 0, senior: 0 };
     TT.all().forEach(function (ex) {
-      var a = d.attempts[ex.id];
+      const a = d.attempts[ex.id];
       if (a && a.status === 'passed') byLevelPassed[ex.level]++;
     });
     if (byLevelPassed.senior >= 2 && s.accuracy >= 75) return 'senior';

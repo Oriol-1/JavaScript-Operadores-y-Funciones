@@ -9,6 +9,25 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'be-refactor-produccion',
+    empresa: {
+      empresas: ['cabify', 'gitlab', 'automattic'],
+      evidencia: 'inspirada',
+      puesto: 'Backend Engineer',
+      rol: 'backend',
+      formato: 'refactor',
+      dificultad: 3,
+      evalua: [
+        'Separar capas sin cambiar el comportamiento observable.',
+        'Justificar cada movimiento: un refactor que no sabes defender no vale.',
+        'Reconocer qué NO hay que tocar todavía.'
+      ],
+      nota: 'Las tres evalúan sobre código que ya existe: Cabify revisa tu entrega contigo delante, GitLab trabaja sobre repositorios grandes y Automattic publica que su prueba consiste en modificar código existente con un compañero asignado. El código a refactorizar es nuestro.',
+      fuentes: [
+        { titulo: 'Pruebas técnicas en procesos de selección en España', url: 'https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion' },
+        { titulo: 'Technical Interviews — The GitLab Handbook', url: 'https://handbook.gitlab.com/handbook/hiring/interviewing/technical/' },
+        { titulo: 'How We Hire Developers — Automattic', url: 'https://automattic.com/work-with-us/how-we-hire-developers/' }
+      ]
+    },
     categorias: ['backend', 'testing'],
     title: 'De "funciona en mi máquina" a código de producción',
     category: 'refactor',
@@ -645,6 +664,25 @@
      ------------------------------------------------------------------ */
   TT.defineExercise({
     id: 'api-cliente-resistente',
+    empresa: {
+      empresas: ['stripe', 'cloudflare', 'edreams'],
+      evidencia: 'inspirada',
+      puesto: 'Backend Engineer',
+      rol: 'backend',
+      formato: 'api-integration',
+      dificultad: 3,
+      evalua: [
+        'Implementar contra una API que no conoces, con la documentación abierta: es literalmente su ronda de integración.',
+        'Reintentos con espera exponencial, respeto de los límites de peticiones e idempotencia.',
+        'Errores tratados como parte del contrato, no como excepción rara.'
+      ],
+      nota: 'Stripe tiene una ronda de integración con API documentada por testimonios; en Cloudflare, HTTP y los límites de peticiones aparecen en casi todas las rondas; y eDreams ODIGEO vive de integrarse con proveedores de viaje que fallan, cachean mal y limitan las consultas. El cliente concreto es nuestro.',
+      fuentes: [
+        { titulo: 'La ronda Bug Squash de Stripe, según testimonios de candidatos', url: 'https://www.coditioning.com/blog/804/stripe-swe-bug-squash-interview' },
+        { titulo: 'Experiencias de entrevista en Cloudflare — Taro', url: 'https://www.jointaro.com/interviews/companies/cloudflare/experiences/software-engineer-october-17-2025-no-offer-neutral-ff798d3e/' },
+        { titulo: 'eDreams ODIGEO Tech Blog', url: 'https://tech.edreamsodigeo.com/' }
+      ]
+    },
     categorias: ['backend', 'performance'],
     title: 'Cliente de API que sobrevive a la red real',
     category: 'apis',

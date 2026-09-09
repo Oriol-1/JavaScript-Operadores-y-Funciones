@@ -10,11 +10,14 @@
    ============================================================ */
 window.TT.MANIFEST = [
   'taxonomy.js',
+  'companies.js',
   'exercises/junior.js',
   'exercises/frontend.js',
   'exercises/backend.js',
   'exercises/testing.js',
   'exercises/datos.js',
+  'exercises/algoritmos-sql.js',
+  'exercises/barcelona.js',
   'exercises/ai.js',
   'exercises/ai-avanzado.js',
   'exercises/company.js',

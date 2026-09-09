@@ -10,11 +10,16 @@ jobs:
   verificar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: '20'
-      - name: Verificar catálogo (estructura, docs, fases, rutas y tests)
+          # Node 24 es la LTS activa. La 20 que había aquí llegó a fin de
+          # vida en abril de 2026, así que la verificación se estaba
+          # ejecutando sobre un runtime sin soporte.
+          node-version: '24'
+      - name: Verificar catálogo (estructura, docs, fases, empresas, rutas y tests)
         run: node tools/verificar.js
       - name: Comprobar que content/indice.js está actualizado
         run: node tools/generar-indice.js --check
+      - name: Prueba de humo (ejecuta el JavaScript de cada página)
+        run: node tools/humo.js

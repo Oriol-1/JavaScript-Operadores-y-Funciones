@@ -37,7 +37,39 @@
       "expresiones regulares",
       "duplicados"
     ],
-    "time": 30
+    "time": 30,
+    "empresa": {
+      "empresas": [
+        "factorial",
+        "typeform",
+        "caixabank-tech"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Full Stack Engineer (Junior)",
+      "rol": "fullstack",
+      "formato": "take-home",
+      "dificultad": 1,
+      "evalua": [
+        "Limpieza de datos de entrada, que es la mitad del trabajo real en producto de RRHH y formularios.",
+        "Casos límite silenciosos: espacios, mayúsculas, duplicados y valores vacíos.",
+        "Código legible en una función pequeña, sin librerías."
+      ],
+      "nota": "Ninguna de las tres publica esta prueba. Se construye a partir de su dominio —datos introducidos por personas en formularios, fichas de empleado o formularios bancarios— y del nivel de entrada de sus ofertas: CaixaBank Tech es de las pocas empresas del ecosistema que publica vacantes con seis meses de experiencia mínima.",
+      "fuentes": [
+        {
+          "titulo": "Careers in Factorial",
+          "url": "https://factorialhr.com/join-factorial"
+        },
+        {
+          "titulo": "Engineering Jobs — Careers at Typeform",
+          "url": "https://www.typeform.com/careers/engineering"
+        },
+        {
+          "titulo": "CaixaBank Tech — Junior Software Engineer Java + Python",
+          "url": "https://caixabanktech.com/en/job/junior-software-engineer-java-python-3/"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -67,7 +99,34 @@
       "operadores",
       "aritmética"
     ],
-    "time": 30
+    "time": 30,
+    "empresa": {
+      "empresas": [
+        "glovo",
+        "wallapop"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend Engineer (Junior)",
+      "rol": "backend",
+      "formato": "take-home",
+      "dificultad": 2,
+      "evalua": [
+        "Agregar y resumir una colección sin perder precisión en los importes.",
+        "Reglas de negocio pequeñas pero con casos límite: carrito vacío, cantidades cero, descuentos.",
+        "Elegir la estructura de datos adecuada en vez de encadenar bucles."
+      ],
+      "nota": "Inspirada en el dominio de marketplace de ambas empresas (carrito, precios, totales). No es su prueba: ninguna la publica.",
+      "fuentes": [
+        {
+          "titulo": "Pruebas técnicas en procesos de selección en España",
+          "url": "https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion"
+        },
+        {
+          "titulo": "Companies that don’t have a broken hiring process",
+          "url": "https://github.com/poteto/hiring-without-whiteboards"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -98,7 +157,34 @@
       "async",
       "race condition"
     ],
-    "time": 40
+    "time": 40,
+    "empresa": {
+      "empresas": [
+        "meta",
+        "airbnb"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Frontend Engineer",
+      "rol": "frontend",
+      "formato": "live-coding",
+      "dificultad": 3,
+      "evalua": [
+        "JavaScript y DOM por debajo del framework: temporizadores, cancelación y eventos.",
+        "Condiciones de carrera en la interfaz: respuestas que llegan desordenadas.",
+        "Escribir código ejecutable, no pseudocódigo — es un requisito explícito en ambos procesos."
+      ],
+      "nota": "El buscador con debounce y cancelación es un clásico del live coding de frontend. Meta y Airbnb documentan el formato (código ejecutable, tiempo corto); el enunciado concreto es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Preparing for your software engineering interview at Meta",
+          "url": "https://www.metacareers.com/blog/preparing-for-your-software-engineering-interview-at-meta/"
+        },
+        {
+          "titulo": "Airbnb interview questions — interviewing.io",
+          "url": "https://interviewing.io/airbnb-interview-questions"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -125,7 +211,34 @@
       "closures",
       "hoisting"
     ],
-    "time": 25
+    "time": 25,
+    "empresa": {
+      "empresas": [
+        "meta",
+        "google"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Frontend / JavaScript Engineer",
+      "rol": "frontend",
+      "formato": "quiz",
+      "dificultad": 3,
+      "evalua": [
+        "Modelo mental del bucle de eventos: microtareas, macrotareas y orden de resolución.",
+        "Explicar el porqué, no solo acertar la salida: es lo que separa a un mid de un junior.",
+        "Precisión bajo presión de tiempo, sin ejecutar el código."
+      ],
+      "nota": "Formato de pregunta rápida eliminatoria. Ambas empresas publican que se espera razonar sin compilador; el ejercicio concreto es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Preparing for your software engineering interview at Meta",
+          "url": "https://www.metacareers.com/blog/preparing-for-your-software-engineering-interview-at-meta/"
+        },
+        {
+          "titulo": "Software Engineer interview prep guide — Google Careers",
+          "url": "https://www.google.com/about/careers/applications/candidate-prep/swe"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -155,7 +268,44 @@
       "estados de UI",
       "ARIA"
     ],
-    "time": 60
+    "time": 60,
+    "empresa": {
+      "empresas": [
+        "airbnb",
+        "vercel",
+        "typeform",
+        "spotify"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Frontend Engineer",
+      "rol": "frontend",
+      "formato": "mini-app",
+      "dificultad": 3,
+      "evalua": [
+        "Todos los estados de una interfaz, no solo el feliz: carga, vacío, error y éxito.",
+        "Accesibilidad real con ARIA y foco, no como añadido final.",
+        "Criterio de producto: qué ve el usuario mientras algo falla."
+      ],
+      "nota": "Construir un componente completo con todos sus estados es el formato habitual de frontend en las cuatro. El componente concreto es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Airbnb interview questions — interviewing.io",
+          "url": "https://interviewing.io/airbnb-interview-questions"
+        },
+        {
+          "titulo": "Engineering Jobs — Careers at Typeform",
+          "url": "https://www.typeform.com/careers/engineering"
+        },
+        {
+          "titulo": "Start Your Journey — Life at Spotify",
+          "url": "https://www.lifeatspotify.com/start-your-journey"
+        },
+        {
+          "titulo": "Companies that don’t have a broken hiring process",
+          "url": "https://github.com/poteto/hiring-without-whiteboards"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -187,7 +337,39 @@
       "validación",
       "capas"
     ],
-    "time": 55
+    "time": 55,
+    "empresa": {
+      "empresas": [
+        "cabify",
+        "gitlab",
+        "automattic"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend Engineer",
+      "rol": "backend",
+      "formato": "refactor",
+      "dificultad": 3,
+      "evalua": [
+        "Separar capas sin cambiar el comportamiento observable.",
+        "Justificar cada movimiento: un refactor que no sabes defender no vale.",
+        "Reconocer qué NO hay que tocar todavía."
+      ],
+      "nota": "Las tres evalúan sobre código que ya existe: Cabify revisa tu entrega contigo delante, GitLab trabaja sobre repositorios grandes y Automattic publica que su prueba consiste en modificar código existente con un compañero asignado. El código a refactorizar es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Pruebas técnicas en procesos de selección en España",
+          "url": "https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion"
+        },
+        {
+          "titulo": "Technical Interviews — The GitLab Handbook",
+          "url": "https://handbook.gitlab.com/handbook/hiring/interviewing/technical/"
+        },
+        {
+          "titulo": "How We Hire Developers — Automattic",
+          "url": "https://automattic.com/work-with-us/how-we-hire-developers/"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -219,7 +401,39 @@
       "rate limit",
       "idempotencia"
     ],
-    "time": 50
+    "time": 50,
+    "empresa": {
+      "empresas": [
+        "stripe",
+        "cloudflare",
+        "edreams"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend Engineer",
+      "rol": "backend",
+      "formato": "api-integration",
+      "dificultad": 3,
+      "evalua": [
+        "Implementar contra una API que no conoces, con la documentación abierta: es literalmente su ronda de integración.",
+        "Reintentos con espera exponencial, respeto de los límites de peticiones e idempotencia.",
+        "Errores tratados como parte del contrato, no como excepción rara."
+      ],
+      "nota": "Stripe tiene una ronda de integración con API documentada por testimonios; en Cloudflare, HTTP y los límites de peticiones aparecen en casi todas las rondas; y eDreams ODIGEO vive de integrarse con proveedores de viaje que fallan, cachean mal y limitan las consultas. El cliente concreto es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "La ronda Bug Squash de Stripe, según testimonios de candidatos",
+          "url": "https://www.coditioning.com/blog/804/stripe-swe-bug-squash-interview"
+        },
+        {
+          "titulo": "Experiencias de entrevista en Cloudflare — Taro",
+          "url": "https://www.jointaro.com/interviews/companies/cloudflare/experiences/software-engineer-october-17-2025-no-offer-neutral-ff798d3e/"
+        },
+        {
+          "titulo": "eDreams ODIGEO Tech Blog",
+          "url": "https://tech.edreamsodigeo.com/"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -247,7 +461,34 @@
       "casos borde",
       "mutation testing"
     ],
-    "time": 45
+    "time": 45,
+    "empresa": {
+      "empresas": [
+        "github",
+        "cabify"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend / QA Engineer",
+      "rol": "qa",
+      "formato": "testing",
+      "dificultad": 2,
+      "evalua": [
+        "Distinguir cobertura de detección: un test que no puede fallar no prueba nada.",
+        "Escribir el caso límite antes que el camino feliz.",
+        "Tests como documentación del comportamiento esperado."
+      ],
+      "nota": "GitHub evalúa las entregas con tests automáticos y rúbrica; en Cabify la calidad de los tests pesa más que la funcionalidad extra. El ejercicio es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "How GitHub does take home technical interviews — The GitHub Blog",
+          "url": "https://github.blog/developer-skills/career-growth/how-github-does-take-home-technical-interviews/"
+        },
+        {
+          "titulo": "Pruebas técnicas en procesos de selección en España",
+          "url": "https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -277,7 +518,34 @@
       "arrays",
       "diagnóstico"
     ],
-    "time": 50
+    "time": 50,
+    "empresa": {
+      "empresas": [
+        "stripe",
+        "netflix"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend Engineer",
+      "rol": "backend",
+      "formato": "bug-squash",
+      "dificultad": 3,
+      "evalua": [
+        "Depuración metódica y narrada: leer el síntoma, formular una hipótesis y comprobarla antes de tocar código.",
+        "Encontrar la causa raíz en lugar de tapar el síntoma.",
+        "Moverse por código que no escribiste tú."
+      ],
+      "nota": "El formato reproduce la ronda \"Bug Squash\" de Stripe (repositorio ajeno, fallo real, diagnóstico en voz alta) documentada por testimonios de candidatos. El bug concreto es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "La ronda Bug Squash de Stripe, según testimonios de candidatos",
+          "url": "https://www.coditioning.com/blog/804/stripe-swe-bug-squash-interview"
+        },
+        {
+          "titulo": "Demystifying Interviewing for Backend Engineers @ Netflix",
+          "url": "https://netflixtechblog.com/demystifying-interviewing-for-backend-engineers-netflix-aceb26a83495"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -310,7 +578,34 @@
       "consultas",
       "agrupación en memoria"
     ],
-    "time": 50
+    "time": 50,
+    "empresa": {
+      "empresas": [
+        "travelperk",
+        "wallapop"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend Engineer",
+      "rol": "backend",
+      "formato": "optimizacion",
+      "dificultad": 3,
+      "evalua": [
+        "Medir antes de optimizar: identificar el cuello de botella con datos.",
+        "El patrón N+1, que es el problema de rendimiento más frecuente en producto con base de datos.",
+        "Índices y consultas que escalan con el volumen real, no con el de tu portátil."
+      ],
+      "nota": "Ambas trabajan con catálogos y búsquedas de gran volumen. La optimización concreta es nuestra.",
+      "fuentes": [
+        {
+          "titulo": "How do we hire engineers @ TravelPerk?",
+          "url": "https://medium.com/@alexander.ludwick/how-do-we-hire-engineers-travelperk-afabbf82aedc"
+        },
+        {
+          "titulo": "Pruebas técnicas en procesos de selección en España",
+          "url": "https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -344,7 +639,300 @@
       "autorización",
       "OWASP"
     ],
-    "time": 55
+    "time": 55,
+    "empresa": {
+      "empresas": [
+        "revolut",
+        "cloudflare"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend / Security Engineer",
+      "rol": "security",
+      "formato": "code-review",
+      "dificultad": 4,
+      "evalua": [
+        "Autorización a nivel de recurso, no solo autenticación: el fallo de acceso más común y más caro.",
+        "Pensar como quien ataca: qué pasa si cambio el identificador de la URL.",
+        "Defensa en profundidad y registro de auditoría."
+      ],
+      "nota": "En banca digital y en seguridad de red el control de acceso es tema obligado en el proceso. El endpoint vulnerable es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Companies that don’t have a broken hiring process",
+          "url": "https://github.com/poteto/hiring-without-whiteboards"
+        },
+        {
+          "titulo": "Experiencias de entrevista en Cloudflare — Taro",
+          "url": "https://www.jointaro.com/interviews/companies/cloudflare/experiences/software-engineer-october-17-2025-no-offer-neutral-ff798d3e/"
+        }
+      ]
+    }
+  });
+
+  TT.defineExerciseIndice({
+    "id": "alg-ventana-deslizante",
+    "title": "El pico de peticiones: ventana deslizante en O(n)",
+    "category": "javascript",
+    "categorias": [
+      "performance"
+    ],
+    "kind": "build",
+    "level": "mid",
+    "context": "Ronda de algoritmos de 45 minutos, con un ingeniero al otro lado y un editor compartido sin autocompletado. El problema está sacado de un sistema real: el equipo de infraestructura necesita saber cuál fue el momento de más carga de cada cliente para dimensionar sus límites de peticiones.",
+    "situation": "Tienes las marcas de tiempo (en milisegundos) de todas las peticiones que un cliente hizo ayer. Quieren saber **cuántas peticiones llegó a hacer, como máximo, en una ventana de tiempo cualquiera**: si el límite es de 100 peticiones por minuto y su pico real fue de 340, hay que hablar con ese cliente.\nEl entrevistador te avisa de dos cosas antes de empezar: que hay clientes con millones de peticiones diarias, y que el fichero de origen **no siempre llega ordenado**.",
+    "goal": "Implementar `picoDePeticiones(marcas, ventanaMs)`, que devuelve el número máximo de peticiones contenidas en cualquier ventana de `ventanaMs` milisegundos, con complejidad lineal tras ordenar.",
+    "tech": [
+      "JavaScript",
+      "Algoritmos"
+    ],
+    "skills": [
+      "dos punteros",
+      "ventana deslizante",
+      "análisis de complejidad",
+      "casos límite",
+      "inmutabilidad"
+    ],
+    "tags": [
+      "algoritmos",
+      "dos punteros",
+      "complejidad",
+      "rate limiting"
+    ],
+    "time": 35,
+    "empresa": {
+      "empresas": [
+        "google",
+        "meta",
+        "netflix"
+      ],
+      "evidencia": "documentada",
+      "puesto": "Software Engineer",
+      "rol": "backend",
+      "formato": "algoritmos",
+      "dificultad": 3,
+      "evalua": [
+        "Análisis de complejidad explícito: llegar a O(n) y saber decir por qué lo es.",
+        "Casos límite tratados antes de escribir el bucle, no después de que falle un test.",
+        "Narrar el razonamiento mientras programas: el comité de Google solo lee lo que el entrevistador anotó."
+      ],
+      "nota": "Google y Meta publican en sus guías oficiales que sus rondas técnicas evalúan estructuras de datos, algoritmos y complejidad, y Netflix documenta que sus problemas son piezas de infraestructura reconocibles como un limitador de peticiones. Ese formato está documentado; el enunciado concreto de esta prueba es original nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Software Engineer interview prep guide — Google Careers",
+          "url": "https://www.google.com/about/careers/applications/candidate-prep/swe"
+        },
+        {
+          "titulo": "Preparing for your software engineering interview at Meta",
+          "url": "https://www.metacareers.com/blog/preparing-for-your-software-engineering-interview-at-meta/"
+        },
+        {
+          "titulo": "Demystifying Interviewing for Backend Engineers @ Netflix",
+          "url": "https://netflixtechblog.com/demystifying-interviewing-for-backend-engineers-netflix-aceb26a83495"
+        }
+      ]
+    }
+  });
+
+  TT.defineExerciseIndice({
+    "id": "sql-informe-actividad",
+    "title": "Informe de actividad: la consulta que tarda ocho minutos",
+    "category": "databases",
+    "categorias": [
+      "performance",
+      "backend"
+    ],
+    "kind": "optimize",
+    "level": "mid",
+    "context": "Ronda de datos de 45 minutos con un editor SQL compartido. No hay ejecución: escribes la consulta y la defiendes. El entrevistador te avisa de que le interesa más **por qué** eliges cada cosa que que la sintaxis compile a la primera.",
+    "situation": "El equipo de producto necesita un informe mensual: cuántos usuarios distintos hicieron al menos una operación cada mes del último año, y cuánto movieron en total.\nLa consulta que hay escrita ahora tarda **ocho minutos** y bloquea el panel de control. La tabla `operaciones` tiene 400 millones de filas y crece cinco millones al día.\n\n```sql\nCREATE TABLE usuarios (\n  id            BIGINT PRIMARY KEY,\n  pais          CHAR(2)     NOT NULL,\n  creado_en     TIMESTAMPTZ NOT NULL\n);\n\nCREATE TABLE operaciones (\n  id            BIGINT PRIMARY KEY,\n  usuario_id    BIGINT      NOT NULL REFERENCES usuarios(id),\n  importe_cent  BIGINT      NOT NULL,   -- céntimos, nunca coma flotante\n  moneda        CHAR(3)     NOT NULL,\n  estado        TEXT        NOT NULL,   -- pendiente | confirmada | anulada\n  creada_en     TIMESTAMPTZ NOT NULL\n);\n\nCREATE INDEX idx_op_usuario ON operaciones (usuario_id);\n```\n\nY la consulta actual:\n\n```sql\nSELECT DATE_TRUNC('month', o.creada_en) AS mes,\n       COUNT(*)          AS usuarios,\n       SUM(o.importe_cent) AS total\n  FROM operaciones o, usuarios u\n WHERE o.usuario_id = u.id\n   AND EXTRACT(YEAR FROM o.creada_en) = 2026\n GROUP BY 1\n ORDER BY 1;\n```",
+    "goal": "Reescribir la consulta para que sea **correcta** y **rápida**, y justificar qué índice hace falta y por qué el que existe no se está usando.",
+    "tech": [
+      "SQL",
+      "PostgreSQL",
+      "Índices"
+    ],
+    "skills": [
+      "agregación",
+      "DISTINCT frente a COUNT",
+      "sargabilidad",
+      "índices compuestos",
+      "zonas horarias"
+    ],
+    "tags": [
+      "SQL",
+      "agregación",
+      "índices",
+      "plan de ejecución",
+      "fechas"
+    ],
+    "time": 45,
+    "empresa": {
+      "empresas": [
+        "revolut",
+        "amazon",
+        "travelperk"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "Backend / Data Engineer",
+      "rol": "data",
+      "formato": "sql",
+      "dificultad": 3,
+      "evalua": [
+        "Entender qué va a hacer el motor con tu consulta, no solo que devuelva las filas correctas.",
+        "Agregación correcta con fechas y zonas horarias, que es donde se rompen casi todos los informes.",
+        "Índices: saber cuál hace falta y por qué el que hay no sirve."
+      ],
+      "nota": "Ninguna de las tres empresas publica sus enunciados de SQL. El formato de ronda de datos y su peso está descrito en testimonios públicos y, en el caso de Amazon, en su propia página de proceso, que menciona pruebas específicas por puesto. El esquema y el enunciado son nuestros.",
+      "fuentes": [
+        {
+          "titulo": "Interviewing at Amazon — amazon.jobs",
+          "url": "https://www.amazon.jobs/content/en/how-we-hire/interviewing-at-amazon"
+        },
+        {
+          "titulo": "How do we hire engineers @ TravelPerk?",
+          "url": "https://medium.com/@alexander.ludwick/how-do-we-hire-engineers-travelperk-afabbf82aedc"
+        },
+        {
+          "titulo": "Companies that don’t have a broken hiring process",
+          "url": "https://github.com/poteto/hiring-without-whiteboards"
+        }
+      ]
+    }
+  });
+
+  TT.defineExerciseIndice({
+    "id": "bcn-desembolsos-comisiones",
+    "title": "Desembolsos a comercios: comisiones por tramos, al céntimo",
+    "category": "backend",
+    "categorias": [
+      "javascript",
+      "databases"
+    ],
+    "kind": "build",
+    "level": "mid",
+    "context": "Prueba para casa de una fintech de Barcelona que ofrece pago aplazado a tiendas en línea. Te dan un enunciado corto, te dicen que no dediques más de tres horas y que valoran la calidad por encima de terminarlo todo. Después hay una segunda ronda en la que revisas tu propio código en vivo con dos ingenieros: todo lo que entregues, tendrás que defenderlo.",
+    "situation": "La empresa cobra al comercio una comisión por cada pedido y le paga el resto **una vez por semana**, agrupando todos los pedidos completados en esa semana.\n\nLa comisión depende del importe del pedido:\n\n| Importe del pedido | Comisión |\n| --- | --- |\n| Menos de 50 € | 1,00 % |\n| De 50 € a menos de 300 € | 0,95 % |\n| 300 € o más | 0,85 % |\n\nLos importes llegan **en céntimos y como enteros**, porque en dinero nadie usa coma flotante. Cada pedido trae la fecha en la que se completó, en formato ISO y en UTC, o `null` si todavía no se ha completado.\n\nEl equipo de finanzas cuadra estas cifras a mano contra el banco. Un céntimo de diferencia multiplicado por cien mil pedidos es una reunión muy larga.",
+    "goal": "Implementar `calcularDesembolsos(pedidos)`, que devuelve un desembolso por semana con el número de pedidos, el importe bruto, la comisión total y el neto a pagar al comercio.",
+    "tech": [
+      "JavaScript",
+      "Node.js"
+    ],
+    "skills": [
+      "aritmética entera",
+      "redondeo",
+      "reglas de negocio por tramos",
+      "agrupación por fecha",
+      "inmutabilidad"
+    ],
+    "tags": [
+      "dinero",
+      "redondeo",
+      "tramos",
+      "fechas",
+      "fintech",
+      "Barcelona"
+    ],
+    "time": 50,
+    "empresa": {
+      "empresas": [
+        "sequra",
+        "revolut",
+        "glovo"
+      ],
+      "evidencia": "documentada",
+      "puesto": "Backend Engineer",
+      "rol": "backend",
+      "formato": "take-home",
+      "dificultad": 3,
+      "evalua": [
+        "Aritmética de dinero sin coma flotante: en una fintech esto no es una preferencia de estilo, es un requisito.",
+        "Fronteras de tramo tratadas a propósito y no por accidente: es donde se pierde o se gana dinero real.",
+        "Redondear por pedido y no sobre el total, porque así es como se factura de verdad.",
+        "Agrupación temporal correcta, con la semana empezando el lunes y sin sorpresas de zona horaria."
+      ],
+      "nota": "SeQura publica en sus ofertas que su proceso es una prueba asíncrona seguida de una revisión en vivo de tu propio código, y su reto de backend —desembolsos a comercios con comisiones del 1 %, 0,95 % y 0,85 % por tramos de importe— aparece descrito de forma coincidente en varios repositorios públicos de candidatos independientes. Esos tramos son los que se reproducen aquí. El resto del enunciado, el contrato de la función y los tests son originales nuestros.",
+      "fuentes": [
+        {
+          "titulo": "SeQura — Senior Software Engineer: proceso (take-home + peer review en vivo)",
+          "url": "https://sequra.recruitee.com/o/senior-software-engineer-2"
+        },
+        {
+          "titulo": "Reto de backend de SeQura publicado por un candidato (tramos de comisión)",
+          "url": "https://github.com/joelGarcia93/sequra-challenge"
+        },
+        {
+          "titulo": "Segundo repositorio independiente con los mismos tramos",
+          "url": "https://github.com/languita/sequra-challenge"
+        }
+      ]
+    }
+  });
+
+  TT.defineExerciseIndice({
+    "id": "bcn-maquina-expendedora",
+    "title": "Máquina expendedora: el cambio que no siempre se puede dar",
+    "category": "architecture",
+    "categorias": [
+      "backend",
+      "javascript"
+    ],
+    "kind": "build",
+    "level": "senior",
+    "context": "Prueba para casa de una empresa de Barcelona que la publica en abierto, con una advertencia poco habitual en el enunciado: *\"no se trata de que simplemente funcione\"*. Avisan de que un script de un solo archivo que procesa comandos no demuestra nivel senior, y de que tendrás que defender cada decisión de arquitectura en una entrevista posterior.\nTambién dicen algo que casi nadie escribe: **puedes usar IA**, pero el código que entregues tiene que ser código que entiendas lo bastante como para explicarlo, modificarlo y ampliarlo si las herramientas de IA desaparecieran mañana.",
+    "situation": "La máquina acepta monedas de 5, 10, 25 y 100 céntimos. Tiene artículos con precio y existencias, y un inventario de monedas para dar cambio. Un operario puede abrirla para reponer ambas cosas.\n\nEl detalle que hunde la mayoría de las entregas está en una sola línea del enunciado: la máquina **lleva la cuenta del cambio disponible**. Es decir, no siempre puede dar cambio. Y cuando no puede, no vende: devuelve el dinero.\n\nHay una segunda trampa, más silenciosa: las monedas que el cliente acaba de meter **también sirven para dar cambio**. El cambio se calcula sobre el inventario resultante, no sobre el que había antes de la compra.",
+    "goal": "Implementar `crearMaquina(configuracion)`, que devuelve un objeto con las operaciones de la máquina: insertar moneda, seleccionar artículo, devolver el dinero, hacer servicio y consultar el estado.",
+    "tech": [
+      "JavaScript",
+      "Node.js"
+    ],
+    "skills": [
+      "modelado de dominio",
+      "máquinas de estado",
+      "backtracking",
+      "diseño de API",
+      "casos límite"
+    ],
+    "tags": [
+      "modelado de dominio",
+      "estado",
+      "algoritmos",
+      "backtracking",
+      "Barcelona"
+    ],
+    "time": 75,
+    "empresa": {
+      "empresas": [
+        "holded",
+        "seatcode",
+        "cabify"
+      ],
+      "evidencia": "documentada",
+      "puesto": "Senior Backend Engineer",
+      "rol": "backend",
+      "formato": "take-home",
+      "dificultad": 4,
+      "evalua": [
+        "Modelado de dominio: cómo representas reglas de negocio con estado y que sigan siendo legibles.",
+        "Extensibilidad: qué hay que tocar para añadir un producto, una moneda o una regla nueva.",
+        "Reconocer que el algoritmo obvio —dar siempre la moneda más grande— falla con inventario limitado.",
+        "Estados de error tratados como parte del diseño, no como excepciones sueltas."
+      ],
+      "nota": "Holded publica el enunciado de sus pruebas técnicas en un repositorio público de GitHub, y el de Senior Backend Engineer es exactamente una máquina expendedora, con el detalle explícito de que la máquina debe llevar la cuenta del **cambio disponible**. Su enunciado pide PHP y evalúa con rúbrica; aquí se traslada el problema a JavaScript y se añaden tests automáticos para que se pueda practicar solo. El contrato de la función, los casos y la solución son originales nuestros.",
+      "fuentes": [
+        {
+          "titulo": "Reto de Senior Backend Engineer de Holded (máquina expendedora)",
+          "url": "https://github.com/holdedhub/careers/blob/main/challenges/backend/README.md"
+        },
+        {
+          "titulo": "holdedhub/careers — repositorio público de contratación",
+          "url": "https://github.com/holdedhub/careers"
+        },
+        {
+          "titulo": "SEAT CODE — Join Us: proceso de tres fases con prueba práctica",
+          "url": "https://www.code.seat/workwithus"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -373,7 +961,34 @@
       "validación",
       "alucinaciones"
     ],
-    "time": 45
+    "time": 45,
+    "empresa": {
+      "empresas": [
+        "ia-generalista",
+        "microsoft"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "AI Engineer",
+      "rol": "ai-engineer",
+      "formato": "ai-case",
+      "dificultad": 3,
+      "evalua": [
+        "Convertir la salida de un modelo en un contrato de datos fiable, con validación y reintento.",
+        "Tratar al modelo como una dependencia poco fiable, igual que una API externa.",
+        "Fallar de forma controlada cuando la salida no cumple el esquema."
+      ],
+      "nota": "Las salidas estructuradas y su validación son tema recurrente en las convocatorias públicas de AI Engineer de 2026. El caso concreto es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales",
+          "url": "https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms"
+        },
+        {
+          "titulo": "Take-Home Engineering Challenge (Microsoft CSE)",
+          "url": "https://github.com/seushermsft/Take-Home-Engineering-Challenge"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -405,7 +1020,33 @@
       "abstención",
       "evaluación"
     ],
-    "time": 60
+    "time": 60,
+    "empresa": {
+      "empresas": [
+        "ia-generalista"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "AI Engineer",
+      "rol": "ai-engineer",
+      "formato": "ai-case",
+      "dificultad": 4,
+      "evalua": [
+        "Recuperación con citas comprobables: distinguir lo que el modelo sabe de lo que ha leído.",
+        "Depurar un RAG que devuelve basura sabiendo si el fallo está en el índice o en el prompt.",
+        "Fidelidad y relevancia como métricas, no como impresión."
+      ],
+      "nota": "Depurar un RAG y justificar sus métricas es uno de los casos prácticos más repetidos en procesos de IA. El escenario es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales",
+          "url": "https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms"
+        },
+        {
+          "titulo": "How to interview for an AI Engineer role in 2026",
+          "url": "https://chiraghasija.cc/posts/how-to-interview-ai-engineer-role-2026/"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -441,7 +1082,33 @@
       "guardrails",
       "observabilidad"
     ],
-    "time": 75
+    "time": 75,
+    "empresa": {
+      "empresas": [
+        "ia-generalista"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "AI Engineer (Senior)",
+      "rol": "ai-engineer",
+      "formato": "debugging",
+      "dificultad": 5,
+      "evalua": [
+        "Diagnosticar por qué un agente se queda en bucle en vez de limitarse a subir el límite de pasos.",
+        "Coste y latencia por petición como restricción de diseño.",
+        "Observabilidad: qué habría que registrar para que este fallo fuera evidente."
+      ],
+      "nota": "Los fallos de agentes y el control de coste son preguntas explícitas en las ofertas de AI Engineer. La traza concreta es nuestra.",
+      "fuentes": [
+        {
+          "titulo": "How to interview for an AI Engineer role in 2026",
+          "url": "https://chiraghasija.cc/posts/how-to-interview-ai-engineer-role-2026/"
+        },
+        {
+          "titulo": "AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales",
+          "url": "https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -475,7 +1142,33 @@
       "regresiones",
       "coste"
     ],
-    "time": 60
+    "time": 60,
+    "empresa": {
+      "empresas": [
+        "ia-generalista"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "AI Engineer",
+      "rol": "ai-engineer",
+      "formato": "ai-case",
+      "dificultad": 4,
+      "evalua": [
+        "Decidir si un cambio de modelo mejora algo de verdad, antes de desplegarlo.",
+        "Diseñar un conjunto de evaluación y un juez automático con sus propios sesgos controlados.",
+        "Medir en lugar de opinar: la competencia que más se repite en estas entrevistas."
+      ],
+      "nota": "\"¿Cómo sabes que la versión nueva es mejor?\" es la pregunta central de las entrevistas de IA de 2026. El caso es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "How to interview for an AI Engineer role in 2026",
+          "url": "https://chiraghasija.cc/posts/how-to-interview-ai-engineer-role-2026/"
+        },
+        {
+          "titulo": "AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales",
+          "url": "https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -508,7 +1201,34 @@
       "esquemas",
       "validación"
     ],
-    "time": 60
+    "time": 60,
+    "empresa": {
+      "empresas": [
+        "ia-generalista",
+        "microsoft"
+      ],
+      "evidencia": "inspirada",
+      "puesto": "AI Engineer",
+      "rol": "ai-engineer",
+      "formato": "mini-app",
+      "dificultad": 4,
+      "evalua": [
+        "Exponer capacidades a un agente con un contrato de herramientas explícito y validado.",
+        "Límites de confianza entre la instrucción del sistema y los datos del usuario.",
+        "Diseño de API pensado para que lo consuma un modelo, no una persona."
+      ],
+      "nota": "Construir un servidor de herramientas para un agente es el equivalente actual del \"haz una pequeña API\". El enunciado es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "AI Engineer interview roadmap 2026: RAG, LLM y bases vectoriales",
+          "url": "https://www.mockexperts.com/blog/2026-ai-engineer-interview-roadmap-rag-llms"
+        },
+        {
+          "titulo": "Take-Home Engineering Challenge (Microsoft CSE)",
+          "url": "https://github.com/seushermsft/Take-Home-Engineering-Challenge"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -542,7 +1262,34 @@
       "seguridad",
       "concurrencia"
     ],
-    "time": 45
+    "time": 45,
+    "empresa": {
+      "empresas": [
+        "gitlab",
+        "github"
+      ],
+      "evidencia": "documentada",
+      "puesto": "Senior Backend Engineer",
+      "rol": "backend",
+      "formato": "code-review",
+      "dificultad": 4,
+      "evalua": [
+        "Revisión de un Merge Request como ronda técnica principal: es literalmente el formato que GitLab publica en su handbook.",
+        "Priorizar por impacto y comunicar sin atacar a la persona.",
+        "Detectar ausencias — transacción, idempotencia, tests — y no solo lo que está escrito."
+      ],
+      "nota": "GitLab documenta en su handbook público que su entrevista técnica es la revisión de un Merge Request, y GitHub que sus entregas se revisan como un Pull Request con rúbrica. El PR concreto de este ejercicio es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Technical Interviews — The GitLab Handbook",
+          "url": "https://handbook.gitlab.com/handbook/hiring/interviewing/technical/"
+        },
+        {
+          "titulo": "How GitHub does take home technical interviews — The GitHub Blog",
+          "url": "https://github.blog/developer-skills/career-growth/how-github-does-take-home-technical-interviews/"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -578,7 +1325,34 @@
       "accesibilidad",
       "testing"
     ],
-    "time": 240
+    "time": 240,
+    "empresa": {
+      "empresas": [
+        "github",
+        "shopify"
+      ],
+      "evidencia": "documentada",
+      "puesto": "Frontend Engineer",
+      "rol": "frontend",
+      "formato": "take-home",
+      "dificultad": 3,
+      "evalua": [
+        "Entrega con límite de tiempo declarado y evaluada con rúbrica: el formato que GitHub describe en su blog de ingeniería.",
+        "Saber qué dejar fuera: entregar de más no suma puntos.",
+        "Decisiones de producto y de accesibilidad justificadas por escrito."
+      ],
+      "nota": "GitHub publica el formato de su take-home (límite de tiempo, entrega anonimizada, rúbrica y scorecard en el Pull Request) y Shopify el suyo de ejercicio práctico. El enunciado del ejercicio es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "How GitHub does take home technical interviews — The GitHub Blog",
+          "url": "https://github.blog/developer-skills/career-growth/how-github-does-take-home-technical-interviews/"
+        },
+        {
+          "titulo": "Shopify’s Technical Interview Process",
+          "url": "https://shopify.engineering/nail-your-technical-shopify-interview"
+        }
+      ]
+    }
   });
 
   TT.defineExerciseIndice({
@@ -615,7 +1389,44 @@
       "caché",
       "consistencia"
     ],
-    "time": 60
+    "time": 60,
+    "empresa": {
+      "empresas": [
+        "atlassian",
+        "netflix",
+        "cloudflare",
+        "adevinta"
+      ],
+      "evidencia": "documentada",
+      "puesto": "Senior Backend Engineer",
+      "rol": "backend",
+      "formato": "system-design",
+      "dificultad": 4,
+      "evalua": [
+        "Ronda de system design de 60 minutos: la publican Atlassian en su guía oficial y Netflix en su blog de ingeniería.",
+        "Defender compromisos explícitos en vez de dibujar la arquitectura de moda.",
+        "Fallos parciales, consistencia y coste como parte del diseño."
+      ],
+      "nota": "La existencia y el formato de esta ronda están documentados por Atlassian, Netflix y Cloudflare. Adevinta Spain se añade porque sus ofertas de Barcelona piden exactamente este perfil —sistemas de alta disponibilidad y baja latencia, Kubernetes y datos en streaming con Kafka y Flink—, aunque no publica el detalle de su proceso. El sistema concreto que se pide diseñar es nuestro.",
+      "fuentes": [
+        {
+          "titulo": "Atlassian Engineering Interview Guide",
+          "url": "https://www.atlassian.com/company/careers/resources/interviewing/engineering"
+        },
+        {
+          "titulo": "Demystifying Interviewing for Backend Engineers @ Netflix",
+          "url": "https://netflixtechblog.com/demystifying-interviewing-for-backend-engineers-netflix-aceb26a83495"
+        },
+        {
+          "titulo": "Experiencias de entrevista en Cloudflare — Taro",
+          "url": "https://www.jointaro.com/interviews/companies/cloudflare/experiences/software-engineer-october-17-2025-no-offer-neutral-ff798d3e/"
+        },
+        {
+          "titulo": "Product & Tech — Adevinta Careers",
+          "url": "https://adevinta.com/careers/product-tech/"
+        }
+      ]
+    }
   });
 
 })(window.TT);

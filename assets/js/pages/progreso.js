@@ -3,14 +3,14 @@
   'use strict';
 
   TT.boot('', { liviano: true }).then(function () {
-    var UI = TT.ui;
+    const UI = TT.ui;
     UI.mountNav('progreso.html');
     UI.refreshNavLevel();
     render();
 
     function render() {
-      var s = TT.store.summary();
-      var cont = document.getElementById('contenido');
+      const s = TT.store.summary();
+      const cont = document.getElementById('contenido');
 
       if (s.started === 0) {
         cont.innerHTML =
@@ -55,9 +55,9 @@
         '<div class="card table-scroll" style="padding:0;margin-top:var(--sp-3)"><table class="table">' +
           '<thead><tr><th>Área</th><th style="width:90px">Superadas</th><th>Avance</th><th style="width:110px">Precisión</th></tr></thead><tbody>' +
           Object.keys(s.byCategory).map(function (id) {
-            var c = s.byCategory[id];
-            var pct = c.total ? Math.round(c.passed / c.total * 100) : 0;
-            var prec = c.max ? Math.round(c.score / c.max * 100) : null;
+            const c = s.byCategory[id];
+            const pct = c.total ? Math.round(c.passed / c.total * 100) : 0;
+            const prec = c.max ? Math.round(c.score / c.max * 100) : null;
             return '<tr>' +
               '<td>' + UI.catBadge(id) + '</td>' +
               '<td class="mono">' + c.passed + ' / ' + c.total + '</td>' +
@@ -107,8 +107,8 @@
         return 'Hace falta superar al menos una prueba para empezar a calibrar. El nivel no se declara: se deduce ' +
                'de qué pruebas apruebas, con qué precisión y con cuánta ayuda.';
       }
-      var l = TT.LEVELS[s.estimatedLevel];
-      var siguiente = { 'junior': 'junior-adv', 'junior-adv': 'mid', 'mid': 'senior', 'senior': null }[s.estimatedLevel];
+      const l = TT.LEVELS[s.estimatedLevel];
+      const siguiente = { 'junior': 'junior-adv', 'junior-adv': 'mid', 'mid': 'senior', 'senior': null }[s.estimatedLevel];
       return l.desc + (siguiente
         ? ' Para llegar a ' + TT.LEVELS[siguiente].label + ' necesitas superar pruebas de ese nivel manteniendo ' +
           'la precisión por encima del 70 %.'
@@ -116,7 +116,7 @@
     }
 
     function recomendacion() {
-      var recos = TT.store.recommend(3);
+      const recos = TT.store.recommend(3);
       if (!recos.length) return '';
       return '<h2 style="margin-top:var(--sp-7)">Qué hacer a continuación</h2>' +
         '<p class="soft small">La plataforma prioriza reforzar lo flojo antes de avanzar: repetir una prueba ' +
@@ -132,7 +132,7 @@
     }
 
     function panelSkills(titulo, mapa, color, ayuda) {
-      var claves = Object.keys(mapa).sort(function (a, b) { return mapa[b] - mapa[a]; });
+      const claves = Object.keys(mapa).sort(function (a, b) { return mapa[b] - mapa[a]; });
       return '<div class="card">' +
         '<div class="card-title" style="color:var(--' + color + ')">' + UI.esc(titulo) + '</div>' +
         '<p class="tiny muted">' + UI.esc(ayuda) + '</p>' +
@@ -147,7 +147,7 @@
 
     function fecha(iso) {
       if (!iso) return '—';
-      var d = new Date(iso);
+      const d = new Date(iso);
       return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }) + ' · ' +
              d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
     }
@@ -167,7 +167,7 @@
     }
 
     function conectarHerramientas() {
-      var caja = document.getElementById('caja');
+      const caja = document.getElementById('caja');
 
       document.getElementById('exportar').addEventListener('click', function () {
         caja.classList.remove('hidden');

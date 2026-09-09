@@ -8,7 +8,7 @@
   'use strict';
 
   // Qué prueba evalúa cada laboratorio. Añadir uno nuevo es una línea.
-  var PRUEBA_RELACIONADA = {
+  const PRUEBA_RELACIONADA = {
     'fundamentos.html': null,
     'algoritmos.html': null,
     'dom_lab.html': 'fe-estados-accesibles',
@@ -18,17 +18,17 @@
     'buscador.html': null
   };
 
-  var TEMA_KEY = 'techtrack.theme';
+  const TEMA_KEY = 'techtrack.theme';
   try {
-    var guardado = localStorage.getItem(TEMA_KEY);
+    const guardado = localStorage.getItem(TEMA_KEY);
     if (guardado) document.documentElement.setAttribute('data-theme', guardado);
   } catch (e) { /* sin persistencia disponible */ }
 
   function montar() {
-    var archivo = location.pathname.split('/').pop() || 'index.html';
-    var prueba = PRUEBA_RELACIONADA[archivo];
+    const archivo = location.pathname.split('/').pop() || 'index.html';
+    const prueba = PRUEBA_RELACIONADA[archivo];
 
-    var bar = document.createElement('div');
+    const bar = document.createElement('div');
     bar.className = 'lab-bar';
     bar.innerHTML =
       '<a class="lab-brand" href="index.html"><span class="lab-logo">T</span>TechTrack</a>' +
@@ -45,7 +45,7 @@
     document.body.insertBefore(bar, document.body.firstChild);
 
     document.getElementById('lab-tema').addEventListener('click', function () {
-      var ahora = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      const ahora = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', ahora);
       try { localStorage.setItem(TEMA_KEY, ahora); } catch (e) { /* ignorado */ }
     });
