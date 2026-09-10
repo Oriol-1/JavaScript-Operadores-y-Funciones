@@ -550,6 +550,33 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'Sliding Window, una técnica imprescindible | Animación',
+        canal: 'Entropía Binaria',
+        url: 'https://www.youtube.com/watch?v=y29342Vgtr8',
+        idioma: 'es',
+        porque: 'La animación enseña por qué la ventana convierte un O(n²) en un O(n), que es justo lo que se evalúa aquí.'
+      },
+      {
+        titulo: 'Two pointers, la técnica que te salvará en entrevistas | Animación',
+        canal: 'Entropía Binaria',
+        url: 'https://www.youtube.com/watch?v=RLvE9Ym2lqI',
+        idioma: 'es',
+        porque: 'Los dos punteros son el mecanismo que hay debajo de la ventana. Lo aplica al problema Two Sum, no al de aquí: te llevas la idea, no la solución.'
+      },
+      {
+        titulo: 'Problema hermoso: subarreglo de máxima suma en O(n)',
+        canal: 'Andrés Mejía',
+        url: 'https://www.youtube.com/watch?v=A5YDZYInF3A',
+        idioma: 'es',
+        porque: 'Un problema hermano resuelto desde la solución ingenua hasta la lineal; buen contraste con el pico de peticiones.'
+      }
+    ],
+
     reinforce: [
       'Resolver dos problemas más de ventana deslizante con ventana variable, para que el patrón deje de parecer un truco.',
       'Estudiar el algoritmo de ventana deslizante que usan los limitadores de peticiones reales, y en qué se diferencia del de cubo con fichas.',
@@ -1088,6 +1115,26 @@
         { criteria: 'Zona horaria explícita y método de comprobación', weight: 10 }
       ]
     },
+
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'Explain, índices y optimización de consultas',
+        canal: 'SystemGuards',
+        url: 'https://www.youtube.com/watch?v=-h41xIv1550',
+        idioma: 'es',
+        porque: 'Leer el plan de ejecución antes de tocar nada es el primer paso que pide la prueba.'
+      },
+      {
+        titulo: '🚨 ¿Por qué tu consulta en SQL es tan lenta? | Table Scan vs. Index Seek',
+        canal: 'Astrit Valdivia',
+        url: 'https://www.youtube.com/watch?v=vBGqctDWIBU',
+        idioma: 'es',
+        porque: 'La diferencia entre recorrer la tabla entera y buscar por índice, que suele explicar los ocho minutos.'
+      }
+    ],
 
     reinforce: [
       'Leer un plan de `EXPLAIN (ANALYZE, BUFFERS)` real y localizar el nodo que más tiempo consume.',

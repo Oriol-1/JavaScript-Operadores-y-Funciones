@@ -120,6 +120,34 @@
   const DOCS_REQUIRED = ['resumen', 'conceptos', 'referencia', 'ejemplo', 'glosario', 'preparado'];
 
   /**
+   * Bloque `recursos`: material externo — de momento, vídeos — que explica
+   * la técnica que evalúa la prueba. Es opcional y deliberadamente
+   * secundario: `docs` debe bastar para resolver, y un enlace de fuera no
+   * es excusa para documentar de menos. Sirve para quien prefiere que se
+   * lo cuenten en voz alta antes de leer.
+   *
+   *   titulo   El del vídeo, tal cual, para reconocerlo si cambia la URL.
+   *   canal    Quién lo publica: la mitad de la credibilidad está aquí.
+   *   url      Enlace directo. https obligatorio.
+   *   idioma   'es' | 'en'  — se muestra, porque condiciona a quién le sirve.
+   *   porque   Qué aporta A ESTA prueba. Sin esto es una lista de enlaces
+   *            más, que es justo lo que no queremos.
+   */
+  const RECURSO_REQUIRED = ['titulo', 'canal', 'url', 'idioma', 'porque'];
+
+  function validarRecursos(ex) {
+    ex.recursos.forEach(function (r, i) {
+      const falta = RECURSO_REQUIRED.filter(function (k) { return !r[k]; });
+      if (falta.length) {
+        console.warn('[TechTrack] Recurso ' + (i + 1) + ' de "' + ex.id + '" incompleto:', falta);
+      }
+      if (r.url && r.url.indexOf('https://') !== 0) {
+        console.warn('[TechTrack] Recurso ' + (i + 1) + ' de "' + ex.id + '" no usa https: ' + r.url);
+      }
+    });
+  }
+
+  /**
    * Bloque `fases`: construcción incremental de la solución.
    *
    * Regla innegociable: el campo `codigo` de cada fase es el archivo
@@ -195,6 +223,8 @@
     ex.starter = ex.starter || null;
     ex.tags = ex.tags || [];
     ex.categorias = ex.categorias || [];   // categorías secundarias
+    ex.recursos = ex.recursos || [];       // vídeos de apoyo (opcional)
+    if (ex.recursos.length) validarRecursos(ex);
     byId[ex.id] = ex;
     exercises.push(ex);
     return ex;

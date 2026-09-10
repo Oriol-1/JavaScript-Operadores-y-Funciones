@@ -1001,6 +1001,26 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: '¿Cómo RESOLVER el Problema del N+1? Tarde o temprano TE VA A TOCAR 💀',
+        canal: 'hdeleon.net',
+        url: 'https://www.youtube.com/watch?v=CiQFafuRAcE',
+        idioma: 'es',
+        porque: 'Explica el N+1 sin atarlo a un ORM concreto: sirve sea cual sea el stack de la empresa.'
+      },
+      {
+        titulo: '🐍 Problema del N+1 en el ORM de Django y como evitarlo',
+        canal: 'Andrés Cruz',
+        url: 'https://www.youtube.com/watch?v=nv_rGUuEDDg',
+        idioma: 'es',
+        porque: 'Muestra cómo detectarlo mirando las consultas que se ejecutan de verdad, no adivinando.'
+      }
+    ],
+
     reinforce: [
       'Planes de ejecución: `EXPLAIN ANALYZE` para ver qué hace realmente una consulta.',
       'Índices en claves foráneas y su efecto sobre `WHERE id IN (...)`.',
@@ -2109,6 +2129,26 @@
         { criteria: 'Registro de intentos y campos ignorados', weight: 10 }
       ]
     },
+
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'Cuál es y cómo protegerte de la VULNERABILIDAD TOP 1 de OWASP - Broken Access Control',
+        canal: 'MS4 Security',
+        url: 'https://www.youtube.com/watch?v=JIx7pFvlkAQ',
+        idioma: 'es',
+        porque: 'Sitúa el fallo del endpoint de facturas dentro de la categoría A01 de OWASP.'
+      },
+      {
+        titulo: 'Ejercicio-TOP 1 OWASP 2021-Broken Access Control [WebGoat Referencias Inseguras]',
+        canal: 'MS4 Security',
+        url: 'https://www.youtube.com/watch?v=Z8UIObinEdY',
+        idioma: 'es',
+        porque: 'Explota un IDOR en la práctica: ver el ataque hace obvia la comprobación que falta.'
+      }
+    ],
 
     reinforce: [
       'OWASP Top 10, A01:2021 Broken Access Control.',

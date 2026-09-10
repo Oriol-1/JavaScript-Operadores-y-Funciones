@@ -909,6 +909,19 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'Aprende Unit Testing, la buena práctica que los juniors ignoran',
+        canal: 'Morsa Programando',
+        url: 'https://www.youtube.com/watch?v=RbGdlJqqhbk',
+        idioma: 'es',
+        porque: 'Insiste en la diferencia entre un test que pasa y un test que detecta algo, que es el eje de esta prueba.'
+      }
+    ],
+
     reinforce: [
       'Análisis de valores límite y particiones de equivalencia.',
       'Testing basado en propiedades con fast-check.',

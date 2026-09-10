@@ -2723,6 +2723,26 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: '¿Qué es MCP? - Explicado en simple y con ejemplos reales',
+        canal: 'EvoAcademy',
+        url: 'https://www.youtube.com/watch?v=Lc2bEowoJoc',
+        idioma: 'es',
+        porque: 'Para qué existe el protocolo y qué problema resuelve, antes de escribir una sola herramienta.'
+      },
+      {
+        titulo: 'How Model Context Protocol (MCP) actually works',
+        canal: 'Google Cloud Tech',
+        url: 'https://www.youtube.com/watch?v=cGuyrANVi4A',
+        idioma: 'en',
+        porque: 'El mensaje a mensaje del protocolo: lo que necesitas para que tu servidor no se rompa.'
+      }
+    ],
+
     reinforce: [
       'Especificación de MCP: herramientas, recursos y prompts.',
       'Function calling y salidas estructuradas en las APIs de modelos.',

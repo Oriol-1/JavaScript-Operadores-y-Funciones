@@ -132,6 +132,23 @@ function expect(actual) {
         console.log('  FASES ' + ex.id + ': solo ' + ex.fases.length + ' fase(s), mínimo 3'); fallos++;
       }
     }
+    // Vídeos de apoyo: opcionales, pero si están, que sean enlaces
+    // presentables. Un enlace sin `porque` es un enlace que nadie va a
+    // abrir, y uno sin https se lo come el navegador.
+    if (ex.recursos && ex.recursos.length) {
+      ex.recursos.forEach((r, i) => {
+        const faltaRec = ['titulo', 'canal', 'url', 'idioma', 'porque'].filter(k => !r[k]);
+        if (faltaRec.length) {
+          console.log('  RECURSOS ' + ex.id + ' #' + (i + 1) + ' faltan: ' + faltaRec.join(', ')); fallos++;
+        }
+        if (r.url && r.url.indexOf('https://') !== 0) {
+          console.log('  RECURSOS ' + ex.id + ' #' + (i + 1) + ' no usa https: ' + r.url); fallos++;
+        }
+        if (r.idioma && r.idioma !== 'es' && r.idioma !== 'en') {
+          console.log('  RECURSOS ' + ex.id + ' #' + (i + 1) + ' idioma desconocido: ' + r.idioma); fallos++;
+        }
+      });
+    }
     if (!TT.CATEGORIES[ex.category]) { console.log('  CATEGORIA desconocida en ' + ex.id + ': ' + ex.category); fallos++; }
     if (!TT.LEVELS[ex.level]) { console.log('  NIVEL desconocido en ' + ex.id + ': ' + ex.level); fallos++; }
     const suma = ex.scoring.rubric.reduce((a, r) => a + r.weight, 0);
@@ -270,8 +287,11 @@ function expect(actual) {
   const conEmpresa = TT.all().filter(e => e.empresa).length;
   const documentadas = TT.all().filter(e => e.empresa && e.empresa.evidencia === 'documentada').length;
   const empDoc = TT.companies().filter(c => c.verificacion === 'documentado').length;
+  const conVideos = TT.all().filter(e => e.recursos && e.recursos.length);
+  const videos = conVideos.reduce((a, e) => a + e.recursos.length, 0);
   console.log('\n' + TT.all().length + ' pruebas · ' + conTests + ' con tests automáticos · ' + total +
-              ' aserciones · ' + conDocs + ' con documentación · ' + conFases + ' con fases');
+              ' aserciones · ' + conDocs + ' con documentación · ' + conFases + ' con fases · ' +
+              conVideos.length + ' con vídeos de apoyo (' + videos + ' enlaces)');
   const porPrueba = { si: 0, no: 0, depende: 0 };
   TT.companies().forEach(c => { porPrueba[c.pruebaCodigo]++; });
   console.log(TT.companies().length + ' empresas (' + empDoc + ' con proceso publicado) · ' +

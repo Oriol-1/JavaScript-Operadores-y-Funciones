@@ -1247,6 +1247,33 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'Retry Strategies: Exponential Backoff & Jitter Explained',
+        canal: 'CodeLucky',
+        url: 'https://www.youtube.com/watch?v=NByH-cau97A',
+        idioma: 'en',
+        porque: 'Cubre las tres decisiones de la prueba: cuántos reintentos, con qué espera y por qué hace falta jitter.'
+      },
+      {
+        titulo: 'How to Implement Exponential Backoff & Retry Logic (Rate-Limit Handling, 429, 5xx)',
+        canal: 'SystemDR - Scalable System Design',
+        url: 'https://www.youtube.com/watch?v=zq97PFCftNA',
+        idioma: 'en',
+        porque: 'Distingue qué errores merecen reintento y cuáles no: reintentar un 400 es el fallo típico.'
+      },
+      {
+        titulo: 'Retry Storms Explained: How Exponential Backoff with Jitter Prevents System Meltdowns',
+        canal: 'SystemDR - Scalable System Design',
+        url: 'https://www.youtube.com/watch?v=WjEmM1Jy79M',
+        idioma: 'en',
+        porque: 'El porqué del jitter: sin él, tu cliente resistente tumba al servidor que intentaba salvar.'
+      }
+    ],
+
     reinforce: [
       'Idempotencia en APIs HTTP y claves de idempotencia.',
       'Patrones de resiliencia: circuit breaker, bulkhead, timeout.',

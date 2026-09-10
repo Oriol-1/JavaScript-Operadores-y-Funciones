@@ -501,6 +501,33 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'Mejora tu App con Debounce en JavaScript',
+        canal: 'lasfito',
+        url: 'https://www.youtube.com/watch?v=W1sOOTjtfh0',
+        idioma: 'es',
+        porque: 'Plantea el mismo caso que la prueba: un input que dispara peticiones de más y cómo frenarlo.'
+      },
+      {
+        titulo: '16- Implementar un debounce manualmente',
+        canal: 'Fernando Herrera',
+        url: 'https://www.youtube.com/watch?v=PPLSSskhUik',
+        idioma: 'es',
+        porque: 'Lo escribe a mano, sin librería, que es lo que se te pide aquí.'
+      },
+      {
+        titulo: 'Debounce JavaScript Function — Build a Search Bar Without API Overload',
+        canal: 'LearnAwesome',
+        url: 'https://www.youtube.com/watch?v=LTfWrpOcuxo',
+        idioma: 'en',
+        porque: 'Explica el closure que guarda el temporizador, el punto donde suele fallar la implementación.'
+      }
+    ],
+
     reinforce: [
       'Cierres y captura de variables: revisa el Módulo 5 (Scope & Closures) del laboratorio.',
       'Orden de resolución de promesas y microtareas: Módulo 4 (Asincronía).',
@@ -874,6 +901,33 @@
         { criteria: 'Solución alternativa con IIFE', weight: 10 }
       ]
     },
+
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: '🤔 ¿Qué cosas son TAREAS y Microtareas en JAVASCRIPT? - Event Loop',
+        canal: 'Eduardo Fierro',
+        url: 'https://www.youtube.com/watch?v=rgztQJkfduY',
+        idioma: 'es',
+        porque: 'Separa las dos colas exactamente como lo hace la prueba: qué entra en microtareas, qué en macrotareas y en qué orden se vacían.'
+      },
+      {
+        titulo: '🔴 QUÉ es el EVENT LOOP en JAVASCRIPT - PASO a PASO ⚠️',
+        canal: 'Eduardo Fierro',
+        url: 'https://www.youtube.com/watch?v=rvzItyLuh28',
+        idioma: 'es',
+        porque: 'El modelo mental completo (pila, cola, bucle) por si el anterior te llega con la base ya dada por sabida.'
+      },
+      {
+        titulo: 'Javascript: Macro vs Micro Tasks',
+        canal: 'A shot of code',
+        url: 'https://www.youtube.com/watch?v=Rpb-hZjw--w',
+        idioma: 'en',
+        porque: 'Recorre ejemplos de predicción de salida con el mismo formato de pregunta que la prueba.'
+      }
+    ],
 
     reinforce: [
       'Módulo 4 (Asincronía) del laboratorio: promesas y orden de resolución.',
@@ -1290,6 +1344,33 @@
         { criteria: 'Separación entre lógica y render', weight: 10 }
       ]
     },
+
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'An accessible loading pattern using an aria live region',
+        canal: 'CANAXESS',
+        url: 'https://www.youtube.com/watch?v=8iWWAYp6Wh0',
+        idioma: 'en',
+        porque: 'Es exactamente el patrón vacío → cargando → resultado anunciado a un lector de pantalla.'
+      },
+      {
+        titulo: 'WAI-ARIA: Accesibilidad en Aplicaciones Web Modernas (1)',
+        canal: 'iDESWEB UA',
+        url: 'https://www.youtube.com/watch?v=UQ6dmO1RsL4',
+        idioma: 'es',
+        porque: 'Roles, propiedades y estados: la base para no usar ARIA a ciegas.'
+      },
+      {
+        titulo: 'WAI-ARIA: Accesibilidad en Aplicaciones Web Modernas (2)',
+        canal: 'iDESWEB UA',
+        url: 'https://www.youtube.com/watch?v=YK_k8cKc_vA',
+        idioma: 'es',
+        porque: 'Continúa con las regiones vivas y el contenido que cambia solo, que es el caso de una lista de datos.'
+      }
+    ],
 
     reinforce: [
       'WAI-ARIA Authoring Practices: patrones de regiones vivas.',

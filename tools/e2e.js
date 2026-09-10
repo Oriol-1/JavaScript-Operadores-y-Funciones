@@ -297,6 +297,28 @@ async function probarRunner() {
     if (bloques < 2) throw new Error('no aparecieron fases y solución');
     return bloques + ' bloques de código';
   });
+
+  /* Los vídeos de apoyo son enlaces a un sitio de fuera: lo que puede
+     romperse no es el texto sino que se abran mal (misma pestaña, sin
+     rel) o que el bloque desaparezca al tocar la documentación. */
+  await caso('los vídeos de apoyo salen enlazados a YouTube', async () => {
+    await p.ir(url('prueba.html', '?id=alg-ventana-deslizante'));
+    await p.esperarQue('!!document.getElementById("editor")', 25000);
+    await p.evaluar('document.querySelector(\'.tab[data-tab="documentacion"]\').click()');
+    await esperar(200);
+    const enlaces = await p.evaluar(
+      'JSON.stringify(Array.from(document.querySelectorAll("#p-documentacion a"))' +
+      '.filter(a=>a.href.indexOf("youtube.com")>-1)' +
+      '.map(a=>({t:a.target,r:a.rel})))');
+    const lista = JSON.parse(enlaces);
+    const esperados = await p.evaluar('TT.get("alg-ventana-deslizante").recursos.length');
+    if (lista.length !== esperados) {
+      throw new Error('esperaba ' + esperados + ' enlaces, hay ' + lista.length);
+    }
+    const malos = lista.filter(a => a.t !== '_blank' || a.r.indexOf('noopener') === -1);
+    if (malos.length) throw new Error(malos.length + ' enlaces sin target o sin rel seguro');
+    return lista.length + ' vídeos, todos en pestaña nueva';
+  });
 }
 
 async function probarSimulacion() {

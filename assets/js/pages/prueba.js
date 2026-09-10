@@ -296,6 +296,8 @@
           '</tbody></table></div>' +
         '</div>' +
 
+        bloqueRecursos() +
+
         '<div class="card" style="border-color:var(--ok)">' +
           '<div class="card-title" style="color:var(--ok)">¿Estás listo para resolverla?</div>' +
           '<p class="small muted">Si puedes responder a todo esto sin volver atrás, ya puedes ir a Resolver. ' +
@@ -306,6 +308,32 @@
         '</div>' +
 
       '</div>';
+    }
+
+    /* Vídeos de apoyo. Van al final de la documentación a propósito:
+       primero el material propio, que es el que está escrito para esta
+       prueba; el vídeo es el plan B de quien prefiere que se lo cuenten. */
+    function bloqueRecursos() {
+      if (!ex.recursos.length) return '';
+
+      return '<div><h3 style="margin-bottom:var(--sp-2)">Vídeos que explican esta técnica</h3>' +
+        '<p class="small muted">No hacen falta para resolver: la documentación de arriba basta. ' +
+          'Están aquí por si prefieres que te lo cuenten antes de leer, o por si un concepto ' +
+          'se te resiste. Se abren en YouTube, fuera de la plataforma.</p>' +
+        '<div class="card" style="margin-top:var(--sp-3)">' +
+          ex.recursos.map(function (r) {
+            return '<div class="fuente" style="flex-direction:column;gap:4px;padding:11px 0">' +
+              '<div style="display:flex;gap:var(--sp-3);align-items:baseline">' +
+                '<span class="fuente-tipo recurso-idioma">' +
+                  UI.esc(r.idioma === 'es' ? 'ES' : 'EN') + '</span>' +
+                '<a href="' + UI.esc(r.url) + '" target="_blank" rel="noopener noreferrer">' +
+                  UI.esc(r.titulo) + ' ↗</a>' +
+              '</div>' +
+              '<div class="small muted" style="padding-left:calc(var(--sp-3) + 28px)">' +
+                UI.esc(r.canal) + ' — ' + UI.md(r.porque) + '</div>' +
+            '</div>';
+          }).join('') +
+        '</div></div>';
     }
 
     /* ---------- Bloques 10-15: resolución ---------- */

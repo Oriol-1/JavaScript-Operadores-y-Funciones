@@ -2040,6 +2040,33 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'DISEÑO de SISTEMAS para una ENTREVISTA de INGENIERO de SOFTWARE',
+        canal: 'Rafa Páez - Más allá del código',
+        url: 'https://www.youtube.com/watch?v=j83X1if9h1A',
+        idioma: 'es',
+        porque: 'El método de la entrevista: cómo estructurar la respuesta y en qué orden hablar.'
+      },
+      {
+        titulo: 'Distributed Message Queue (Kafka): System Design Interview (Stripe & Amazon Offers)',
+        canal: 'TechPrep',
+        url: 'https://www.youtube.com/watch?v=Qay43Km1NwY',
+        idioma: 'en',
+        porque: 'El caso concreto de ingestión masiva de eventos, que es el enunciado de esta prueba.'
+      },
+      {
+        titulo: 'Arquitectura de alto rendimiento orientada a eventos con Go y Kafka - David Torres Garrigós',
+        canal: 'VLC TechFest',
+        url: 'https://www.youtube.com/watch?v=OB-FtgCnQ7w',
+        idioma: 'es',
+        porque: 'Una charla con números de producción reales: útil para justificar decisiones, no solo dibujarlas.'
+      }
+    ],
+
     reinforce: [
       'Fundamentos: particionado, replicación, consistencia y consenso.',
       'Patrones de caché: cache-aside, write-through, estampida.',

@@ -139,7 +139,10 @@ cuánto te pasaste.
    ejemplos, referencia de sintaxis, un caso análogo resuelto, glosario y una
    autocomprobación previa. **La prueba es autosuficiente: no tienes que buscar
    nada fuera.** Y no es la solución: el ejemplo resuelve un problema distinto con
-   la misma técnica.
+   la misma técnica. Trece pruebas cierran esa pestaña con **vídeos de apoyo**
+   (30 enlaces comprobados, en español o inglés, cada uno con una línea de por qué
+   sirve para *esa* prueba): son el plan B de quien prefiere que se lo cuenten en
+   voz alta, nunca un sustituto de la documentación propia.
 3. **Resolver** — editor con pistas progresivas que se van revelando.
 4. **Tests** — se ejecutan en un `iframe` aislado con límite de tiempo.
 5. **Solución** — accesible cuando quieras, pero se registra: verla antes de

@@ -606,6 +606,19 @@
       ]
     },
 
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'Tutorial Salidas Estructuradas API OpenAI - Crea Respuestas Perfectas en JSON - Structured Outputs',
+        canal: 'LLM Master Cursos',
+        url: 'https://www.youtube.com/watch?v=nbtJToGckQM',
+        idioma: 'es',
+        porque: 'Enseña a fijar el esquema en la propia llamada en lugar de confiar en que el modelo devuelva JSON válido. Lo hace sobre la API de OpenAI, pero la idea es la misma en cualquier proveedor.'
+      }
+    ],
+
     reinforce: [
       'Structured Outputs y function calling en las APIs de modelos.',
       'Validación por esquema con Zod o JSON Schema.',
@@ -1144,6 +1157,26 @@
         { criteria: 'Consideraciones de seguridad y medición', weight: 15 }
       ]
     },
+
+    /* Vídeos que explican la técnica que evalúa esta prueba. No son la
+       solución: son el material de fuera al que recurrirías si la
+       documentación de arriba no te bastara. Enlaces comprobados. */
+    recursos: [
+      {
+        titulo: 'RAG (Retrieval-Augmented Generation): Enriqueciendo a los Modelos LLM',
+        canal: 'Miguel Cotrina | Data & IA',
+        url: 'https://www.youtube.com/watch?v=S0lR8pF1_ME',
+        idioma: 'es',
+        porque: 'Recorre la tubería entera: trocear, indexar, recuperar y responder citando lo recuperado.'
+      },
+      {
+        titulo: '(Español) RAG Retrieval Augmented Generation',
+        canal: 'The Machine Learning Engineer',
+        url: 'https://www.youtube.com/playlist?list=PLw-i55H2Io6iyzMKOYvIWhjkIHkhZhB7X',
+        idioma: 'es',
+        porque: 'Serie larga por si quieres bajar al detalle de embeddings y recuperación antes de resolver.'
+      }
+    ],
 
     reinforce: [
       'Estrategias de troceado (chunking) y solapamiento.',
