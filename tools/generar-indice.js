@@ -65,6 +65,11 @@ function cargarCatalogo() {
 function extraerCampos(ex) {
   const ligero = {};
   for (const campo of CAMPOS_LIGEROS) ligero[campo] = ex[campo];
+  /* Los vídeos de apoyo no viajan al índice —son texto largo que solo
+     hace falta al abrir la prueba—, pero el catálogo sí necesita saber
+     CUÁNTOS hay para marcarlo en la tarjeta y poder filtrar. Con el
+     número basta, y son dos bytes. */
+  if (ex.recursos && ex.recursos.length) ligero.videos = ex.recursos.length;
   return ligero;
 }
 

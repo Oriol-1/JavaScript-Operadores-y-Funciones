@@ -184,7 +184,8 @@
           "url": "https://interviewing.io/airbnb-interview-questions"
         }
       ]
-    }
+    },
+    "videos": 3
   });
 
   TT.defineExerciseIndice({
@@ -238,7 +239,8 @@
           "url": "https://www.google.com/about/careers/applications/candidate-prep/swe"
         }
       ]
-    }
+    },
+    "videos": 3
   });
 
   TT.defineExerciseIndice({
@@ -305,7 +307,8 @@
           "url": "https://github.com/poteto/hiring-without-whiteboards"
         }
       ]
-    }
+    },
+    "videos": 3
   });
 
   TT.defineExerciseIndice({
@@ -433,7 +436,8 @@
           "url": "https://tech.edreamsodigeo.com/"
         }
       ]
-    }
+    },
+    "videos": 3
   });
 
   TT.defineExerciseIndice({
@@ -488,7 +492,8 @@
           "url": "https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion"
         }
       ]
-    }
+    },
+    "videos": 1
   });
 
   TT.defineExerciseIndice({
@@ -605,7 +610,8 @@
           "url": "https://leonardopoza.substack.com/p/pruebas-tecnicas-procesos-seleccion"
         }
       ]
-    }
+    },
+    "videos": 2
   });
 
   TT.defineExerciseIndice({
@@ -666,7 +672,8 @@
           "url": "https://www.jointaro.com/interviews/companies/cloudflare/experiences/software-engineer-october-17-2025-no-offer-neutral-ff798d3e/"
         }
       ]
-    }
+    },
+    "videos": 2
   });
 
   TT.defineExerciseIndice({
@@ -730,7 +737,8 @@
           "url": "https://netflixtechblog.com/demystifying-interviewing-for-backend-engineers-netflix-aceb26a83495"
         }
       ]
-    }
+    },
+    "videos": 3
   });
 
   TT.defineExerciseIndice({
@@ -797,7 +805,8 @@
           "url": "https://github.com/poteto/hiring-without-whiteboards"
         }
       ]
-    }
+    },
+    "videos": 2
   });
 
   TT.defineExerciseIndice({
@@ -988,7 +997,8 @@
           "url": "https://github.com/seushermsft/Take-Home-Engineering-Challenge"
         }
       ]
-    }
+    },
+    "videos": 1
   });
 
   TT.defineExerciseIndice({
@@ -1046,7 +1056,8 @@
           "url": "https://chiraghasija.cc/posts/how-to-interview-ai-engineer-role-2026/"
         }
       ]
-    }
+    },
+    "videos": 2
   });
 
   TT.defineExerciseIndice({
@@ -1228,7 +1239,8 @@
           "url": "https://github.com/seushermsft/Take-Home-Engineering-Challenge"
         }
       ]
-    }
+    },
+    "videos": 2
   });
 
   TT.defineExerciseIndice({
@@ -1426,7 +1438,8 @@
           "url": "https://adevinta.com/careers/product-tech/"
         }
       ]
-    }
+    },
+    "videos": 3
   });
 
 })(window.TT);

@@ -253,6 +253,10 @@
         (emp ? '<span>' + UI.esc(UI.formatoLabel(emp.formato)) + '</span><span>·</span>' : '') +
         '<span class="mono">' + ex.tech.slice(0, 3).map(UI.esc).join(' · ') + '</span>' +
         (ex.docs ? '<span>·</span><span title="Incluye la documentación necesaria para resolverla">📖 docs</span>' : '') +
+        (ex.videos
+          ? '<span>·</span><span title="' + ex.videos + ' vídeo(s) que explican esta técnica, al final de la pestaña Documentación">▶ ' +
+            ex.videos + ' vídeo' + (ex.videos === 1 ? '' : 's') + '</span>'
+          : '') +
       '</div>' +
     '</a>';
   };

@@ -131,6 +131,27 @@ async function probarCatalogo() {
     return total + ' -> ' + n;
   });
 
+  /* El contador de vídeos viaja en el índice ligero, no en el contenido
+     completo: si alguien lo deja de generar, el catálogo se queda sin
+     marca y sin filtro sin que falle nada más. */
+  await caso('el filtro de vídeos deja solo las pruebas marcadas', async () => {
+    await p.evaluar('document.querySelector(\'#f-categorias .chip[data-valor="ai"]\').click()');
+    await esperar(200);
+    await p.evaluar('document.querySelector(\'#f-videos .chip[data-valor="si"]\').click()');
+    await esperar(300);
+    const n = await p.evaluar('document.querySelectorAll("#resultados .card").length');
+    const esperados = await p.evaluar('TT.all().filter(e=>e.videos).length');
+    const marcadas = await p.evaluar(
+      'Array.from(document.querySelectorAll("#resultados .card")).filter(c=>c.textContent.indexOf("▶")>-1).length');
+    if (n !== esperados) throw new Error('esperaba ' + esperados + ' tarjetas, hay ' + n);
+    if (marcadas !== n) throw new Error('solo ' + marcadas + ' de ' + n + ' llevan la marca ▶');
+    await p.evaluar('document.querySelector(\'#f-videos .chip[data-valor="si"]\').click()');
+    await esperar(200);
+    await p.evaluar('document.querySelector(\'#f-categorias .chip[data-valor="ai"]\').click()');
+    await esperar(200);
+    return n + ' pruebas, todas marcadas';
+  });
+
   await caso('el filtro se sincroniza con la URL', async () => {
     const q = await p.evaluar('location.search');
     if (!q.includes('categoria=ai')) throw new Error('la URL no cambió: ' + q);

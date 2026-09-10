@@ -225,6 +225,9 @@
     ex.categorias = ex.categorias || [];   // categorías secundarias
     ex.recursos = ex.recursos || [];       // vídeos de apoyo (opcional)
     if (ex.recursos.length) validarRecursos(ex);
+    /* El mismo contador que el índice ligero publica en `videos`, para
+       que tarjetas y filtros funcionen igual con contenido completo. */
+    ex.videos = ex.recursos.length;
     byId[ex.id] = ex;
     exercises.push(ex);
     return ex;
@@ -247,6 +250,7 @@
       ex.empresa.fuentes = ex.empresa.fuentes || [];
       ex.empresa.evalua = ex.empresa.evalua || [];
     }
+    ex.videos = ex.videos || 0;
     ex.liviano = true;
     byId[ex.id] = ex;
     exercises.push(ex);
@@ -340,6 +344,7 @@
       if (filters.level && ex.level !== filters.level) return false;
       if (filters.kind && ex.kind !== filters.kind) return false;
       if (filters.tech && ex.tech.indexOf(filters.tech) === -1) return false;
+      if (filters.videos === 'si' && !ex.videos) return false;
 
       /* Ejes que solo existen en las pruebas con bloque `empresa`.
          Filtrar por cualquiera de ellos descarta, por definición, las

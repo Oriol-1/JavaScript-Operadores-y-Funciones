@@ -24,6 +24,7 @@
       { campo: 'category',   param: 'categoria' },
       { campo: 'level',      param: 'nivel' },
       { campo: 'kind',       param: 'tipo' },
+      { campo: 'videos',     param: 'videos' },
       { campo: 'company',    param: 'empresa',    deEmpresa: true },
       { campo: 'formato',    param: 'formato',    deEmpresa: true },
       { campo: 'role',       param: 'puesto',     deEmpresa: true },
@@ -87,6 +88,17 @@
     grupo('f-kinds', Object.keys(presentes.kind).map(function (id) {
       return { valor: id, etiqueta: TT.KINDS[id] || id };
     }), 'kind');
+
+    /* Un solo interruptor, y solo si hay algo que encender: quien busca
+       vídeo lo busca a propósito, y ofrecer "sin vídeos" no le sirve a
+       nadie. El número sale del contador `videos` del índice ligero. */
+    const conVideos = TT.all().filter(function (ex) { return ex.videos; }).length;
+    if (conVideos) {
+      grupo('f-videos', [
+        { valor: 'si', etiqueta: '▶ Con vídeos · ' + conVideos,
+          titulo: 'Pruebas cuya documentación termina con vídeos que explican la técnica.' }
+      ], 'videos');
+    }
 
     grupo('f-empresas', Object.keys(presentes.company).map(function (id) {
       const c = TT.company(id);

@@ -78,6 +78,8 @@
             (ex.tests.mode === 'js' ? ex.tests.cases.length + ' tests automáticos' : 'Evaluación con rúbrica') +
             '</span>' : '') +
           (ex.docs ? '<span class="badge badge-info">Documentación incluida</span>' : '') +
+          (ex.videos ? '<span class="badge badge-neutral" title="Al final de la pestaña Documentación">▶ ' +
+            ex.videos + ' vídeo' + (ex.videos === 1 ? '' : 's') + ' de apoyo</span>' : '') +
           (ex.empresa ? UI.evidenciaBadge(ex.empresa.evidencia) : '') +
         '</div>' +
         (ex.empresa
