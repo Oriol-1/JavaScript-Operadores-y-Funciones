@@ -429,9 +429,9 @@
           code:
 '(async () => {\n' +
 '  const d = fakeDeps();\n' +
-'  const r = await registrarUsuario(d, { email: "ana@ejemplo.com", password: "SuperSecreta9!" });\n' +
+'  const r = await registrarUsuario(d, { email: "ana@ejemplo.com", password: "placeholder-no-real-1" });\n' +
 '  expect(r.status).toBe(201);\n' +
-'  expect(JSON.stringify(r.body).indexOf("SuperSecreta9!")).toBe(-1);\n' +
+'  expect(JSON.stringify(r.body).indexOf("placeholder-no-real-1")).toBe(-1);\n' +
 '  expect(JSON.stringify(r.body).indexOf("hash:")).toBe(-1);\n' +
 '})()'
         },
@@ -440,7 +440,7 @@
           code:
 '(async () => {\n' +
 '  const d = fakeDeps();\n' +
-'  await registrarUsuario(d, { email: "b@ejemplo.com", password: "Clave123456!" });\n' +
+'  await registrarUsuario(d, { email: "b@ejemplo.com", password: "placeholder-no-real-2" });\n' +
 '  expect(d.creados).toHaveLength(1);\n' +
 '  expect(d.creados[0].password).toBe(undefined);\n' +
 '  expect(String(d.creados[0].passwordHash || "").indexOf("hash:")).toBe(0);\n' +
@@ -451,8 +451,8 @@
           code:
 '(async () => {\n' +
 '  const d = fakeDeps();\n' +
-'  await registrarUsuario(d, { email: "c@ejemplo.com", password: "NoDebeSalir42!" });\n' +
-'  expect(textoDeLogs(d).indexOf("NoDebeSalir42!")).toBe(-1);\n' +
+'  await registrarUsuario(d, { email: "c@ejemplo.com", password: "placeholder-no-real-3" });\n' +
+'  expect(textoDeLogs(d).indexOf("placeholder-no-real-3")).toBe(-1);\n' +
 '})()'
         },
         {
@@ -460,7 +460,7 @@
           code:
 '(async () => {\n' +
 '  const d = fakeDeps();\n' +
-'  const r = await registrarUsuario(d, { email: "no-es-un-email", password: "Clave123456!" });\n' +
+'  const r = await registrarUsuario(d, { email: "no-es-un-email", password: "placeholder-no-real-2" });\n' +
 '  expect(r.status).toBe(422);\n' +
 '  expect(d.creados).toHaveLength(0);\n' +
 '})()'
@@ -479,8 +479,8 @@
           code:
 '(async () => {\n' +
 '  const d = fakeDeps();\n' +
-'  await registrarUsuario(d, { email: "e@ejemplo.com", password: "Clave123456!" });\n' +
-'  const r = await registrarUsuario(d, { email: "e@ejemplo.com", password: "Otra123456!" });\n' +
+'  await registrarUsuario(d, { email: "e@ejemplo.com", password: "placeholder-no-real-2" });\n' +
+'  const r = await registrarUsuario(d, { email: "e@ejemplo.com", password: "placeholder-no-real-4" });\n' +
 '  expect(r.status).toBe(409);\n' +
 '  expect(d.creados).toHaveLength(1);\n' +
 '})()'
@@ -491,7 +491,7 @@
 '(async () => {\n' +
 '  const d = fakeDeps();\n' +
 '  d.mail = { enviarBienvenida: async function () { throw new Error("SMTP caído"); } };\n' +
-'  const r = await registrarUsuario(d, { email: "f@ejemplo.com", password: "Clave123456!" });\n' +
+'  const r = await registrarUsuario(d, { email: "f@ejemplo.com", password: "placeholder-no-real-2" });\n' +
 '  expect(r.status).toBe(201);\n' +
 '  expect(d.creados).toHaveLength(1);\n' +
 '  expect(d.logs.some(l => l.nivel === "error")).toBeTruthy();\n' +
@@ -504,7 +504,7 @@
 '  const d = fakeDeps();\n' +
 '  d.repo.crear = async function () { throw new Error("conexión perdida"); };\n' +
 '  let lanzo = false;\n' +
-'  try { await registrarUsuario(d, { email: "g@ejemplo.com", password: "Clave123456!" }); }\n' +
+'  try { await registrarUsuario(d, { email: "g@ejemplo.com", password: "placeholder-no-real-2" }); }\n' +
 '  catch (e) { lanzo = true; }\n' +
 '  expect(lanzo).toBeTruthy();\n' +
 '})()'

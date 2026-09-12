@@ -1,0 +1,11 @@
+# Configuración de GitGuardian.
+#
+# Este repositorio es material didáctico: los ejercicios incluyen credenciales
+# de ejemplo (pares email + password) dentro de los casos de prueba. Son valores
+# inventados, con dominios de ejemplo, y nunca han correspondido a ninguna cuenta
+# real. Los detectores genéricos los confunden con secretos filtrados.
+version: 2
+
+secret:
+  ignored-paths:
+    - content/exercises/**
